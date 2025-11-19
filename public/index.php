@@ -1,5 +1,37 @@
 <?php
-// public/index.php - MEJOR FORMA
+/**
+ * Front controller
+ *
+ * Ruteja les peticions per paràmetre ?action=
+ * Autor: Arnau Aumedes Jimenez
+ */
+// Front controller: route by ?action=
+$action = $_GET['action'] ?? 'menu';
+
+if ($action === 'login') {
+	// Delegate login handling to the dedicated controller
+	require_once __DIR__ . '/../app/controlador/loginController.php';
+	exit;
+}
+
+if ($action === 'logout') {
+	// Simple logout endpoint handled by public script or controller
+	// If you want to centralize, you can create app/controlador/logoutController.php
+	require_once __DIR__ . '/../app/controlador/logoutController.php';
+	exit;
+}
+
+if ($action === 'register') {
+	require_once __DIR__ . '/../app/controlador/registerController.php';
+	exit;	
+}
+
+// Password recovery routes
+if ($action === 'password_request' || $action === 'reset_password') {
+	require_once __DIR__ . '/../app/controlador/passwordController.php';
+	exit;
+}
+
 require_once __DIR__ . '/../app/controlador/ArticleController.php';
 
 $controller = new ArticleController();

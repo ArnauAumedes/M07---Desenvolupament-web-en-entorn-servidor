@@ -1,3 +1,8 @@
+<!--
+    Create view
+    Autor: Arnau Aumedes Jimenez
+    Fitxer: app/vista/create.php
+-->
 <!DOCTYPE html>
 <html lang="ca">
 
@@ -13,10 +18,7 @@
     <div class="container mt-5">
         <h1>Crear Nou Article</h1>
         <form method="POST" action="/practicas/Pràctica 03 - Paginació/public/index.php?action=create">
-            <div class="form-group">
-                <label for="dni">DNI:</label>
-                <input type="text" name="dni" id="dni" class="form-control" required>
-            </div>
+            <!-- Creator assigned automatically from logged-in user -->
             <div class="form-group">
                 <label for="titol">Títol:</label>
                 <input type="text" name="titol" id="titol" class="form-control" required>

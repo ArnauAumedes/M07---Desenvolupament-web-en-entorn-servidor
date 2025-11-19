@@ -1,121 +1,211 @@
 <?php
+/**
+ * UserDAO
+ *
+ * Gestiona l'accés a la taula `users` per registre i autenticació.
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../entities/User.php';
 
 class UserDAO extends User
-{
+{   
     private $db;
-    /**
-     * Constructor per connectar a la DB per fer consultes
-     * @param PDO $db Connexió a la base de dades
-     * @return void Retorna l'objecte PDO
-     */
-    public function _construct(PDO $db) {
-        $this->db = $db; 
-    } 
-    /**
-     * Funcio per crear un nou usuari a la base de dades
-     * @return int|false ID del nou usuari creat (lastInsertId) o false en cas d'error
-     */
-    public function create() {
-        $userName = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password_hash'];
-        $active = $_POST['active'];
-
-        // Crear objecte User 
-        $user = new User($userName, $email, $password, $active);
-
-        // Utilitzar getters per obtenir dades de l'objecte
-        $sql = "INSERT INTO users (username, email, password_hash, active) VALUES (:username, :email, :password_hash, :active)";
-        $stmt = $this->db->prepare($sql); 
-        $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
-        $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
-        $stmt->bindValue(':password_hash', $user->getPasswordHash(), PDO::PARAM_STR);
-        $stmt->bindValue(':active', $user->isActive(), PDO::PARAM_INT);
-
-        return $this->db->lastInsertId();
+    public function __construct($db)
+    {
+        $this->db = $db;
     }
+
     /**
-     * Actualitza un usuari existent a la base de dades
-     * 
-     * Obté l'ID via $_GET i les noves dades via $_POST.
-     * Actualitza tots els camps (Nom i contrasenya) de l'usuari identificat per email.
-     * 
-     * @return int Número de files afectades (1 si s'actualitza, 0 si no es troba)
+     * Processa el formulari de registre
+     * - Valida dades
+     * - Comprova si l'usuari ja existeix
+     * - Hashea la contrasenya i insereix l'usuari
      */
-    public function update() {
-        // Obtenir dades del formulari ($_POST)
-        $email = $_POST['email'];
-        $userName = $_POST['username'];
-        $password_hash = $_POST['password_hash'];
-
-        // Crear objecte User
-        $user = new User($userName, $email, $password_hash);
-
-        // Utilitzar getters per obtenir dades de l'objecte
-        $sql = "UPDATE users SET username = :username, password_hash = :password_hash WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            ':username' => $user->getUsername(),
-            ':password_hash' => $user->getPasswordHash()
-        ]);
-
-        return $stmt->rowCount();
-    }
-    /**
-     * Elimina un usuari existent a la base de dades
-     * @return int Número de files afectades (1 si s'elimina, 0 si no es troba)
-     */
-    public function delete() {
-        $user_id = $_GET['user_id']; 
-
-        $stmt = $this->db->prepare("DELETE FROM users WHERE user_id = :user_id");
-        $stmt->execute([':id' => $user_id]); 
-        
-        return $stmt->rowCount(); 
-    }
-    /**
-     * Busca tots els usuaris a la base de dades
-     * @return User[] Llista d'objectes User amb tots els usuaris de la base de dades
-     */
-    public function findAll() {
-        $stmt = $this->db->prepare("SELECT * FROM users ORDER BY id ASC"); 
-        $stmt->execute();
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC); 
-
-        $users = []; 
-        foreach ($rows as $row) {
-        $user = new User($row['username'], $row['email'], $row['password_hash'], $row['active']);
-        $user->user_id = $row['user_id'];
-        $users[] = $user;
+    public function processRegister()
+    {
+        // Sessió amb cookie de 40 minuts
+        if (session_status() === PHP_SESSION_NONE) {
+            ini_set('session.cookie_lifetime', 2400);
+            ini_set('session.gc_maxlifetime', 2400);
+            session_set_cookie_params(2400);
+            session_start();
         }
-        return $users;
-    }
-    /**
-     * Contar tots els usuaris a la base de dades
-     * @return int Número total d'usuaris a la base de dades 
-     */
-    public function countAll() {
-        $stmt = $this->db->query("SELECT COUNT(*) FROM users");
-        return $stmt->fetchColumn();
-    }
-    /**
-     * Buscar un usuari per email
-     * @return User|null Retorna l'objecte User si es troba l'usuari, o null si no existeix
-     */
-    public function findByEmail() {
-        $email = $_GET['email']; 
 
-        $sql = "SELECT * FROM users WHERE email = :email";
-        $stmt = $this->db->prepare($sql);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnRegister'])) {
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $password2 = $_POST['password2'] ?? '';
 
-        if ($row) {
-            $user = new User($row['username'], $row['email'], $row['password_hash'], $row['active']); 
-            $user->setEmail($row['email']);
-            return $user; 
+            // Validacions bàsiques
+            if ($username === '' || $email === '' || $password === '' || $password2 === '') {
+                echo '<div class="alert alert-danger">Tots els camps són obligatoris</div>';
+                return;
+            }
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo '<div class="alert alert-danger">Email invàlid</div>';
+                return;
+            }
+            if ($password !== $password2) {
+                echo '<div class="alert alert-danger">Les contrasenyes no coincideixen</div>';
+                return;
+            }
+            // Comprovar força de la contrasenya (mínim 8, lletres + números)
+            if (strlen($password) < 8 || !preg_match('/[A-Z]/i', $password) || !preg_match('/[0-9]/', $password)) {
+                echo '<div class="alert alert-danger">La contrasenya ha de tenir almenys 8 caràcters i incloure lletres i números</div>';
+                return;
+            }
+
+                // Comprovar si existeix usuari per email
+                try {
+                    $check = $this->db->prepare('SELECT user_id FROM users WHERE email = :email LIMIT 1');
+                    $check->execute([':email' => $email]);
+                    if ($check->fetch()) {
+                        echo '<div class="alert alert-danger">Ja existeix un usuari amb aquest email</div>';
+                        return;
+                    }
+
+                    // Comprovar si existeix usuari per username (evitar duplicats)
+                    $checkUser = $this->db->prepare('SELECT user_id FROM users WHERE username = :username LIMIT 1');
+                    $checkUser->execute([':username' => $username]);
+                    if ($checkUser->fetch()) {
+                        echo '<div class="alert alert-danger">Ja existeix un usuari amb aquest nom d\'usuari</div>';
+                        return;
+                    }
+
+                    // Hashear password
+                    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+                    // Insert into users without dni column (dni does not exist in this schema)
+                    $stmt = $this->db->prepare('INSERT INTO users (username, email, password_hash, active) VALUES (:username, :email, :password_hash, 1)');
+                    $stmt->execute([
+                        ':username' => $username,
+                        ':email' => $email,
+                        ':password_hash' => $hash
+                    ]);
+
+                // Login automàtic després de registrar
+                $userId = $this->db->lastInsertId();
+                session_regenerate_id(true);
+                $_SESSION['user'] = [
+                    'user_id' => $userId,
+                    'username' => $username,
+                    'email' => $email
+                ];
+                $_SESSION['flash_welcome'] = $username;
+                header('Location: /practicas/Pràctica 03 - Paginació/public/index.php?action=menu');
+                exit;
+            } catch (Exception $e) {
+                echo '<div class="alert alert-danger">Error del servidor. Torna-ho a intentar més tard.</div>';
+                echo '<div class="alert alert-warning"><small>Debug: ' . htmlspecialchars($e->getMessage()) . '</small></div>';
+                error_log('Register error: ' . $e->getMessage());
+                return;
+            }
         }
-        return null;
+    }
+
+    /**
+     * Processa el formulari de login
+     * 
+     * Valida les credencials i inicia la sessió si són correctes.
+     * Utilitza prepared statements per prevenir SQL Injection.
+     * 
+     * @return void
+     */
+    public function processLogin()
+    {
+        // Procesamiento del formulario de login
+        // Aseguramos una sesión con cookie de 40 minutos (2400s)
+        if (session_status() === PHP_SESSION_NONE) {
+            ini_set('session.cookie_lifetime', 2400);
+            ini_set('session.gc_maxlifetime', 2400);
+            session_set_cookie_params(2400);
+            session_start();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSubmit'])) {
+            // Validar campos
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+
+            if ($email === '' || $password === '') {
+                echo '<div class="alert alert-danger">ELS CAMPS NO PODEN ESTAR BUITS</div>';
+                return;
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                echo '<div class="alert alert-danger">Email invàlid</div>';
+                return;
+            }
+
+            // La connexió PDO s'ha de passar al constructor i estar en $this->db
+            if (!isset($this->db) || !($this->db instanceof PDO)) {
+                echo '<div class="alert alert-danger">Error de configuració: connexió a la BD no trobada.</div>';
+                return;
+            }
+
+            try {
+                $stmt = $this->db->prepare('SELECT user_id, username, email, password_hash, active FROM users WHERE email = :email LIMIT 1');
+                $stmt->execute([':email' => $email]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$user) {
+                    echo '<div class="alert alert-danger">Credencials incorrectes.</div>';
+                    return;
+                }
+
+                // Determinar quina columna guarda la contrasenya (password_hash o password)
+                $hashColumn = null;
+                if (isset($user['password_hash'])) {
+                    $hashColumn = 'password_hash';
+                } elseif (isset($user['password'])) {
+                    $hashColumn = 'password';
+                }
+
+                if ($hashColumn === null) {
+                    // Mostrar keys per ajudar a depurar (temporal)
+                    $cols = implode(', ', array_keys($user));
+                    echo '<div class="alert alert-danger">Error al verificar la contrasenya: la fila d\'usuari no conté cap columna de contrasenya coneguda. Columnes: ' . htmlspecialchars($cols) . '</div>';
+                    return;
+                }
+
+                // Verificar contrasenya
+                if (!password_verify($password, $user[$hashColumn])) {
+                    echo '<div class="alert alert-danger">Credencials incorrectes.</div>';
+                    return;
+                }
+
+                // Comprovar si el compte està actiu (opcional)
+                if (isset($user['active']) && !$user['active']) {
+                    echo '<div class="alert alert-danger">El compte no està actiu.</div>';
+                    return;
+                }
+
+                // Login correcte: guardar dades en sessió
+                // Regenerar id de sessió per seguretat
+                session_regenerate_id(true);
+                $_SESSION['user'] = [
+                    'user_id' => $user['user_id'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'dni' => $user['dni'] ?? null
+                ];
+
+                // Preparar missatge flash de benvinguda (es mostrarà una sola vegada al header)
+                $_SESSION['flash_welcome'] = $user['username'] ?? ($user['email'] ?? 'Usuari');
+
+                // Redirigir al menú / pàgina principal
+                header('Location: /practicas/Pràctica 03 - Paginació/public/index.php?action=menu');
+                exit;
+            } catch (Exception $e) {
+                // Mostrar missatge genèric per a l'usuari i el missatge d'error real per a debug
+                echo '<div class="alert alert-danger">Error del servidor. Torna a intentar-ho més tard.</div>';
+                // Debug (temporal): mostrar excepció per ajudar a localitzar el problema
+                echo '<div class="alert alert-warning"><small>Debug: ' . htmlspecialchars($e->getMessage()) . '</small></div>';
+                error_log('Login error: ' . $e->getMessage());
+                return;
+            }
+        }
     }
 }
 ?>

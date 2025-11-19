@@ -8,7 +8,7 @@ require_once __DIR__ . '/../entities/Article.php';
  * tota la lògica d'accés a dades relacionada amb la taula 'articles'.
  * Utilitza PDO amb prepared statements per prevenir SQL Injection.
  * 
- * @author Arnau Aumedes
+ * @author Arnau Aumedes Jimenez
  * @version 1.0
  */
 class ArticleDAO extends Article 
@@ -35,24 +35,30 @@ class ArticleDAO extends Article
      * i l'insereix a la taula 'articles' utilitzant prepared statements.
      * 
      * @return int|false ID del nou article creat (lastInsertId) o false en cas d'error
-     * @throws PDOException Si hi ha errors en la inserció a la base de dades
      */
     public function create()
     {
         // Obtenir dades del formulari ($_POST)
         $titol = $_POST['titol'] ?? '';
         $cos = $_POST['cos'] ?? '';
-        $dni = $_POST['dni'] ?? null;
+
+        // Determine current logged user id
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $user_id = $_SESSION['user']['user_id'] ?? null;
+        if ($user_id === null) {
+            // No user logged in: refuse to create
+            throw new Exception('User not authenticated');
+        }
 
         // Crear objecte Article
-        $article = new Article($dni, $titol, $cos);
+        $article = new Article($user_id, $titol, $cos);
         
         // Utilitzar getters per obtenir dades de l'objecte
-        $sql = "INSERT INTO articles (titol, cos, dni) VALUES (:titol, :cos, :dni)";
+        $sql = "INSERT INTO articles (user_id, titol, cos) VALUES (:user_id, :titol, :cos)";
         $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $article->getUserId(), PDO::PARAM_INT);
         $stmt->bindValue(':titol', $article->getTitol(), PDO::PARAM_STR);
         $stmt->bindValue(':cos', $article->getCos(), PDO::PARAM_STR);
-        $stmt->bindValue(':dni', $article->getDni(), PDO::PARAM_STR);
         $stmt->execute();
         
         return $this->db->lastInsertId();
@@ -72,14 +78,16 @@ class ArticleDAO extends Article
         // Obtenir ID del paràmetre URL ($_GET)
         $id = $_GET['id'] ?? '';
         
-        $stmt = $this->db->prepare("SELECT * FROM articles WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT a.*, u.username AS author_username FROM articles a LEFT JOIN users u ON a.user_id = u.user_id WHERE a.id = :id");
         $stmt->execute([':id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($row) {
             // Crear objecte Article
-            $article = new Article($row['dni'], $row['titol'], $row['cos']);
+            $article = new Article($row['user_id'], $row['titol'], $row['cos']);
             $article->setId($row['id']);
+            if (isset($row['data_creacio'])) $article->setDataCreacio($row['data_creacio']);
+            if (isset($row['author_username'])) $article->setAuthorName($row['author_username']);
             return $article;
         }
         return null;
@@ -98,23 +106,28 @@ class ArticleDAO extends Article
     {
         // Obtenir ID de la URL ($_GET) i dades del formulari ($_POST)
         $id = $_GET['id'] ?? '';
-        $dni = $_POST['dni'] ?? '';
         $titol = $_POST['titol'] ?? '';
         $cos = $_POST['cos'] ?? '';
 
-        // Crear objecte Article
-        $article = new Article($dni, $titol, $cos);
-        
-        // Utilitzar getters per accedir a les dades de l'objecte
-        $sql = "UPDATE articles SET titol = :titol, cos = :cos, dni = :dni WHERE id = :id";
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $currentUser = $_SESSION['user']['user_id'] ?? null;
+        if ($currentUser === null) {
+            throw new Exception('User not authenticated');
+        }
+
+        // Crear objecte Article per validar structure
+        $article = new Article($currentUser, $titol, $cos);
+
+        // Actualitzar només si l'usuari és el propietari
+        $sql = "UPDATE articles SET titol = :titol, cos = :cos WHERE id = :id AND user_id = :user_id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':titol' => $article->getTitol(),
             ':cos' => $article->getCos(),
-            ':dni' => $article->getDni(),
-            ':id' => $id
+            ':id' => $id,
+            ':user_id' => $currentUser
         ]);
-        
+
         return $stmt->rowCount();
     }
 
@@ -130,9 +143,13 @@ class ArticleDAO extends Article
     {
         // Obtenir ID del paràmetre URL ($_GET)
         $id = $_GET['id'] ?? '';
-        
-        $stmt = $this->db->prepare("DELETE FROM articles WHERE id = :id");
-        $stmt->execute([':id' => $id]);
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $currentUser = $_SESSION['user']['user_id'] ?? null;
+        if ($currentUser === null) {
+            throw new Exception('User not authenticated');
+        }
+        $stmt = $this->db->prepare("DELETE FROM articles WHERE id = :id AND user_id = :user_id");
+        $stmt->execute([':id' => $id, ':user_id' => $currentUser]);
         return $stmt->rowCount();
     }
 
@@ -147,15 +164,16 @@ class ArticleDAO extends Article
      */
     public function findAll()
     {
-        $stmt = $this->db->prepare("SELECT * FROM articles ORDER BY id ASC");
+        $stmt = $this->db->prepare("SELECT a.*, u.username AS author_username FROM articles a LEFT JOIN users u ON a.user_id = u.user_id ORDER BY a.id ASC");
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         $articles = [];
         foreach ($rows as $row) {
-            $article = new Article($row['dni'], $row['titol'], $row['cos']);
-            // Agregar el ID manualmente ya que no está en el constructor
-            $article->id = $row['id'];
+            $article = new Article($row['user_id'], $row['titol'], $row['cos']);
+            $article->setId($row['id']);
+            if (isset($row['data_creacio'])) $article->setDataCreacio($row['data_creacio']);
+            if (isset($row['author_username'])) $article->setAuthorName($row['author_username']);
             $articles[] = $article;
         }
         
@@ -175,7 +193,7 @@ class ArticleDAO extends Article
 
     public function findPage($limit, $offset)
     {
-        $stmt = $this->db->prepare("SELECT * FROM articles ORDER BY id ASC LIMIT :limit OFFSET :offset");
+        $stmt = $this->db->prepare("SELECT a.*, u.username AS author_username FROM articles a LEFT JOIN users u ON a.user_id = u.user_id ORDER BY a.id ASC LIMIT :limit OFFSET :offset");
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
@@ -183,8 +201,10 @@ class ArticleDAO extends Article
         
         $articles = [];
         foreach ($rows as $row) {
-            $article = new Article($row['dni'], $row['titol'], $row['cos']);
+            $article = new Article($row['user_id'], $row['titol'], $row['cos']);
             $article->setId($row['id']);
+            if (isset($row['data_creacio'])) $article->setDataCreacio($row['data_creacio']);
+            if (isset($row['author_username'])) $article->setAuthorName($row['author_username']);
             $articles[] = $article;
         }
         return $articles;

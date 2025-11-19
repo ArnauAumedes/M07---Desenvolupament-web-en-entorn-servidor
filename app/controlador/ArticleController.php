@@ -10,7 +10,7 @@ require_once __DIR__ . '/../model/database/database.php';
  * Aquesta classe segueix el patró MVC (Model-Vista-Controlador) i actua com a
  * Front Controller, gestionant totes les peticions HTTP relacionades amb articles.
  * 
- * @author Arnau Aumedes
+ * @author Arnau Aumedes Jimenez
  * @version 1.0
  */
 class ArticleController
@@ -54,6 +54,9 @@ class ArticleController
         switch ($action) {
             case 'create':
                 $this->createArticle();
+                break;
+            case 'view':
+                $this->viewArticle();
                 break;
             case 'update':
                 $this->updateArticle();
@@ -196,6 +199,34 @@ class ArticleController
     }
 
     /**
+     * Mostra un article concret (vista single)
+     *
+     * Valida l'ID rebut via GET, demana el DAO i carrega la vista
+     */
+    private function viewArticle()
+    {
+        $article = null;
+        $message = "";
+
+        if (isset($_GET['id']) && !empty($_GET['id'])) {
+            try {
+                $article = $this->articleDAO->findById();
+                if (!$article) {
+                    $message = "No s'ha trobat cap article amb aquest ID";
+                    header("HTTP/1.0 404 Not Found");
+                }
+            } catch (Exception $e) {
+                $message = "Error cercant l'article: " . $e->getMessage();
+            }
+        } else {
+            $message = "ID no proporcionat";
+            header("HTTP/1.0 400 Bad Request");
+        }
+
+        include __DIR__ . '/../vista/singleArticle.php';
+    }
+
+    /**
      * Mostra el menú principal amb la llista de tots els articles
      * 
      * Obté tots els articles de la base de dades i carrega la vista menu.php.
@@ -206,13 +237,13 @@ class ArticleController
     private function showMenu()
     {
         // Obtenir els parametres de paginació
-        $allowed = [1,5,10,20];
-        // Default a 5 si no és vàlid
-        $perPage = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 5;
+        $allowed = [1,6,12,22];
+        // Default a 6 si no és vàlid
+        $perPage = isset($_GET['per_page']) ? (int) $_GET['per_page'] : 6;
         if (!in_array($perPage, $allowed)) {
-            $perPage = 5;
+            $perPage = 6;
             if (isset($_GET['per_page'])) {
-                header("Location: /practicas/Pràctica 03 - Paginació/public/index.php?per_page=5");
+                header("Location: /practicas/Pràctica 03 - Paginació/public/index.php?per_page=6");
             }
         }
 

@@ -19,7 +19,7 @@ class Database {
     /**
      * @var string Nom de la base de dades
      */
-    private $dbname = 'pt03_arnau_aumedes';
+    private $dbname = 'pt04_arnau_aumedes';
     
     /**
      * @var string Nom d'usuari per connectar a la BD
