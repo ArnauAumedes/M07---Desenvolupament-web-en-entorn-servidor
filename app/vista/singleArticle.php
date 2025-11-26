@@ -37,7 +37,7 @@ echo '<script>console.log(' . json_encode(["source" => "singleArticle.php", "tit
 
 <body>
     <header>
-        <?php require_once __DIR__ . '/../globals/header.php'; ?>
+        <?php require_once __DIR__ . '/./globals/header.php'; ?>
     </header>
 
     <div class="container-xl">
@@ -74,7 +74,7 @@ echo '<script>console.log(' . json_encode(["source" => "singleArticle.php", "tit
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <footer>
-        <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+        <?php require_once __DIR__ . '/./globals/footer.php'; ?>
     </footer>
 
 </body>

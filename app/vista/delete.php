@@ -1,3 +1,8 @@
+<!--
+    Delete view
+    Autor: Arnau Aumedes Jimenez
+    Fitxer: app/vista/delete.php
+-->
 <!DOCTYPE html>
 <html lang="ca">
 <head>

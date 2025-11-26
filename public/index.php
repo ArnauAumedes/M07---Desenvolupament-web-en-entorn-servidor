@@ -26,12 +26,6 @@ if ($action === 'register') {
 	exit;	
 }
 
-// Password recovery routes
-if ($action === 'password_request' || $action === 'reset_password') {
-	require_once __DIR__ . '/../app/controlador/passwordController.php';
-	exit;
-}
-
 require_once __DIR__ . '/../app/controlador/ArticleController.php';
 
 $controller = new ArticleController();

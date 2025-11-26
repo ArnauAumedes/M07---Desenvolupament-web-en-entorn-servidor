@@ -620,3 +620,7 @@ table.table .avatar {
   .frontpagearticlefigure { width: 100%; height: auto; }
   .frontpagearticlefigure img.frontpagearticleimg { height: 200px; }
 }
+
+.text-muted { 
+  color: #1AA4D6 !important;
+}

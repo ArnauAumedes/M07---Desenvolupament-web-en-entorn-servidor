@@ -52,8 +52,8 @@
 										class="form-control">
 								</div>
 								<div class="form-group text-center mt-2">
-									<a href="/practicas/Pràctica 03 - Paginació/public/index.php?action=password_request"
-										class="text-muted"><b>He olvidado mi contrasenya</b>
+									<a href="/practicas/Pràctica 03 - Paginació/app/vista/restablecerPassword.php"
+										class="text-muted"><b><u>I Forgot my Password</u></b>
 									</a>
 								</div>
 								<div class="form-group text-center mt-4">
