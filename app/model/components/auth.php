@@ -36,7 +36,7 @@ function getLoggedUserDni(): ?string {
 }
 
 /** Redirige si no está logado */
-function requireLogin(string $redirect = '/practicas/Pràctica 03 - Paginació/public/index.php'): void {
+function requireLogin(string $redirect = '/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php'): void {
     if (!isLoggedIn()) {
         header('Location: ' . $redirect);
         exit;

@@ -20,14 +20,14 @@ CREATE TABLE `articles` (
 
 -- --------------------------------------------------------
 -- Estructura de tabla para la tabla `users`
--- (simple table for authentication; passwords stored as password_hash)
+-- (simple table for authentication; passwords stored as password)
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` INT(11) NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(100) NOT NULL,
   `email` VARCHAR(255) NOT NULL UNIQUE,
-  `password_hash` VARCHAR(255) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`)
@@ -53,7 +53,7 @@ INSERT INTO `articles` (`id`, `user_id`, `titol`, `cos`, `data_creacio`, `data_m
 (14, 100, 'Com crear una API REST amb Laravel', 'Guia pas a pas per construir una API eficient i segura amb aquest framework PHP.', '2025-10-22 15:42:27', '2025-10-22 15:42:27'),
 (15, 100, 'Machine Learning aplicat al màrqueting', 'Casos reals on la IA millora la segmentació i personalització de campanyes.', '2025-10-22 15:42:27', '2025-10-22 15:42:27');
 
-INSERT INTO `users`(`user_id`, `username`, `email`, `password_hash`, `active`, `created_at`) VALUES
+INSERT INTO `users`(`user_id`, `username`, `email`, `password`, `active`, `created_at`) VALUES
 ('100', 'admin', 'admin@admin.com', '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe', 1, NOW()),
 ('101', 'usuario1', 'usuario1@example.com', '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe', 1, NOW()),
 ('102', 'usuario2', 'usuario2@example.com', '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe', 1, NOW()),

@@ -1,3 +1,23 @@
+.form-center-flex select.orderby-select {
+  width: 150px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 4px 8px;
+  font-size: 14px;
+  margin-left: 6px;
+  margin-right: 0;
+  display: inline-block;
+}
+/* Centrado flexible para formularios independientes de Bootstrap */
+.form-center-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 12px auto;
+  flex-wrap: wrap;
+  color: grey !important;
+}
 /*
   style.css
   Autor: Arnau Aumedes Jimenez
@@ -295,13 +315,15 @@ table.table .avatar {
   font-weight: bold;
 }
 /* Ajustos para el selector */
-.paginacion form.form-inline {
+.paginacion form.form-inline-center {
   display: inline-block;
   vertical-align: middle;
   margin-left: 10px;
+  justify-content: center;
+  align-items: center;
 }
 .paginacion label {
-  color: #fff;
+  color: grey !important;
   margin-right: 6px;
 }
 .paginacion select.form-control {
@@ -357,7 +379,7 @@ table.table .avatar {
 
 /* Etiqueta hint-text ajustada */
 .paginacion .hint-text {
-  color: #fff;
+  color: grey !important;
   font-size: 14px;
   margin-right: 6px;
 }

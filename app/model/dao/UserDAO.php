@@ -77,11 +77,11 @@ class UserDAO extends User
                     $hash = password_hash($password, PASSWORD_DEFAULT);
 
                     // Insert into users without dni column (dni does not exist in this schema)
-                    $stmt = $this->db->prepare('INSERT INTO users (username, email, password_hash, active) VALUES (:username, :email, :password_hash, 1)');
+                    $stmt = $this->db->prepare('INSERT INTO users (username, email, password, active) VALUES (:username, :email, :password, 1)');
                     $stmt->execute([
                         ':username' => $username,
                         ':email' => $email,
-                        ':password_hash' => $hash
+                        ':password' => $hash
                     ]);
 
                 // Login automàtic després de registrar
@@ -93,7 +93,7 @@ class UserDAO extends User
                     'email' => $email
                 ];
                 $_SESSION['flash_welcome'] = $username;
-                header('Location: /practicas/Pràctica 03 - Paginació/public/index.php?action=menu');
+                header('Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=menu');
                 exit;
             } catch (Exception $e) {
                 echo '<div class="alert alert-danger">Error del servidor. Torna-ho a intentar més tard.</div>';
@@ -145,7 +145,7 @@ class UserDAO extends User
             }
 
             try {
-                $stmt = $this->db->prepare('SELECT user_id, username, email, password_hash, active FROM users WHERE email = :email LIMIT 1');
+                $stmt = $this->db->prepare('SELECT user_id, username, email, password, active FROM users WHERE email = :email LIMIT 1');
                 $stmt->execute([':email' => $email]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -154,10 +154,10 @@ class UserDAO extends User
                     return;
                 }
 
-                // Determinar quina columna guarda la contrasenya (password_hash o password)
+                // Determinar quina columna guarda la contrasenya (password o password)
                 $hashColumn = null;
-                if (isset($user['password_hash'])) {
-                    $hashColumn = 'password_hash';
+                if (isset($user['password'])) {
+                    $hashColumn = 'password';
                 } elseif (isset($user['password'])) {
                     $hashColumn = 'password';
                 }
@@ -195,7 +195,7 @@ class UserDAO extends User
                 $_SESSION['flash_welcome'] = $user['username'] ?? ($user['email'] ?? 'Usuari');
 
                 // Redirigir al menú / pàgina principal
-                header('Location: /practicas/Pràctica 03 - Paginació/public/index.php?action=menu');
+                header('Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=menu');
                 exit;
             } catch (Exception $e) {
                 // Mostrar missatge genèric per a l'usuari i el missatge d'error real per a debug
@@ -206,6 +206,21 @@ class UserDAO extends User
                 return;
             }
         }
+    }
+
+    public function updatePasswordByEmail($email, $hashedPassword, $trnDate) {
+        $stmt = $this->db->prepare('UPDATE users SET password = :password, trn_date = :trn_date WHERE email = :email');
+        $stmt->execute([
+            ':password' => $hashedPassword,
+            ':trn_date' => $trnDate,
+            ':email' => $email
+        ]);
+    }
+
+    public function getByEmail($email) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
 ?>

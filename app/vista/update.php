@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualitzar Article</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/practicas/Pràctica 03 - Paginació/public/css/style.css">
+    <link rel="stylesheet" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/css/style.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -22,14 +22,14 @@
                 <h3>Buscar Article per ID</h3>
             </div>
             <div class="card-body">
-                <form method="GET" action="/practicas/Pràctica 03 - Paginació/public/index.php">
+                <form method="GET" action="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php">
                     <input type="hidden" name="action" value="update">
                     <div class="form-group">
                         <label for="id">ID de l'article a actualitzar:</label>
                         <input type="number" name="id" id="id" class="form-control" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Cercar Article</button>
-                    <a href="/practicas/Pràctica 03 - Paginació/public/index.php" class="btn btn-secondary">Tornar al menú</a>
+                    <a href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php" class="btn btn-secondary">Tornar al menú</a>
                 </form>
             </div>
         </div>
@@ -46,7 +46,7 @@
                     <h3>Editar Article</h3>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="/practicas/Pràctica 03 - Paginació/public/index.php?action=update&id=<?php echo urlencode($article->getId()); ?>">
+                    <form method="POST" action="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=update&id=<?php echo urlencode($article->getId()); ?>">
                         <div class="form-group">
                             <label for="id_display">ID:</label>
                             <input type="text" id="id_display" class="form-control" value="<?php echo htmlspecialchars($article->getId()); ?>" readonly>
@@ -65,7 +65,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-success">Actualitzar Article</button>
-                        <a href="/practicas/Pràctica 03 - Paginació/public/index.php" class="btn btn-secondary">Cancel·lar</a>
+                        <a href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php" class="btn btn-secondary">Cancel·lar</a>
                     </form>
                 </div>
             </div>

@@ -32,7 +32,7 @@ $username = $user['username'] ?? null;
 <!-- Header fragment: include this inside the <body> of your pages -->
 <nav id="header" class="navbar navbar-expand-sm navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="/practicas/Pràctica 03 - Paginació/public/index.php">Logo</a>
+        <a class="navbar-brand text-white" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php">Logo</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -49,14 +49,14 @@ $username = $user['username'] ?? null;
                         <a class="nav-link text-white" href="#"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white logout-link" href="/practicas/Pràctica 03 - Paginació/public/index.php?action=logout">Logout</a>
+                        <a class="nav-link text-white logout-link" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=logout">Logout</a>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/practicas/Pràctica 03 - Paginació/public/index.php?action=login">Login</a>
+                        <a class="nav-link text-white" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=login">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/practicas/Pràctica 03 - Paginació/public/index.php?action=register">Register</a>
+                        <a class="nav-link text-white" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=register">Register</a>
                     </li>
                 <?php endif; ?>
             </ul>

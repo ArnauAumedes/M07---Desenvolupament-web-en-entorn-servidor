@@ -4,17 +4,17 @@ class User
     public $id;
     private $username;
     private $email;
-    private $password_hash;
+    private $password;
     private $active;
     private $created_at;
     private $updated_at;
     private $last_login;
 
-    public function __construct($username, $email, $password_hash, $active = 1)
+    public function __construct($username, $email, $password, $active = 1)
     {
         $this->username = $username;
         $this->email = $email;
-        $this->password_hash = $password_hash;
+        $this->password = $password;
         $this->active = $active;
     }
 
@@ -33,7 +33,7 @@ class User
     }
     public function getPasswordHash()
     {
-        return $this->password_hash;
+        return $this->password;
     }
     public function isActive()
     {

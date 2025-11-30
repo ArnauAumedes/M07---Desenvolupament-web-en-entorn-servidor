@@ -22,7 +22,7 @@ Aquest README descriu de manera específica què s'ha implementat a la pràctica
 
 Codi rellevant:
 ```php
-// filepath: c:\xampp\htdocs\practicas\Pràctica 03 - Paginació\app\controlador\ArticleController.php
+// filepath: c:\xampp\htdocs\practicas\M07---Desenvolupament-web-en-entorn-servidor\app\controlador\ArticleController.php
 private function showMenu()
 {
     // Obtenir els parametres de paginació
@@ -32,7 +32,7 @@ private function showMenu()
     if (!in_array($perPage, $allowed)) {
         $perPage = 5;
         if (isset($_GET['per_page'])) {
-            header("Location: /practicas/Pràctica 03 - Paginació/public/index.php?per_page=5");
+            header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?per_page=5");
         }
     }
 
@@ -45,7 +45,7 @@ private function showMenu()
         // Ajustar la pàgina actual si excedeix el total de pàgines
         if ($currentPage > $totalPages || $currentPage < 1) {
             if ($currentPage !== 1) {
-                header("Location: /practicas/Pràctica 03 - Paginació/public/index.php?per_page=" . $perPage . "&page=1");
+                header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?per_page=" . $perPage . "&page=1");
             }
             $currentPage = 1; 
         }

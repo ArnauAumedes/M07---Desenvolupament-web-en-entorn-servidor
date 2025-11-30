@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/Pràctica 03 - Paginació/public/css/style.css">
+    <link rel="stylesheet" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/css/style.css">
 </head>
 
 <body>
@@ -33,7 +33,7 @@
                         <div class="login-card p-4">
                             <h4 class="mb-3 text-center">Crear compte</h4>
                             <?php echo $messages ?? ''; ?>
-                            <form method="post" action="/practicas/Pràctica 03 - Paginació/public/index.php?action=register">
+                            <form method="post" action="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=register">
                                 <div class="form-group">
                                     <label for="username">Nom d'usuari</label>
                                     <input id="username" name="username" type="text" class="form-control" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="form-group text-center mt-4">
                                     <button name="btnRegister" type="submit" class="btn btn-success px-4">Registrar</button>
-                                    <a href="/practicas/Pràctica 03 - Paginació/public/index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
+                                    <a href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
                                 </div>
                             </form>
                         </div>
