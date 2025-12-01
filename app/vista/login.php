@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/css/style.css">
+	<link rel="stylesheet" href="/practicas/public/css/style.css">
 </head>
 
 <body>
@@ -40,7 +40,7 @@
 
 							?>
 							<form method="post"
-								action="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=login">
+								action="/practicas/public/index.php?action=login">
 								<div class="form-group">
 									<label for="email">Email</label>
 									<input id="email" name="email" type="text" name="email" class="form-control"
@@ -52,13 +52,13 @@
 										class="form-control">
 								</div>
 								<div class="form-group text-center mt-2">
-									<a href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/app/vista/send-email.php"
+									<a href="/practicas/app/vista/send-email.php"
 										class="text-muted"><b><u>I Forgot my Password</u></b>
 									</a>
 								</div>
 								<div class="form-group text-center mt-4">
 									<button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
-									<a href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php"
+									<a href="/practicas/public/index.php"
 										class="btn btn-outline-secondary ml-2">Cancel·lar</a>
 								</div>
 							</form>

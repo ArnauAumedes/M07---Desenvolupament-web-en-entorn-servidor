@@ -46,7 +46,7 @@ class ForgotPasswordController {
             $key = md5(time()) . substr(md5(uniqid(rand(), 1)), 3, 10);
             $this->passwordResetDao->insert($this->email, $key, $expDate);
             $output = '<p>Please click on the following link to reset your password.</p>';
-            $output .= '<p><a href="http://localhost/practicas/M07---Desenvolupament-web-en-entorn-servidor/app/vista/reset-password.php?key=' . $key . '&email=' . $this->email . '&action=reset" target="_blank">http://localhost/practicas/M07---Desenvolupament-web-en-entorn-servidor/app/vista/reset-password.php?key=' . $key . '&email=' . $this->email . '&action=reset</a></p>';
+            $output .= '<p><a href="http://localhost/practicas/app/vista/reset-password.php?key=' . $key . '&email=' . $this->email . '&action=reset" target="_blank">http://localhost/practicas/app/vista/reset-password.php?key=' . $key . '&email=' . $this->email . '&action=reset</a></p>';
             $body = $output;
             $subject = "Password Recovery";
             $email_to = $this->email;

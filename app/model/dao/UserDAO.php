@@ -93,7 +93,7 @@ class UserDAO extends User
                     'email' => $email
                 ];
                 $_SESSION['flash_welcome'] = $username;
-                header('Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=menu');
+                header('Location: /practicas/public/index.php?action=menu');
                 exit;
             } catch (Exception $e) {
                 echo '<div class="alert alert-danger">Error del servidor. Torna-ho a intentar més tard.</div>';
@@ -195,7 +195,7 @@ class UserDAO extends User
                 $_SESSION['flash_welcome'] = $user['username'] ?? ($user['email'] ?? 'Usuari');
 
                 // Redirigir al menú / pàgina principal
-                header('Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?action=menu');
+                header('Location: /practicas/public/index.php?action=menu');
                 exit;
             } catch (Exception $e) {
                 // Mostrar missatge genèric per a l'usuari i el missatge d'error real per a debug

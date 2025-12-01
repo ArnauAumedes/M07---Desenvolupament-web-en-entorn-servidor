@@ -13,7 +13,7 @@ $controller->handleRequest();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/css/style.css">
+    <link rel="stylesheet" href="/practicas/public/css/style.css">
 </head>
 <body>
     <div class="container-xl">
@@ -43,7 +43,7 @@ $controller->handleRequest();
                                 </div>
                                 <div class="form-group text-center mt-4">
                                     <input type="submit" id="reset" value="Enviar enllaç de recuperació" class="btn btn-primary px-4" />
-                                    <a href="/practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php" class="btn btn-outline-secondary ml-2">Tornar al menú</a>
+                                    <a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Tornar al menú</a>
                                 </div>
                             </form>
                         </div>

@@ -31,7 +31,7 @@ echo '<script>console.log(' . json_encode(["source" => "singleArticle.php", "tit
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/M07---Desenvolupament-web-en-entorn-servidor
+    <link rel="stylesheet" href="/practicas
     /public/css/style.css">
 
 </head>

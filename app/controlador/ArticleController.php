@@ -1,5 +1,5 @@
 <?php
-// filepath: c:\xampp\htdocs\practicas\M07---Desenvolupament-web-en-entorn-servidor\app\controller\ArticleController.php
+// filepath: c:\xampp\htdocs\practicas\app\controller\ArticleController.php
 require_once __DIR__ . '/../model/entities/Article.php';
 require_once __DIR__ . '/../model/dao/ArticleDAO.php';
 require_once __DIR__ . '/../model/database/database.php';
@@ -92,16 +92,16 @@ class ArticleController
 
                 if ($result) {
                     // Redirigir al menú con mensaje de éxito
-                    header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?created=success&id=" . $result);
+                    header("Location: /practicas/public/index.php?created=success&id=" . $result);
                     exit();
                 } else {
                     // Redirigir al menú con mensaje de error
-                    header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?created=error");
+                    header("Location: /practicas/public/index.php?created=error");
                     exit();
                 }
             } catch (Exception $e) {
                 // Redirigir al menú con mensaje de error
-                header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?created=error&msg=" . urlencode($e->getMessage()));
+                header("Location: /practicas/public/index.php?created=error&msg=" . urlencode($e->getMessage()));
                 exit();
             }
         } else {
@@ -134,7 +134,7 @@ class ArticleController
 
                 if ($rowsAffected > 0) {
                     // Redirigir al menú con mensaje de éxito
-                    header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?updated=success");
+                    header("Location: /practicas/public/index.php?updated=success");
                     exit();
                 } else {    
                     $message = "No s'ha pogut actualitzar l'article";
@@ -179,21 +179,21 @@ class ArticleController
 
                 if ($rowsAffected > 0) {
                     // Redirigir al menú con mensaje de éxito
-                    header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?deleted=success&id=" . $id);
+                    header("Location: /practicas/public/index.php?deleted=success&id=" . $id);
                     exit();
                 } else {
                     // Redirigir al menú con mensaje de error
-                    header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?deleted=error");
+                    header("Location: /practicas/public/index.php?deleted=error");
                     exit();
                 }
             } catch (Exception $e) {
                 // Redirigir al menú con mensaje de error
-                header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?deleted=error&msg=" . urlencode($e->getMessage()));
+                header("Location: /practicas/public/index.php?deleted=error&msg=" . urlencode($e->getMessage()));
                 exit();
             }
         } else {
             // Redirigir al menú si no hay ID
-            header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?deleted=noid");
+            header("Location: /practicas/public/index.php?deleted=noid");
             exit();
         }
     }
@@ -243,7 +243,7 @@ class ArticleController
         if (!in_array($perPage, $allowed)) {
             $perPage = 6;
             if (isset($_GET['per_page'])) {
-                header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?per_page=6");
+                header("Location: /practicas/public/index.php?per_page=6");
             }
         }
 
@@ -257,7 +257,7 @@ class ArticleController
             // Ajustar la pàgina actual si excedeix el total de pàgines
             if ($currentPage > $totalPages || $currentPage < 1) {
                 if ($currentPage !== 1) {
-                    header("Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php?per_page=" . $perPage . "&page=1");
+                    header("Location: /practicas/public/index.php?per_page=" . $perPage . "&page=1");
                 }
                 $currentPage = 1; 
             }

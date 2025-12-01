@@ -24,7 +24,7 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 
 // Redirigir a la pàgina pública principal
-header('Location: /practicas/M07---Desenvolupament-web-en-entorn-servidor/public/index.php');
+header('Location: /practicas/public/index.php');
 exit;
 
 ?>
