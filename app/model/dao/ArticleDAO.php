@@ -11,7 +11,7 @@ require_once __DIR__ . '/../entities/Article.php';
  * @author Arnau Aumedes Jimenez
  * @version 1.0
  */
-class ArticleDAO extends Article 
+class ArticleDAO extends Article implements DAO
 {
     /**
      * @var PDO Connexió a la base de dades PDO
@@ -36,31 +36,15 @@ class ArticleDAO extends Article
      * 
      * @return int|false ID del nou article creat (lastInsertId) o false en cas d'error
      */
-    public function create()
+    public function create($article)
     {
-        // Obtenir dades del formulari ($_POST)
-        $titol = $_POST['titol'] ?? '';
-        $cos = $_POST['cos'] ?? '';
-
-        // Determine current logged user id
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $user_id = $_SESSION['user']['user_id'] ?? null;
-        if ($user_id === null) {
-            // No user logged in: refuse to create
-            throw new Exception('User not authenticated');
-        }
-
-        // Crear objecte Article
-        $article = new Article($user_id, $titol, $cos);
-        
-        // Utilitzar getters per obtenir dades de l'objecte
+        // El objeto Article ya contiene todos los datos necesarios
         $sql = "INSERT INTO articles (user_id, titol, cos) VALUES (:user_id, :titol, :cos)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':user_id', $article->getUserId(), PDO::PARAM_INT);
         $stmt->bindValue(':titol', $article->getTitol(), PDO::PARAM_STR);
         $stmt->bindValue(':cos', $article->getCos(), PDO::PARAM_STR);
         $stmt->execute();
-        
         return $this->db->lastInsertId();
     }
 
@@ -73,7 +57,7 @@ class ArticleDAO extends Article
      * @return Article|null Objecte Article si es troba, null si no existeix
      * @throws PDOException Si hi ha errors en la consulta a la base de dades
      */
-    public function findById()
+    public function findById($id)
     {
         // Obtenir ID del paràmetre URL ($_GET)
         $id = $_GET['id'] ?? '';
@@ -102,32 +86,17 @@ class ArticleDAO extends Article
      * @return int Número de files afectades (1 si s'actualitza, 0 si no es troba)
      * @throws PDOException Si hi ha errors en l'actualització a la base de dades
      */
-    public function update()
+    public function update($article)
     {
-        // Obtenir ID de la URL ($_GET) i dades del formulari ($_POST)
-        $id = $_GET['id'] ?? '';
-        $titol = $_POST['titol'] ?? '';
-        $cos = $_POST['cos'] ?? '';
-
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $currentUser = $_SESSION['user']['user_id'] ?? null;
-        if ($currentUser === null) {
-            throw new Exception('User not authenticated');
-        }
-
-        // Crear objecte Article per validar structure
-        $article = new Article($currentUser, $titol, $cos);
-
-        // Actualitzar només si l'usuari és el propietari
+        // El objeto Article ya contiene todos los datos necesarios
         $sql = "UPDATE articles SET titol = :titol, cos = :cos WHERE id = :id AND user_id = :user_id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':titol' => $article->getTitol(),
             ':cos' => $article->getCos(),
-            ':id' => $id,
-            ':user_id' => $currentUser
+            ':id' => $article->getId(),
+            ':user_id' => $article->getUserId()
         ]);
-
         return $stmt->rowCount();
     }
 
@@ -139,17 +108,14 @@ class ArticleDAO extends Article
      * @return int Número de files eliminades (1 si s'elimina, 0 si no es troba)
      * @throws PDOException Si hi ha errors en l'eliminació de la base de dades
      */
-    public function delete()
+    public function delete($article)
     {
-        // Obtenir ID del paràmetre URL ($_GET)
-        $id = $_GET['id'] ?? '';
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $currentUser = $_SESSION['user']['user_id'] ?? null;
-        if ($currentUser === null) {
-            throw new Exception('User not authenticated');
-        }
+        // El objeto Article debe tener el id y el user_id
         $stmt = $this->db->prepare("DELETE FROM articles WHERE id = :id AND user_id = :user_id");
-        $stmt->execute([':id' => $id, ':user_id' => $currentUser]);
+        $stmt->execute([
+            ':id' => $article->getId(),
+            ':user_id' => $article->getUserId()
+        ]);
         return $stmt->rowCount();
     }
 
