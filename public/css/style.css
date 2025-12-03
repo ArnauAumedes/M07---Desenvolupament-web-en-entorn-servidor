@@ -85,6 +85,7 @@ body {
 .main {
   flex: 2;
   margin-top: 56px;
+  margin-left: 10px;
 }
 /* FIN DEL BODY */
 

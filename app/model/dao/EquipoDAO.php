@@ -1,8 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../entities/Equipo.php';
+require_once __DIR__ . '/../dao/DAO.php';
 
-class EquipoDAO implements DAO {
+class EquipoDAO extends Equipo implements DAO {
     private $db;
 
     public function __construct(PDO $db) {

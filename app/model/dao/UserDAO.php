@@ -7,7 +7,6 @@
  */
 require_once __DIR__ . '/../entities/User.php';
 
-
 class UserDAO extends User
 {
     private $db;

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../entities/Article.php';
+require_once __DIR__ . '/../dao/DAO.php';
 
 /**
  * Data Access Object (DAO) per gestionar les operacions de base de dades dels articles

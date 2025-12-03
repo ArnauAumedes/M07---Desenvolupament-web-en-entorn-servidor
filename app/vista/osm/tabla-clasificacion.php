@@ -19,113 +19,12 @@
 
 <?php
 require_once __DIR__ . '/../globals/header.php';
-$equipos = [
-	[
-		'pos' => 1,
-		'club' => 'LIVERPOOL',
-		'usuario' => 'USUARIO1',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
-		'jugados' => 10,
-		'ganados' => 10,
-		'empatados' => 0,
-		'perdidos' => 0,
-		'puntos' => 30,
-		'gf_gc' => '20-2',
-		'rendimiento' => ['V', 'V', 'V', 'V', 'V'],
-		'bg' => '',
-		'trofeo' => true
-	],
-	[
-		'pos' => 2,
-		'club' => 'ARSENAL',
-		'usuario' => 'USUARIO2',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
-		'jugados' => 10,
-		'ganados' => 9,
-		'empatados' => 1,
-		'perdidos' => 0,
-		'puntos' => 28,
-		'gf_gc' => '18-1',
-		'rendimiento' => ['V', 'V', 'V', 'V', 'V'],
-		'bg' => '',
-		'trofeo' => true
-	],
-	[
-		'pos' => 3,
-		'club' => 'TOTTENHAM',
-		'usuario' => 'USUARIO3',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur_F.C._logo.svg',
-		'jugados' => 10,
-		'ganados' => 9,
-		'empatados' => 0,
-		'perdidos' => 1,
-		'puntos' => 27,
-		'gf_gc' => '22-12',
-		'rendimiento' => ['V', 'V', 'V', 'V', 'V'],
-		'bg' => '',
-		'trofeo' => true
-	],
-	[
-		'pos' => 4,
-		'club' => 'MANCHESTER CITY',
-		'usuario' => 'USUARIO4',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
-		'jugados' => 10,
-		'ganados' => 8,
-		'empatados' => 1,
-		'perdidos' => 1,
-		'puntos' => 25,
-		'gf_gc' => '21-4',
-		'rendimiento' => ['V', 'V', 'V', 'V', 'V'],
-		'bg' => '',
-		'trofeo' => true
-	],
-	[
-		'pos' => 5,
-		'club' => 'CHEALSE',
-		'usuario' => 'USUARIO5',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
-		'jugados' => 10,
-		'ganados' => 8,
-		'empatados' => 0,
-		'perdidos' => 2,
-		'puntos' => 24,
-		'gf_gc' => '16-4',
-		'rendimiento' => ['V', 'V', 'V', 'V', 'V'],
-		'bg' => '',
-		'trofeo' => true
-	],
-	[
-		'pos' => 6,
-		'club' => 'MANCHESTER UNITED',
-		'usuario' => 'USUARIO6',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
-		'jugados' => 10,
-		'ganados' => 7,
-		'empatados' => 1,
-		'perdidos' => 2,
-		'puntos' => 22,
-		'gf_gc' => '10-2',
-		'rendimiento' => ['V', 'V', 'V', 'D', 'V'],
-		'bg' => '',
-		'trofeo' => false
-	],
-	[
-		'pos' => 7,
-		'club' => 'LEICHESTER CITY',
-		'usuario' => 'USUARIO7',
-		'escudo' => 'https://upload.wikimedia.org/wikipedia/en/6/63/Leicester_City_crest.svg',
-		'jugados' => 10,
-		'ganados' => 7,
-		'empatados' => 1,
-		'perdidos' => 2,
-		'puntos' => 22,
-		'gf_gc' => '15-6',
-		'rendimiento' => ['E', 'V', 'D', 'D', 'V'],
-		'bg' => '',
-		'trofeo' => false
-	],
-];
+require_once __DIR__ . '/../../model/database/database.php';
+require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
+
+$db = new Database();
+$equipoDAO = new EquipoDAO($db->getConnection());
+$equipos = $equipoDAO->findAll();
 ?>
 <div class="main">
 	<div class="table-responsive">
@@ -145,39 +44,26 @@ $equipos = [
 			</thead>
 			<tbody>
 				<?php foreach ($equipos as $equipo): ?>
-					<tr class="<?= $equipo['bg'] ?>">
+					<tr>
 						<td class="align-middle fs-4 fw-bold">
-							<?= $equipo['pos'] ?>
-							<?php if ($equipo['trofeo']): ?><span class="ms-1">🏆</span><?php endif; ?>
+							<?= htmlspecialchars($equipo->getPos()) ?>
 						</td>
 						<td class="align-middle d-flex align-items-center gap-2">
-							<img src="<?= $equipo['escudo'] ?>" alt="<?= $equipo['club'] ?>"
+							<img src="<?= htmlspecialchars($equipo->getEscudo()) ?>" alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
 								style="height:32px; margin-right:8px;">
 							<div>
-								<span class="fw-bold text-uppercase"><?= $equipo['club'] ?></span><br>
+								<span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
 								<span class="text-muted club-usuario"
-									style="font-size:0.95em;"><?= $equipo['usuario'] ?></span>
+									style="font-size:0.95em;">
+									<?= htmlspecialchars($equipo->getUserId()) ?></span>
 							</div>
 						</td>
-						<td class="text-center align-middle"><?= $equipo['jugados'] ?></td>
-						<td class="text-center align-middle"><?= $equipo['ganados'] ?></td>
-						<td class="text-center align-middle"><?= $equipo['empatados'] ?></td>
-						<td class="text-center align-middle"><?= $equipo['perdidos'] ?></td>
-						<td class="text-center align-middle"><?= $equipo['puntos'] ?></td>
-						<td class="text-center align-middle"><?= $equipo['gf_gc'] ?></td>
-						<td class="text-center align-middle">
-							<?php foreach ($equipo['rendimiento'] as $r): ?>
-								<?php
-								if ($r === 'V') {
-									echo '<span class="badge bg-success mx-1">V</span>';
-								} elseif ($r === 'E') {
-									echo '<span class="badge bg-warning text-dark mx-1">E</span>';
-								} elseif ($r === 'D') {
-									echo '<span class="badge bg-danger mx-1">D</span>';
-								}
-								?>
-							<?php endforeach; ?>
-						</td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getJugados()) ?></td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getGanados()) ?></td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getEmpatados()) ?></td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getPerdidos()) ?></td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getPuntos()) ?></td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getGfGc()) ?></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
