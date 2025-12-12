@@ -11,8 +11,9 @@ class Equipo {
 	private $perdidos;
 	private $puntos;
 	private $gf_gc;
+	private $objetivo;
 
-	public function __construct($id, $pos, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc) {
+	public function __construct($id, $pos, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc, $objetivo = 0) {
 		$this->id = $id;
 		$this->pos = $pos;
 		$this->equip = $equip;
@@ -24,6 +25,7 @@ class Equipo {
 		$this->perdidos = $perdidos;
 		$this->puntos = $puntos;
 		$this->gf_gc = $gf_gc;
+		$this->objetivo = $objetivo;
 	}
 
 	public function getId() { return $this->id; }
@@ -58,4 +60,7 @@ class Equipo {
 
 	public function getGfGc() { return $this->gf_gc; }
 	public function setGfGc($gf_gc) { $this->gf_gc = $gf_gc; }
+
+	public function getObjetivo() { return $this->objetivo; }
+	public function setObjetivo($objetivo) { $this->objetivo = $objetivo; }
 }

@@ -1,0 +1,144 @@
+<?php
+
+require_once __DIR__ . '/../entities/Jugador.php';
+require_once __DIR__ . '/../dao/DAO.php';
+
+class JugadorDAO extends Jugador implements DAO
+{
+    private $db;
+
+    public function __construct(PDO $db)
+    {
+        $this->db = $db;
+    }
+
+    // Crea un nuevo jugador
+    public function create($jugador)
+    {
+        $sql = "INSERT INTO jugadores (nombre_completo, equipo_id, valor, partidos, goles, asistencias) VALUES (:nombre_completo, :equipo_id, :valor, :partidos, :goles, :asistencias)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':nombre_completo', $jugador->getNombreCompleto(), PDO::PARAM_STR);
+        $stmt->bindValue(':equipo_id', $jugador->getEquipoId(), PDO::PARAM_INT);
+        $stmt->bindValue(':valor', $jugador->getValor(), PDO::PARAM_STR);
+        $stmt->bindValue(':partidos', $jugador->getPartidos(), PDO::PARAM_INT);
+        $stmt->bindValue(':goles', $jugador->getGoles(), PDO::PARAM_INT);
+        $stmt->bindValue(':asistencias', $jugador->getAsistencias(), PDO::PARAM_INT);
+        $stmt->execute();
+        return $this->db->lastInsertId();
+    }
+
+    // Actualiza un jugador existente
+    public function update($jugador)
+    {
+        $sql = "UPDATE jugadores SET nombre_completo = :nombre_completo, equipo_id = :equipo_id, valor = :valor, partidos = :partidos, goles = :goles, asistencias = :asistencias WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':nombre_completo', $jugador->getNombreCompleto(), PDO::PARAM_STR);
+        $stmt->bindValue(':equipo_id', $jugador->getEquipoId(), PDO::PARAM_INT);
+        $stmt->bindValue(':valor', $jugador->getValor(), PDO::PARAM_STR);
+        $stmt->bindValue(':partidos', $jugador->getPartidos(), PDO::PARAM_INT);
+        $stmt->bindValue(':goles', $jugador->getGoles(), PDO::PARAM_INT);
+        $stmt->bindValue(':asistencias', $jugador->getAsistencias(), PDO::PARAM_INT);
+        $stmt->bindValue(':id', $jugador->getId(), PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    // Elimina un jugador por id
+    public function delete($id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM jugadores WHERE id = :id");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    // Obtiene todos los jugadores
+    public function findAll()
+    {
+        $stmt = $this->db->prepare("SELECT * FROM jugadores ORDER BY nombre_completo ASC");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugador = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+            $jugadores[] = $jugador;
+        }
+        return $jugadores;
+    }
+
+    // Obtiene un jugador por id
+    public function findById($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM jugadores WHERE id = :id");
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+        }
+        return null;
+    }
+
+    // Obtiene todos los jugadores de un equipo
+    public function findByEquipoId($equipoId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM jugadores WHERE equipo_id = :equipo_id ORDER BY nombre_completo ASC");
+        $stmt->bindValue(':equipo_id', $equipoId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugador = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+            $jugadores[] = $jugador;
+        }
+        return $jugadores;
+    }
+
+    // Calcula el total de goles de un equipo
+    public function getTotalGolesEquipo($equipoId)
+    {
+        $sql = "SELECT SUM(goles) as total_goles FROM jugadores WHERE equipo_id = :equipo_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':equipo_id', $equipoId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['total_goles'] : 0;
+    }
+
+    // Calcula el total de asistencias de un equipo
+    public function getTotalAsistenciasEquipo($equipoId)
+    {
+        $sql = "SELECT SUM(asistencias) as total_asistencias FROM jugadores WHERE equipo_id = :equipo_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':equipo_id', $equipoId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['total_asistencias'] : 0;
+    }
+}
+
+?>
