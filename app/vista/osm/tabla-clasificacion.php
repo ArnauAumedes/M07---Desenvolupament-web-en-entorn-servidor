@@ -39,7 +39,6 @@ $equipos = $equipoDAO->findAll();
 					<th class="text-center align-middle">PERDIDOS</th>
 					<th class="text-center align-middle">PUNTOS</th>
 					<th class="text-center align-middle">GF - GC</th>
-					<th class="text-center align-middle">RENDIMIENTO</th>
 				</tr>
 			</thead>
 			<tbody>
