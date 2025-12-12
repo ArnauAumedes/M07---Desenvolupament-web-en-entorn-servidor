@@ -26,8 +26,8 @@ if ($action === 'register') {
 	exit;	
 }
 
-require_once __DIR__ . '/../app/controlador/ArticleController.php';
+require_once __DIR__ . '/../app/controlador/EquipoController.php';
 
-$controller = new ArticleController();
+$controller = new EquipoController();
 $controller->handleRequest();
 ?>
