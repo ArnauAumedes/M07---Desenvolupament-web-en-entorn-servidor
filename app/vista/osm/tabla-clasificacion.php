@@ -31,14 +31,14 @@ $equipos = $equipoDAO->findAll();
 		<table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
 			<thead class="thead-dark">
 				<tr>
-					<th class="align-middle">POSITION</th>
-					<th class="align-middle">CLUB</th>
-					<th class="text-center align-middle">JUGADOS</th>
-					<th class="text-center align-middle">GANADOS</th>
-					<th class="text-center align-middle">EMPATADOS</th>
-					<th class="text-center align-middle">PERDIDOS</th>
-					<th class="text-center align-middle">PUNTOS</th>
-					<th class="text-center align-middle">GF - GC</th>
+					<th class="align-middle" style="width:8%">POSITION</th>
+					<th class="align-middle" style="width:22%">CLUB</th>
+					<th class="text-center align-middle" style="width:10%">JUGADOS</th>
+					<th class="text-center align-middle" style="width:10%">GANADOS</th>
+					<th class="text-center align-middle" style="width:10%">EMPATADOS</th>
+					<th class="text-center align-middle" style="width:10%">PERDIDOS</th>
+					<th class="text-center align-middle" style="width:10%">PUNTOS</th>
+					<th class="text-center align-middle" style="width:10%">GF - GC</th>
 				</tr>
 			</thead>
 			<tbody>

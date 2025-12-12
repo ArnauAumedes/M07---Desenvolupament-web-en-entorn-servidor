@@ -29,12 +29,12 @@ $equipos = $equipoDAO->findAll();
         <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
             <thead class="thead-dark">
                 <tr>
-                    <th class="align-middle">ENTRENADOR</th>
-                    <th class="align-middle">EQUIPO</th>
-                    <th class="text-center align-middle">OBJETIVO</th>
-                    <th class="text-center align-middle">POSICIÓN</th>
-                    <th class="text-center align-middle">DIFERENCIA</th>
-                    <th class="text-center align-middle">FECHA CREACIÓN</th>
+                    <th class="align-middle" style="width:20%">ENTRENADOR</th>
+                    <th class="align-middle" style="width:22%">EQUIPO</th>
+                    <th class="text-center align-middle" style="width:14%">OBJETIVO</th>
+                    <th class="text-center align-middle" style="width:14%">POSICIÓN</th>
+                    <th class="text-center align-middle" style="width:14%">DIFERENCIA</th>
+                    <th class="text-center align-middle" style="width:16%">FECHA CREACIÓN</th>
                 </tr>
             </thead>
             <tbody>

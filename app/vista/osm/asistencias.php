@@ -29,11 +29,11 @@
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
                     <tr>
-                        <th class="align-middle">NOMBRE</th>
-                        <th class="align-middle">CLUB</th>
-                        <th class="text-center align-middle">PARTIDOS</th>
-                        <th class="text-center align-middle">ASISTENCIAS</th>
-                        <th class="text-center align-middle">ASISTENCIAS/PARTIDO</th>
+                        <th class="align-middle" style="width:20%">NOMBRE</th>
+                        <th class="align-middle" style="width:22%">CLUB</th>
+                        <th class="text-center align-middle" style="width:14%">PARTIDOS</th>
+                        <th class="text-center align-middle" style="width:22%">ASISTENCIAS</th>
+                        <th class="text-center align-middle" style="width:22%">ASISTENCIAS/PARTIDO</th>
                     </tr>
                 </thead>
                 <tbody>
