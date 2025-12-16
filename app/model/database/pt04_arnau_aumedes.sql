@@ -36,7 +36,6 @@ CREATE TABLE
   IF NOT EXISTS `equipos` (
     `id` INT (11) NOT NULL AUTO_INCREMENT,
     `pos` INT (11) NOT NULL,
-    `objetivo` INT (11) NOT NULL DEFAULT 0,
     `equip` VARCHAR(100) NOT NULL,
     `user_id` INT (11) DEFAULT NULL,
     `escudo` VARCHAR(255) DEFAULT NULL,
@@ -44,8 +43,6 @@ CREATE TABLE
     `ganados` INT (11) NOT NULL DEFAULT 0,
     `empatados` INT (11) NOT NULL DEFAULT 0,
     `perdidos` INT (11) NOT NULL DEFAULT 0,
-    `puntos` INT (11) NOT NULL DEFAULT 0,
-    `gf_gc` VARCHAR(20) DEFAULT NULL,
     `rendimiento` DECIMAL(5, 2) DEFAULT NULL,
     `bg` VARCHAR(255) DEFAULT NULL,
     `trofeo` VARCHAR(100) DEFAULT NULL,
