@@ -53,7 +53,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($equipos as $equipo): ?>
+                    <?php foreach ($equipos as $index => $equipo): ?>
                         <tr>
                             <td class="align-middle fw-bold">
                                 <?php
@@ -68,8 +68,15 @@
                                 <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
                             </td>
                             <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
-                            <td class="text-center align-middle">-</td>
-                            <td class="text-center align-middle">-</td>
+                            <td class="text-center align-middle"><?= $index + 1 ?></td>
+                            <?php
+                                $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $index + 1);
+                            ?>
+                            <td class="text-center align-middle">
+                                <span class="fw-bold <?= $dif['color'] ?>">
+                                    <?= $dif['simbolo'] . $dif['valor'] ?>
+                                </span>
+                            </td>
                             <td class="text-center align-middle">
                                 <?= htmlspecialchars($user['created_at'] ?? '-') ?>
                             </td>

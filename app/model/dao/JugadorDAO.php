@@ -7,12 +7,20 @@ class JugadorDAO extends Jugador implements DAO
 {
     private $db;
 
+    /**
+     * Constructor de JugadorDAO
+     * @param PDO $db Instancia de la conexión PDO
+     */
     public function __construct(PDO $db)
     {
         $this->db = $db;
     }
 
-    // Crea un nuevo jugador
+    /**
+     * Crea un nuevo jugador en la base de datos
+     * @param Jugador $jugador Instancia del jugador a crear
+     * @return int ID del nuevo jugador insertado
+     */
     public function create($jugador)
     {
         $sql = "INSERT INTO jugadores (nombre_completo, equipo_id, valor, partidos, goles, asistencias) VALUES (:nombre_completo, :equipo_id, :valor, :partidos, :goles, :asistencias)";
@@ -27,7 +35,11 @@ class JugadorDAO extends Jugador implements DAO
         return $this->db->lastInsertId();
     }
 
-    // Actualiza un jugador existente
+    /**
+     * Actualiza un jugador existente en la base de datos
+     * @param Jugador $jugador Instancia del jugador a actualizar
+     * @return int Número de filas afectadas
+     */
     public function update($jugador)
     {
         $sql = "UPDATE jugadores SET nombre_completo = :nombre_completo, equipo_id = :equipo_id, valor = :valor, partidos = :partidos, goles = :goles, asistencias = :asistencias WHERE id = :id";
@@ -43,7 +55,11 @@ class JugadorDAO extends Jugador implements DAO
         return $stmt->rowCount();
     }
 
-    // Elimina un jugador por id
+    /**
+     * Elimina un jugador por su ID
+     * @param int $id ID del jugador a eliminar
+     * @return int Número de filas afectadas
+     */
     public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM jugadores WHERE id = :id");
@@ -52,7 +68,10 @@ class JugadorDAO extends Jugador implements DAO
         return $stmt->rowCount();
     }
 
-    // Obtiene todos los jugadores
+    /**
+     * Obtiene todos los jugadores de la base de datos
+     * @return Jugador[] Array de instancias de Jugador
+     */
     public function findAll()
     {
         $stmt = $this->db->prepare("SELECT * FROM jugadores ORDER BY nombre_completo ASC");
@@ -74,7 +93,11 @@ class JugadorDAO extends Jugador implements DAO
         return $jugadores;
     }
 
-    // Obtiene un jugador por id
+    /**
+     * Obtiene un jugador por su ID
+     * @param int $id ID del jugador
+     * @return Jugador|null Instancia de Jugador o null si no existe
+     */
     public function findById($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM jugadores WHERE id = :id");
@@ -95,7 +118,11 @@ class JugadorDAO extends Jugador implements DAO
         return null;
     }
 
-    // Obtiene todos los jugadores de un equipo
+    /**
+     * Obtiene todos los jugadores de un equipo
+     * @param int $equipoId ID del equipo
+     * @return Jugador[] Array de instancias de Jugador
+     */
     public function findByEquipoId($equipoId)
     {
         $stmt = $this->db->prepare("SELECT * FROM jugadores WHERE equipo_id = :equipo_id ORDER BY nombre_completo ASC");
@@ -118,7 +145,11 @@ class JugadorDAO extends Jugador implements DAO
         return $jugadores;
     }
 
-    // Calcula el total de goles de un equipo
+    /**
+     * Calcula el total de goles de un equipo
+     * @param int $equipoId ID del equipo
+     * @return int Total de goles del equipo
+     */
     public function getTotalGolesEquipo($equipoId)
     {
         $sql = "SELECT SUM(goles) as total_goles FROM jugadores WHERE equipo_id = :equipo_id";
@@ -129,7 +160,11 @@ class JugadorDAO extends Jugador implements DAO
         return $row ? (int) $row['total_goles'] : 0;
     }
 
-    // Calcula el total de asistencias de un equipo
+    /**
+     * Calcula el total de asistencias de un equipo
+     * @param int $equipoId ID del equipo
+     * @return int Total de asistencias del equipo
+     */
     public function getTotalAsistenciasEquipo($equipoId)
     {
         $sql = "SELECT SUM(asistencias) as total_asistencias FROM jugadores WHERE equipo_id = :equipo_id";
@@ -140,7 +175,13 @@ class JugadorDAO extends Jugador implements DAO
         return $row ? (int) $row['total_asistencias'] : 0;
     }
 
-    // Calcula la media de un atributo por partido para un jugador
+    /**
+     * Calcula la media de un atributo (goles o asistencias) por partido para un jugador
+     * @param int $jugadorId ID del jugador
+     * @param string $atributo 'goles' o 'asistencias'
+     * @return float Media del atributo por partido
+     * @throws InvalidArgumentException Si el atributo no es válido
+     */
     public function getMediaPorPartidoJugador($jugadorId, $atributo)
     {
         $validAttributes = ['goles', 'asistencias'];
@@ -160,6 +201,11 @@ class JugadorDAO extends Jugador implements DAO
         return 0;
     }
 
+    /**
+     * Calcula la suma de goles y asistencias de un jugador
+     * @param int $jugadorId ID del jugador
+     * @return int Suma de goles y asistencias
+     */
     public function getSumaGolesAsistencias($jugadorId)
     {
         $sql = "SELECT goles, asistencias FROM jugadores WHERE id = :jugador_id";
@@ -174,12 +220,13 @@ class JugadorDAO extends Jugador implements DAO
         return 0;
     }
 
+
     /**
      * Ordena un array de jugadores según un valor calculado por callback o método.
-     * @param array $jugadores Array de jugadores a ordenar
+     * @param Jugador[] $jugadores Array de jugadores a ordenar
      * @param callable $valueCallback Callback que recibe el jugador y devuelve el valor para ordenar
      * @param string $order 'desc' para descendente, 'asc' para ascendente
-     * @return array Array ordenado
+     * @return Jugador[] Array ordenado
      */
     public function ordenarPorValor(array $jugadores, callable $valueCallback, string $order = 'desc')
     {
