@@ -137,11 +137,47 @@ class EquipoDAO extends Equipo implements DAO
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            $ganados = (int)$row['ganados'];
-            $empatados = (int)$row['empatados'];
+            $ganados = (int) $row['ganados'];
+            $empatados = (int) $row['empatados'];
             return ($ganados * 3) + ($empatados * 1);
         }
         return 0;
+    }
+
+    /**
+     * Ordena un array de objetos (equipos o jugadores) según un valor calculado por callback o método.
+     * @param array $items Array de objetos a ordenar
+     * @param callable $valueCallback Callback que recibe el objeto y devuelve el valor para ordenar
+     * @param string $order 'desc' para descendente, 'asc' para ascendente
+     * @return array Array ordenado
+     */
+    public function ordenarPorValor(array $items, callable $valueCallback, string $order = 'desc')
+    {
+        usort($items, function ($a, $b) use ($valueCallback, $order) {
+            $valorA = $valueCallback($a);
+            $valorB = $valueCallback($b);
+            if ($order === 'desc') {
+                return $valorB <=> $valorA;
+            } else {
+                return $valorA <=> $valorB;
+            }
+        });
+        return $items;
+    }
+
+    /**
+     * Devuelve la cantidad de jugadores de un equipo
+     * @param int $equipoId
+     * @return int
+     */
+    public function getCantidadJugadores($equipoId)
+    {
+        $sql = "SELECT COUNT(*) as cantidad FROM jugadores WHERE equipo_id = :equipo_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':equipo_id', $equipoId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['cantidad'] : 0;
     }
 }
 

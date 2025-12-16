@@ -18,11 +18,25 @@
     require_once __DIR__ . '/../../model/database/database.php';
     require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
     require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-
+    
+    /**
+     * Definir variables i ordenar la taula de pichichis per majors golejadors
+     * @var Database $db Instancia de la base de dades
+     * @var JugadorDAO $jugadorDAO Instancia del DAO de jugadors
+     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
+     * @var array $jugadores Llista de jugadors
+     */
     $db = new Database();
     $jugadorDAO = new JugadorDAO($db->getConnection());
     $equipoDAO = new EquipoDAO($db->getConnection());
     $jugadores = $jugadorDAO->findAll();
+    $jugadores = $jugadorDAO->ordenarPorValor(
+        $jugadores,
+        function ($jugador) {
+            return $jugador->getGoles();
+        },
+        'desc'
+    );
     ?>
     <div class="main">
         <div class="table-responsive">
