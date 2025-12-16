@@ -6,7 +6,7 @@ require_once __DIR__ . '/../dao/DAO.php';
 class EquipoDAO extends Equipo implements DAO
 {
     private $db;
-    
+
     /**
      * Constructor de EquipoDAO
      * @param PDO $db Instancia de la conexión PDO
@@ -225,13 +225,13 @@ class EquipoDAO extends Equipo implements DAO
             return [
                 'valor' => $diferencia,
                 'simbolo' => '+',
-                'color' => 'text-success'
+                'color' => '#11461D'
             ];
         } elseif ($diferencia < 0) {
             return [
                 'valor' => abs($diferencia),
                 'simbolo' => '-',
-                'color' => 'text-danger'
+                'color' => '#75151E'
             ];
         } else {
             return [

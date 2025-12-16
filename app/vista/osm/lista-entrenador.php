@@ -73,7 +73,7 @@
                                 $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $index + 1);
                             ?>
                             <td class="text-center align-middle">
-                                <span class="fw-bold <?= $dif['color'] ?>">
+                                <span class="fw-bold" style="color: <?= htmlspecialchars($dif['color']) ?>;">
                                     <?= $dif['simbolo'] . $dif['valor'] ?>
                                 </span>
                             </td>
