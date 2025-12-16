@@ -7,12 +7,20 @@ class EquipoDAO extends Equipo implements DAO
 {
     private $db;
 
+    /**
+     * Constructor de EquipoDAO
+     * @param PDO $db Instancia de la conexión PDO
+     */
     public function __construct(PDO $db)
     {
         $this->db = $db;
     }
 
-    // Crea un nuevo equipo
+    /**
+     * Crea un nuevo equipo en la base de datos
+     * @param Equipo $equipo Instancia del equipo a crear
+     * @return int ID del nuevo equipo insertado
+     */
     public function create($equipo)
     {
         $sql = "INSERT INTO equipos (equip, user_id, escudo, jugados, ganados, empatados, perdidos, objetivo) VALUES (:equip, :user_id, :escudo, :jugados, :ganados, :empatados, :perdidos, :objetivo)";
@@ -29,7 +37,11 @@ class EquipoDAO extends Equipo implements DAO
         return $this->db->lastInsertId();
     }
 
-    // Actualiza un equipo existente
+    /**
+     * Actualiza un equipo existente en la base de datos
+     * @param Equipo $equipo Instancia del equipo a actualizar
+     * @return int Número de filas afectadas
+     */
     public function update($equipo)
     {
         $sql = "UPDATE equipos SET equip = :equip, user_id = :user_id, escudo = :escudo, jugados = :jugados, ganados = :ganados, empatados = :empatados, perdidos = :perdidos, objetivo = :objetivo WHERE id = :id";
@@ -47,7 +59,11 @@ class EquipoDAO extends Equipo implements DAO
         return $stmt->rowCount();
     }
 
-    // Elimina un equipo por id
+    /**
+     * Elimina un equipo por su ID
+     * @param int $id ID del equipo a eliminar
+     * @return int Número de filas afectadas
+     */
     public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM equipos WHERE id = :id");
@@ -56,7 +72,10 @@ class EquipoDAO extends Equipo implements DAO
         return $stmt->rowCount();
     }
 
-    // Obtiene todos los equipos
+    /**
+     * Obtiene todos los equipos de la base de datos
+     * @return Equipo[] Array de instancias de Equipo
+     */
     public function findAll()
     {
         $stmt = $this->db->prepare("SELECT * FROM equipos");
@@ -80,7 +99,11 @@ class EquipoDAO extends Equipo implements DAO
         return $equipos;
     }
 
-    // Obtiene un equipo por id
+    /**
+     * Obtiene un equipo por su ID
+     * @param int $id ID del equipo
+     * @return Equipo|null Instancia de Equipo o null si no existe
+     */
     public function findById($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM equipos WHERE id = :id");
@@ -103,7 +126,11 @@ class EquipoDAO extends Equipo implements DAO
         return null;
     }
 
-    // Calcula el valor total del equipo sumando el valor de sus jugadores
+    /**
+     * Funcio per obtenir el valor total dels jugadors d'un equip
+     * @param mixed $equipoId ID de l'equip
+     * @return float|int Valor total dels jugadors de l'equip
+     */
     public function getValorEquipo($equipoId)
     {
         $sql = "SELECT SUM(valor) as valor_total FROM jugadores WHERE equipo_id = :equipo_id";
@@ -114,7 +141,11 @@ class EquipoDAO extends Equipo implements DAO
         return $row ? (float) $row['valor_total'] : 0;
     }
 
-    // Calcula la media del valor de los jugadores de un equipo
+    /**
+     * Funcio per obtenir la mitja del valor dels jugadors d'un equip
+     * @param mixed $equipoId ID de l'equip
+     * @return float|int Mitja del valor dels jugadors de l'equip
+     */
     public function getMediaValorJugadores($equipoId)
     {
         $sql = "SELECT AVG(valor) as valor_media FROM jugadores WHERE equipo_id = :equipo_id";
@@ -137,11 +168,78 @@ class EquipoDAO extends Equipo implements DAO
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            $ganados = (int)$row['ganados'];
-            $empatados = (int)$row['empatados'];
+            $ganados = (int) $row['ganados'];
+            $empatados = (int) $row['empatados'];
             return ($ganados * 3) + ($empatados * 1);
         }
         return 0;
+    }
+
+    /**
+     * Ordena un array de objetos (equipos o jugadores) según un valor calculado por callback o método.
+     * @param array $items Array de objetos a ordenar
+     * @param callable $valueCallback Callback que recibe el objeto y devuelve el valor para ordenar
+     * @param string $order 'desc' para descendente, 'asc' para ascendente
+     * @return array Array ordenado
+     */
+    public function ordenarPorValor(array $items, callable $valueCallback, string $order = 'desc')
+    {
+        usort($items, function ($a, $b) use ($valueCallback, $order) {
+            $valorA = $valueCallback($a);
+            $valorB = $valueCallback($b);
+            if ($order === 'desc') {
+                return $valorB <=> $valorA;
+            } else {
+                return $valorA <=> $valorB;
+            }
+        });
+        return $items;
+    }
+
+    /**
+     * Devuelve la cantidad de jugadores de un equipo
+     * @param int $equipoId
+     * @return int
+     */
+    public function getCantidadJugadores($equipoId)
+    {
+        $sql = "SELECT COUNT(*) as cantidad FROM jugadores WHERE equipo_id = :equipo_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':equipo_id', $equipoId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['cantidad'] : 0;
+    }
+
+    /**
+     * Calcula la diferencia entre el objetivo y la posición actual de un equipo.
+     * Devuelve un array con el valor, el símbolo y la clase de color.
+     * @param int $objetivo
+     * @param int $posicionActual
+     * @return array ['valor' => int, 'simbolo' => string, 'color' => string]
+     */
+    public function getDiferenciaObjetivoPosicion($objetivo, $posicionActual)
+    {
+        $diferencia = $objetivo - $posicionActual;
+        if ($diferencia > 0) {
+            return [
+                'valor' => $diferencia,
+                'simbolo' => '+',
+                'color' => '#11461D'
+            ];
+        } elseif ($diferencia < 0) {
+            return [
+                'valor' => abs($diferencia),
+                'simbolo' => '-',
+                'color' => '#75151E'
+            ];
+        } else {
+            return [
+                'valor' => 0,
+                'simbolo' => '',
+                'color' => 'text-secondary'
+            ];
+        }
     }
 }
 

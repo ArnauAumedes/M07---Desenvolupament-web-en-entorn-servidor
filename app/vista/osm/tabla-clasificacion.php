@@ -22,15 +22,22 @@ require_once __DIR__ . '/../globals/header.php';
 require_once __DIR__ . '/../../model/database/database.php';
 require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
 
+/**
+ * Definir variables i ordenar la taula de classificació per puntuatge 
+ * @var Database $db Instancia de la base de dades
+ * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
+ * @var array $equipos Llista d'equips
+ */
 $db = new Database();
 $equipoDAO = new EquipoDAO($db->getConnection());
 $equipos = $equipoDAO->findAll();
-// Ordenar equipos por puntos de mayor a menor
-usort($equipos, function($a, $b) use ($equipoDAO) {
-	$puntosA = $equipoDAO->getPuntos($a->getId());
-	$puntosB = $equipoDAO->getPuntos($b->getId());
-	return $puntosB <=> $puntosA;
-});
+$equipos = $equipoDAO->ordenarPorValor(
+	$equipos,
+	function ($equipo) use ($equipoDAO) {
+		return $equipoDAO->getPuntos($equipo->getId());
+	},
+);
+
 ?>
 <div class="main">
 	<div class="table-responsive">
@@ -65,7 +72,8 @@ usort($equipos, function($a, $b) use ($equipoDAO) {
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getGanados()) ?></td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getEmpatados()) ?></td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getPerdidos()) ?></td>
-						<td class="text-center align-middle"><?= htmlspecialchars($equipoDAO->getPuntos($equipo->getId())) ?></td>
+						<td class="text-center align-middle">
+							<?= htmlspecialchars($equipoDAO->getPuntos($equipo->getId())) ?></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

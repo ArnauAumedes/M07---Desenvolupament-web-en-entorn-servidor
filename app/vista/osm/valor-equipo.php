@@ -18,15 +18,22 @@ require_once __DIR__ . '/../../model/database/database.php';
 require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
 
+/**
+ * Definir variables i ordenar la taula de valor per valor d'equip
+ * @var Database $db Instancia de la base de dades
+ * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
+ * @var array $equipos Llista d'equips
+ */
 $db = new Database();
 $equipoDAO = new EquipoDAO($db->getConnection());
-$jugadorDAO = new JugadorDAO($db->getConnection());
 $equipos = $equipoDAO->findAll();
-usort($equipos, function($a, $b) use ($equipoDAO) {
-	$valorA = $equipoDAO->getValorEquipo($a->getId());
-	$valorB = $equipoDAO->getValorEquipo($b->getId());
-	return $valorB <=> $valorA;
-});
+$equipos = $equipoDAO->ordenarPorValor(
+	$equipos,
+	function ($equipo) use ($equipoDAO) {
+		return $equipoDAO->getValorEquipo($equipo->getId());
+	},
+);
+
 ?>
 <div class="main">
     <div class="table-responsive">
@@ -45,8 +52,7 @@ usort($equipos, function($a, $b) use ($equipoDAO) {
                     <?php
                         $equipoId = $equipo->getId();
                         $valorTotal = $equipoDAO->getValorEquipo($equipoId);
-                        $jugadores = $jugadorDAO->findByEquipoId($equipoId);
-                        $cantidadJugadores = count($jugadores);
+                        $cantidadJugadores = $equipoDAO->getCantidadJugadores($equipoId);
                         $valorPromedio = $cantidadJugadores > 0 ? $equipoDAO->getMediaValorJugadores($equipoId) : 0;
                     ?>
                     <tr>
