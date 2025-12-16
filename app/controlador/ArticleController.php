@@ -1,6 +1,7 @@
 <?php
 // filepath: c:\xampp\htdocs\practicas\app\controller\ArticleController.php
 require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../model/dao/ArticleDAO.php';
 
 /**
  * Controlador principal per gestionar les operacions CRUD d'articles

@@ -25,6 +25,12 @@ require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
 $db = new Database();
 $equipoDAO = new EquipoDAO($db->getConnection());
 $equipos = $equipoDAO->findAll();
+// Ordenar equipos por puntos de mayor a menor
+usort($equipos, function($a, $b) use ($equipoDAO) {
+	$puntosA = $equipoDAO->getPuntos($a->getId());
+	$puntosB = $equipoDAO->getPuntos($b->getId());
+	return $puntosB <=> $puntosA;
+});
 ?>
 <div class="main">
 	<div class="table-responsive">
@@ -38,22 +44,20 @@ $equipos = $equipoDAO->findAll();
 					<th class="text-center align-middle" style="width:10%">EMPATADOS</th>
 					<th class="text-center align-middle" style="width:10%">PERDIDOS</th>
 					<th class="text-center align-middle" style="width:10%">PUNTOS</th>
-					<th class="text-center align-middle" style="width:10%">GF - GC</th>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($equipos as $equipo): ?>
+				<?php foreach ($equipos as $index => $equipo): ?>
 					<tr>
 						<td class="align-middle fs-4 fw-bold">
-							<?= htmlspecialchars($equipo->getPos()) ?>
+							<?= $index + 1 ?>
 						</td>
 						<td class="align-middle d-flex align-items-center gap-2">
-							<img src="<?= htmlspecialchars($equipo->getEscudo()) ?>" alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
-								style="height:32px; margin-right:8px;">
+							<img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
+								alt="<?= htmlspecialchars($equipo->getEquip()) ?>" style="height:32px; margin-right:8px;">
 							<div>
 								<span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
-								<span class="text-muted club-usuario"
-									style="font-size:0.95em;">
+								<span class="text-muted club-usuario" style="font-size:0.95em;">
 									<?= htmlspecialchars($equipo->getUserId()) ?></span>
 							</div>
 						</td>
@@ -61,8 +65,7 @@ $equipos = $equipoDAO->findAll();
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getGanados()) ?></td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getEmpatados()) ?></td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getPerdidos()) ?></td>
-						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getPuntos()) ?></td>
-						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getGfGc()) ?></td>
+						<td class="text-center align-middle"><?= htmlspecialchars($equipoDAO->getPuntos($equipo->getId())) ?></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

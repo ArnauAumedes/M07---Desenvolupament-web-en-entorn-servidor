@@ -47,7 +47,6 @@ class EquipoController
 				if ($user_id === null) {
 					throw new Exception('User not authenticated');
 				}
-				$pos = $_POST['pos'] ?? 0;
 				$equip = $_POST['equip'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
 				$jugados = $_POST['jugados'] ?? 0;
@@ -56,7 +55,7 @@ class EquipoController
 				$perdidos = $_POST['perdidos'] ?? 0;
 				$puntos = $_POST['puntos'] ?? 0;
 				$gf_gc = $_POST['gf_gc'] ?? '';
-				$equipo = new Equipo(null, $pos, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
+				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
 				$result = $this->equipoDAO->create($equipo);
 				if ($result) {
 					header("Location: /practicas/public/index.php?created=success&id=" . $result);
@@ -86,7 +85,6 @@ class EquipoController
 					throw new Exception('User not authenticated');
 				}
 				$id = $_POST['id'] ?? '';
-				$pos = $_POST['pos'] ?? 0;
 				$equip = $_POST['equip'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
 				$jugados = $_POST['jugados'] ?? 0;
@@ -95,7 +93,7 @@ class EquipoController
 				$perdidos = $_POST['perdidos'] ?? 0;
 				$puntos = $_POST['puntos'] ?? 0;
 				$gf_gc = $_POST['gf_gc'] ?? '';
-				$equipo = new Equipo($id, $pos, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
+				$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
 				$rowsAffected = $this->equipoDAO->update($equipo);
 				if ($rowsAffected > 0) {
 					header("Location: /practicas/public/index.php?updated=success");
@@ -166,13 +164,28 @@ class EquipoController
 
 	private function listEquipos()
 	{
+		require_once __DIR__ . '/../model/dao/UserDAO.php';
 		try {
-			$equipos = $this->equipoDAO->findAll();
+			$equiposRaw = $this->equipoDAO->findAll();
+			$userDAO = new UserDAO($this->db);
+			$equipos = [];
+			foreach ($equiposRaw as $equipo) {
+				$user = $userDAO->getById($equipo->getUserId());
+				$nombreEntrenador = $user ? $user['username'] : 'Desconocido';
+				$fechaCreacion = $user ? $user['created_at'] : '';
+				$diferencia = $equipo->getObjetivo();
+				$equipos[] = [
+					'nombreEntrenador' => $nombreEntrenador,
+					'equipo' => $equipo,
+					'fechaCreacion' => $fechaCreacion,
+					'diferencia' => $diferencia
+				];
+			}
 		} catch (Exception $e) {
 			$equipos = [];
 			$message = "Error obtenint equips: " . $e->getMessage();
 		}
-		include __DIR__ . '/../vista/listEquipos.php';
+		include __DIR__ . '/../vista/osm/tabla-clasificacion.php';
 	}
 }
 ?>

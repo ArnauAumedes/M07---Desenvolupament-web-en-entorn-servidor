@@ -1,7 +1,6 @@
 <?php
 class Equipo {
 	private $id;
-	private $pos;
 	private $equip;
 	private $user_id;
 	private $escudo;
@@ -9,30 +8,23 @@ class Equipo {
 	private $ganados;
 	private $empatados;
 	private $perdidos;
-	private $puntos;
-	private $gf_gc;
 	private $objetivo;
 
-	public function __construct($id, $pos, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc, $objetivo = 0) {
-		$this->id = $id;
-		$this->pos = $pos;
-		$this->equip = $equip;
-		$this->user_id = $user_id;
-		$this->escudo = $escudo;
-		$this->jugados = $jugados;
-		$this->ganados = $ganados;
-		$this->empatados = $empatados;
-		$this->perdidos = $perdidos;
-		$this->puntos = $puntos;
-		$this->gf_gc = $gf_gc;
-		$this->objetivo = $objetivo;
-	}
+	   public function __construct($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo = 0) {
+		   $this->id = $id;
+		   $this->equip = $equip;
+		   $this->user_id = $user_id;
+		   $this->escudo = $escudo;
+		   $this->jugados = $jugados;
+		   $this->ganados = $ganados;
+		   $this->empatados = $empatados;
+		   $this->perdidos = $perdidos;
+		   $this->objetivo = $objetivo;
+	   }
 
 	public function getId() { return $this->id; }
 	public function setId($id) { $this->id = $id; }
 
-	public function getPos() { return $this->pos; }
-	public function setPos($pos) { $this->pos = $pos; }
 
 	public function getEquip() { return $this->equip; }
 	public function setEquip($equip) { $this->equip = $equip; }
@@ -55,11 +47,7 @@ class Equipo {
 	public function getPerdidos() { return $this->perdidos; }
 	public function setPerdidos($perdidos) { $this->perdidos = $perdidos; }
 
-	public function getPuntos() { return $this->puntos; }
-	public function setPuntos($puntos) { $this->puntos = $puntos; }
-
-	public function getGfGc() { return $this->gf_gc; }
-	public function setGfGc($gf_gc) { $this->gf_gc = $gf_gc; }
+	// ...existing code...
 
 	public function getObjetivo() { return $this->objetivo; }
 	public function setObjetivo($objetivo) { $this->objetivo = $objetivo; }

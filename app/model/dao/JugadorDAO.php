@@ -139,6 +139,40 @@ class JugadorDAO extends Jugador implements DAO
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['total_asistencias'] : 0;
     }
+
+    // Calcula la media de un atributo por partido para un jugador
+    public function getMediaPorPartidoJugador($jugadorId, $atributo)
+    {
+        $validAttributes = ['goles', 'asistencias'];
+        if (!in_array($atributo, $validAttributes)) {
+            throw new InvalidArgumentException("Atributo no válido para calcular la media: " . $atributo);
+        }
+
+        $sql = "SELECT partidos, $atributo FROM jugadores WHERE id = :jugador_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':jugador_id', $jugadorId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row && $row['partidos'] > 0) {
+            return $row[$atributo] / $row['partidos'];
+        }
+        return 0;
+    }
+
+    public function getSumaGolesAsistencias($jugadorId)
+    {
+        $sql = "SELECT goles, asistencias FROM jugadores WHERE id = :jugador_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':jugador_id', $jugadorId, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return $row['goles'] + $row['asistencias'];
+        }
+        return 0;
+    }
 }
 
 ?>

@@ -22,6 +22,11 @@ $db = new Database();
 $equipoDAO = new EquipoDAO($db->getConnection());
 $jugadorDAO = new JugadorDAO($db->getConnection());
 $equipos = $equipoDAO->findAll();
+usort($equipos, function($a, $b) use ($equipoDAO) {
+	$valorA = $equipoDAO->getValorEquipo($a->getId());
+	$valorB = $equipoDAO->getValorEquipo($b->getId());
+	return $valorB <=> $valorA;
+});
 ?>
 <div class="main">
     <div class="table-responsive">
@@ -36,7 +41,7 @@ $equipos = $equipoDAO->findAll();
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($equipos as $equipo): ?>
+                <?php foreach ($equipos as $index => $equipo): ?>
                     <?php
                         $equipoId = $equipo->getId();
                         $valorTotal = $equipoDAO->getValorEquipo($equipoId);
@@ -46,7 +51,7 @@ $equipos = $equipoDAO->findAll();
                     ?>
                     <tr>
                         <td class="align-middle fs-4 fw-bold">
-                            <?= htmlspecialchars($equipo->getPos()) ?>
+                            <?= $index + 1 ?>
                         </td>
                         <td class="align-middle d-flex align-items-center gap-2">
                             <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>" alt="<?= htmlspecialchars($equipo->getEquip()) ?>"

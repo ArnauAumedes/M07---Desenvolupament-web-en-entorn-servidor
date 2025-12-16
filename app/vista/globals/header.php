@@ -48,10 +48,10 @@ $username = $user['username'] ?? null;
                     CLASIFICACION</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/lista-entrenador.php">LISTA DE ENTRENADOR</a>
+                <a class="nav-link" href="/practicas/app/vista/osm/valor-equipo.php">VALOR DE EQUIPO</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/valor-equipo.php">VALOR DE EQUIPO</a>
+                <a class="nav-link" href="/practicas/app/vista/osm/lista-entrenador.php">LISTA DE ENTRENADOR</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/practicas/app/vista/osm/pichichis.php">PICHICHIS</a>

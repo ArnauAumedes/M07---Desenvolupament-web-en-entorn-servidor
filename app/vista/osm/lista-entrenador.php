@@ -22,6 +22,11 @@ $db = (new Database())->getConnection();
 $equipoDAO = new EquipoDAO($db);
 $userDAO = new UserDAO($db);
 $equipos = $equipoDAO->findAll();
+usort($equipos, function($a, $b) use ($equipoDAO) {
+	$puntosA = $equipoDAO->getPuntos($a->getId());
+	$puntosB = $equipoDAO->getPuntos($b->getId());
+	return $puntosB <=> $puntosA;
+});
 
 ?>
 <div class="main">
@@ -52,19 +57,8 @@ $equipos = $equipoDAO->findAll();
                             <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
                         </td>
                         <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
-                        <td class="text-center align-middle"><?= htmlspecialchars($equipo->getPos()) ?></td>
-                        <td class="text-center align-middle">
-                            <?php
-                            $diferencia = $equipo->getObjetivo() - $equipo->getPos();
-                            if ($diferencia > 0) {
-                                echo '<span style="color:green">+' . $diferencia . '</span>';
-                            } elseif ($diferencia < 0) {
-                                echo '<span style="color:red">' . $diferencia . '</span>';
-                            } else {
-                                echo $diferencia;
-                            }
-                            ?>
-                        </td>
+                        <td class="text-center align-middle">-</td>
+                        <td class="text-center align-middle">-</td>
                         <td class="text-center align-middle">
                             <?= htmlspecialchars($user['created_at'] ?? '-') ?>
                         </td>
