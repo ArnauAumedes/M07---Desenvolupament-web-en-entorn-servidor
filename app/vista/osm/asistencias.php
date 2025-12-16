@@ -19,11 +19,26 @@
     require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
     require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
 
+    /**
+     * Definir variables i ordenar la taula d'assistencias per majors assistents
+     * @var Database $db Instancia de la base de dades
+     * @var JugadorDAO $jugadorDAO Instancia del DAO de jugadors
+     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
+     * @var array $jugadores Llista de jugadors
+     */
     $db = new Database();
     $jugadorDAO = new JugadorDAO($db->getConnection());
     $equipoDAO = new EquipoDAO($db->getConnection());
     $jugadores = $jugadorDAO->findAll();
+    $jugadores = $jugadorDAO->ordenarPorValor(
+        $jugadores,
+        function ($jugador) {
+            return $jugador->getAsistencias();
+        },
+        'desc'
+    );
     ?>
+    
     <div class="main">
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
@@ -37,7 +52,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($jugadores as $jugador): ?>
+                    <?php foreach ($jugadores as $index => $jugador): ?>
                         <?php
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
