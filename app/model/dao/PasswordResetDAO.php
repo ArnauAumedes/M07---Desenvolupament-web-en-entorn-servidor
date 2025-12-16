@@ -2,7 +2,7 @@
 // model/dao/PasswordResetDAO.php
 require_once __DIR__ . '/../database/database.php';
 
-class PasswordResetDAO {
+class PasswordResetDAO  {
     private $db;
 
     public function __construct($db) {

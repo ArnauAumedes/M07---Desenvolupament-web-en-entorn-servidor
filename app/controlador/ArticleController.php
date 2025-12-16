@@ -1,8 +1,7 @@
 <?php
 // filepath: c:\xampp\htdocs\practicas\app\controller\ArticleController.php
-require_once __DIR__ . '/../model/entities/Article.php';
-require_once __DIR__ . '/../model/dao/ArticleDAO.php';
 require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../model/dao/ArticleDAO.php';
 
 /**
  * Controlador principal per gestionar les operacions CRUD d'articles
@@ -13,7 +12,7 @@ require_once __DIR__ . '/../model/database/database.php';
  * @author Arnau Aumedes Jimenez
  * @version 1.0
  */
-class ArticleController
+class ArticleController extends ArticleDAO
 {
     /**
      * @var ArticleDAO Objecte d'accés a dades per a articles
@@ -87,25 +86,28 @@ class ArticleController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                // El DAO s'encarrega d'obtenir les dades de $_POST
-                $result = $this->articleDAO->create();
+                if (session_status() === PHP_SESSION_NONE) session_start();
+                $user_id = $_SESSION['user']['user_id'] ?? null;
+                if ($user_id === null) {
+                    throw new Exception('User not authenticated');
+                }
+                $titol = $_POST['titol'] ?? '';
+                $cos = $_POST['cos'] ?? '';
+                $article = new Article($user_id, $titol, $cos);
+                $result = $this->articleDAO->create($article);
 
                 if ($result) {
-                    // Redirigir al menú con mensaje de éxito
                     header("Location: /practicas/public/index.php?created=success&id=" . $result);
                     exit();
                 } else {
-                    // Redirigir al menú con mensaje de error
                     header("Location: /practicas/public/index.php?created=error");
                     exit();
                 }
             } catch (Exception $e) {
-                // Redirigir al menú con mensaje de error
                 header("Location: /practicas/public/index.php?created=error&msg=" . urlencode($e->getMessage()));
                 exit();
             }
         } else {
-            // Mostrar formulari de creació
             include __DIR__ . '/../vista/create.php';
         }
     }
@@ -129,11 +131,19 @@ class ArticleController
         // Si és POST, actualitzar
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                // El DAO s'encarrega d'obtenir les dades de $_POST i $_GET
-                $rowsAffected = $this->articleDAO->update();
+                if (session_status() === PHP_SESSION_NONE) session_start();
+                $user_id = $_SESSION['user']['user_id'] ?? null;
+                if ($user_id === null) {
+                    throw new Exception('User not authenticated');
+                }
+                $id = $_POST['id'] ?? '';
+                $titol = $_POST['titol'] ?? '';
+                $cos = $_POST['cos'] ?? '';
+                $article = new Article($user_id, $titol, $cos);
+                $article->setId($id);
+                $rowsAffected = $this->articleDAO->update($article);
 
                 if ($rowsAffected > 0) {
-                    // Redirigir al menú con mensaje de éxito
                     header("Location: /practicas/public/index.php?updated=success");
                     exit();
                 } else {    
@@ -147,7 +157,7 @@ class ArticleController
         // Si hi ha ID, buscar l'article per mostrar-lo
         if (isset($_GET['id']) && !empty($_GET['id'])) {
             try {
-                $article = $this->articleDAO->findById();
+                $article = $this->articleDAO->findById($_GET['id']);
                 if (!$article) {
                     $message = "No s'ha trobat cap article amb aquest ID";
                 }
@@ -156,7 +166,6 @@ class ArticleController
             }
         }
 
-        // Carregar vista
         include __DIR__ . '/../vista/update.php';
     }
 
@@ -173,26 +182,28 @@ class ArticleController
     {
         if (isset($_GET['id']) && !empty($_GET['id'])) {
             try {
+                if (session_status() === PHP_SESSION_NONE) session_start();
+                $user_id = $_SESSION['user']['user_id'] ?? null;
+                if ($user_id === null) {
+                    throw new Exception('User not authenticated');
+                }
                 $id = $_GET['id'];
-                // El DAO s'encarrega d'obtenir l'ID de $_GET
-                $rowsAffected = $this->articleDAO->delete();
+                $article = new Article($user_id, '', '');
+                $article->setId($id);
+                $rowsAffected = $this->articleDAO->delete($article);
 
                 if ($rowsAffected > 0) {
-                    // Redirigir al menú con mensaje de éxito
                     header("Location: /practicas/public/index.php?deleted=success&id=" . $id);
                     exit();
                 } else {
-                    // Redirigir al menú con mensaje de error
                     header("Location: /practicas/public/index.php?deleted=error");
                     exit();
                 }
             } catch (Exception $e) {
-                // Redirigir al menú con mensaje de error
                 header("Location: /practicas/public/index.php?deleted=error&msg=" . urlencode($e->getMessage()));
                 exit();
             }
         } else {
-            // Redirigir al menú si no hay ID
             header("Location: /practicas/public/index.php?deleted=noid");
             exit();
         }
@@ -210,7 +221,7 @@ class ArticleController
 
         if (isset($_GET['id']) && !empty($_GET['id'])) {
             try {
-                $article = $this->articleDAO->findById();
+                $article = $this->articleDAO->findById($_GET['id']);
                 if (!$article) {
                     $message = "No s'ha trobat cap article amb aquest ID";
                     header("HTTP/1.0 404 Not Found");

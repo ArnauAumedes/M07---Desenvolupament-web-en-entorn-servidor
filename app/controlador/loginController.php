@@ -19,18 +19,51 @@ try {
     $pdo = null;
 }
 
+
 if ($pdo instanceof PDO) {
     $userDAO = new UserDAO($pdo);
+    if (session_status() === PHP_SESSION_NONE) {
+        ini_set('session.cookie_lifetime', 2400);
+        ini_set('session.gc_maxlifetime', 2400);
+        session_set_cookie_params(2400);
+        session_start();
+    }
 
-    // Capturem qualsevol output generat pel model per mostrar-lo dins la vista
-    ob_start();
-    $userDAO->processLogin();
-    $messages = ob_get_clean();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSubmit'])) {
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        if ($email === '' || $password === '') {
+            $messages = '<div class="alert alert-danger">ELS CAMPS NO PODEN ESTAR BUITS</div>';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $messages = '<div class="alert alert-danger">Email invàlid</div>';
+        } else {
+            $user = $userDAO->getByEmail($email);
+            if (!$user) {
+                $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
+            } elseif (!isset($user['password']) || !password_verify($password, $user['password'])) {
+                $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
+            } elseif (isset($user['active']) && !$user['active']) {
+                $messages = '<div class="alert alert-danger">El compte no està actiu.</div>';
+            } else {
+                // Login correcte: guardar dades en sessió
+                session_regenerate_id(true);
+                $_SESSION['user'] = [
+                    'user_id' => $user['user_id'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'dni' => $user['dni'] ?? null
+                ];
+                $_SESSION['flash_welcome'] = $user['username'] ?? ($user['email'] ?? 'Usuari');
+                header('Location: /practicas/public/index.php?action=menu');
+                exit;
+            }
+        }
+    }
 } else {
     $messages = '<div class="alert alert-danger">Error de connexió a la base de dades.</div>';
 }
 
-// Finalment incloem la vista (la vista mostrarà $messages si cal)
 require_once __DIR__ . '/../vista/login.php';
 
 

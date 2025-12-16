@@ -1,9 +1,11 @@
 <head>
-    <style>
-        #footer {
-            background-color: #435d7d;
-        }
-    </style>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Footer</title>
+        <link rel="stylesheet" href="/practicas/public/css/style.css">
+    </head> 
 </head>
 
 <div id="footer" class="container-fluid footer-dark">
@@ -44,7 +46,8 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-12 text-center copyright">© 2021 Copyright: <a href="https://github.com/ArnauAumedes">a.aumedes@sapalomera.cat</a></div>
+            <div class="col-md-12 text-center copyright">© 2021 Copyright: <a
+                    href="https://github.com/ArnauAumedes">a.aumedes@sapalomera.cat</a></div>
         </div>
     </div>
 </div>
