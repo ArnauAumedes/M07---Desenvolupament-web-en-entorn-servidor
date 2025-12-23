@@ -48,14 +48,25 @@ class EquipoController
 					throw new Exception('User not authenticated');
 				}
 				$equip = $_POST['equip'] ?? '';
+				$objetivo = $_POST['objetivo'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
-				$jugados = $_POST['jugados'] ?? 0;
-				$ganados = $_POST['ganados'] ?? 0;
-				$empatados = $_POST['empatados'] ?? 0;
-				$perdidos = $_POST['perdidos'] ?? 0;
-				$puntos = $_POST['puntos'] ?? 0;
-				$gf_gc = $_POST['gf_gc'] ?? '';
-				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
+				$jugados = (int)($_POST['jugados'] ?? 0);
+				$ganados = (int)($_POST['ganados'] ?? 0);
+				$empatados = (int)($_POST['empatados'] ?? 0);
+				$perdidos = (int)($_POST['perdidos'] ?? 0);
+				if (($ganados + $empatados + $perdidos) !== $jugados) {
+					$error_partidos = 'La suma de partidos ganados, empatados y perdidos debe ser igual a los partidos jugados (' . $jugados . ').';
+					include __DIR__ . '/../vista/create.php';
+					return;
+				}
+				// Validación de objetivo
+				$totalEquipos = $this->equipoDAO->countAll();
+				if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
+					$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
+					include __DIR__ . '/../vista/create.php';
+					return;
+				}
+				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 				$result = $this->equipoDAO->create($equipo);
 				if ($result) {
 					header("Location: /practicas/public/index.php?created=success&id=" . $result);
@@ -69,7 +80,7 @@ class EquipoController
 				exit();
 			}
 		} else {
-			include __DIR__ . '/../vista/createEquipo.php';
+			include __DIR__ . '/../vista/create.php';
 		}
 	}
 
@@ -77,6 +88,7 @@ class EquipoController
 	{
 		$equipo = null;
 		$message = "";
+		$error_partidos = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
 				if (session_status() === PHP_SESSION_NONE) session_start();
@@ -86,20 +98,29 @@ class EquipoController
 				}
 				$id = $_POST['id'] ?? '';
 				$equip = $_POST['equip'] ?? '';
+				$objetivo = $_POST['objetivo'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
-				$jugados = $_POST['jugados'] ?? 0;
-				$ganados = $_POST['ganados'] ?? 0;
-				$empatados = $_POST['empatados'] ?? 0;
-				$perdidos = $_POST['perdidos'] ?? 0;
-				$puntos = $_POST['puntos'] ?? 0;
-				$gf_gc = $_POST['gf_gc'] ?? '';
-				$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
-				$rowsAffected = $this->equipoDAO->update($equipo);
-				if ($rowsAffected > 0) {
-					header("Location: /practicas/public/index.php?updated=success");
-					exit();
+				$jugados = (int)($_POST['jugados'] ?? 0);
+				$ganados = (int)($_POST['ganados'] ?? 0);
+				$empatados = (int)($_POST['empatados'] ?? 0);
+				$perdidos = (int)($_POST['perdidos'] ?? 0);
+				if (($ganados + $empatados + $perdidos) !== $jugados) {
+					$error_partidos = 'La suma de partidos ganados, empatados y perdidos debe ser igual a los partidos jugados (' . $jugados . ').';
 				} else {
-					$message = "No s'ha pogut actualitzar l'equip";
+					// Validación de objetivo
+					$totalEquipos = $this->equipoDAO->countAll();
+					if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
+						$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
+					} else {
+						$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
+						$rowsAffected = $this->equipoDAO->update($equipo);
+						if ($rowsAffected > 0) {
+							header("Location: /practicas/public/index.php?updated=success");
+							exit();
+						} else {
+							$message = "No s'ha pogut actualitzar l'equip";
+						}
+					}
 				}
 			} catch (Exception $e) {
 				$message = "Error: " . $e->getMessage();
@@ -115,7 +136,7 @@ class EquipoController
 				$message = "Error cercant l'equip: " . $e->getMessage();
 			}
 		}
-		include __DIR__ . '/../vista/updateEquipo.php';
+		include __DIR__ . '/../vista/update.php';
 	}
 
 	private function deleteEquipo()
@@ -136,8 +157,7 @@ class EquipoController
 				exit();
 			}
 		} else {
-			header("Location: /practicas/public/index.php?deleted=noid");
-			exit();
+			include __DIR__ . '/../vista/delete.php';
 		}
 	}
 
@@ -159,7 +179,7 @@ class EquipoController
 			$message = "ID no proporcionat";
 			header("HTTP/1.0 400 Bad Request");
 		}
-		include __DIR__ . '/../vista/singleEquipo.php';
+		include __DIR__ . '/../vista/single.php';
 	}
 
 	private function listEquipos()

@@ -18,7 +18,7 @@
     require_once __DIR__ . '/../../model/database/database.php';
     require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
     require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-    
+
     /**
      * Definir variables i ordenar la taula de pichichis per majors golejadors
      * @var Database $db Instancia de la base de dades

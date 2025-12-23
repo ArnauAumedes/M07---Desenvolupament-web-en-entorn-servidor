@@ -16,20 +16,63 @@
 
 <body>
     <div class="container mt-5">
-        <h1>Crear Nou Article</h1>
-        <form method="POST" action="/practicas/public/index.php?action=create">
-            <!-- Creator assigned automatically from logged-in user -->
+        <?php
+        require_once __DIR__ . '/../model/database/database.php';
+        require_once __DIR__ . '/../model/dao/EquipoDAO.php';
+        $db = new Database();
+        $equipoDAO = new EquipoDAO($db->getConnection());
+        $minJugados = $equipoDAO->getMinJugados();
+        $maxJugados = $equipoDAO->getMaxJugados();
+        ?>
+        <form method="POST" action="/practicas/public/index.php?action=create" class="form-create">
+            <h1>Crear Nuevo Equipo</h1>
+            <?php if (!empty($error_partidos)): ?>
+                <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error_partidos); ?></div>
+            <?php endif; ?>
             <div class="form-group">
-                <label for="titol">Títol:</label>
-                <input type="text" name="titol" id="titol" class="form-control" required>
+                <label for="equip">Nombre del equipo:</label>
+                <input type="text" name="equip" id="equip" class="form-control" required
+                    value="<?php echo isset($_POST['equip']) ? htmlspecialchars($_POST['equip']) : ''; ?>">
             </div>
             <div class="form-group">
-                <label for="cos">Cos:</label>
-                <textarea name="cos" id="cos" class="form-control" rows="5" required></textarea>
+                <label for="objetivo">Objetivo:</label>
+                <input type="text" name="objetivo" id="objetivo" class="form-control" required
+                    value="<?php echo isset($_POST['objetivo']) ? htmlspecialchars($_POST['objetivo']) : ''; ?>">
             </div>
-            <button type="submit" class="btn btn-primary">Crear Article</button>
-            <a href="/practicas/public/index.php" class="btn btn-secondary">Tornar al
-                menú</a>
+            <div class="form-group">
+                <label for="escudo">Escudo (URL de imagen):</label>
+                <input type="text" name="escudo" id="escudo" class="form-control" required
+                    value="<?php echo isset($_POST['escudo']) ? htmlspecialchars($_POST['escudo']) : ''; ?>">
+            </div>
+            <div class="form-group">
+                <label for="jugados">Partidos jugados:</label>
+                <input type="number" name="jugados" id="jugados" class="form-control" min="0"
+                    max="<?php echo $maxJugados; ?>"
+                    value="<?php echo isset($_POST['jugados']) ? htmlspecialchars($_POST['jugados']) : $minJugados; ?>"
+                    required>
+                <small class="form-text text-muted">Máximo permitido: <?php echo $maxJugados; ?></small>
+            </div>
+            <div class="form-group">
+                <label for="ganados">Partidos ganados:</label>
+                <input type="number" name="ganados" id="ganados" class="form-control" min="0"
+                    value="<?php echo isset($_POST['ganados']) ? htmlspecialchars($_POST['ganados']) : 0; ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="empatados">Partidos empatados:</label>
+                <input type="number" name="empatados" id="empatados" class="form-control" min="0"
+                    value="<?php echo isset($_POST['empatados']) ? htmlspecialchars($_POST['empatados']) : 0; ?>"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="perdidos">Partidos perdidos:</label>
+                <input type="number" name="perdidos" id="perdidos" class="form-control" min="0"
+                    value="<?php echo isset($_POST['perdidos']) ? htmlspecialchars($_POST['perdidos']) : 0; ?>"
+                    required>
+            </div>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">Crear Equipo</button>
+                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
+            </div>
         </form>
     </div>
 </body>

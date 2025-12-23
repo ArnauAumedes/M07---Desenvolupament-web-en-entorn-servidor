@@ -16,6 +16,12 @@
   align-items: center;
   position: fixed;
   background-color: #22223b;
+  z-index: 1050;
+}
+/* CRUD Buttons container: ensure header stays above */
+.crud-buttons-container {
+  position: relative;
+  z-index: 100;
 }
 
 .container-fluid {
@@ -85,8 +91,8 @@ body {
 .main {
   flex: 2;
   margin-top: 56px;
-  margin-left: 10px;
 }
+
 /* FIN DEL BODY */
 
 /* FOOTER */
@@ -148,3 +154,58 @@ body {
   color: rgba(255, 255, 255, 0.65);
 }
 /* FIN DEL FOOTER */
+
+
+/* FORMULARIO CREAR EQUIPO */
+.form-create {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(34,34,59,0.08);
+  padding: 32px 28px 24px 28px;
+  max-width: 480px;
+  margin: 0 auto 32px auto;
+}
+.form-create h1 {
+  color: #22223b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.form-create .form-group label {
+  font-weight: 600;
+  color: #22223b;
+}
+.form-create .form-control {
+  border-radius: 6px;
+  border: 1px solid #e0e0e7;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+.form-create .btn-primary {
+  background: #22223b;
+  border: none;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 6px;
+  margin-right: 8px;
+}
+.form-create .btn-primary:hover {
+  background: #4a4e69;
+}
+.form-create .btn-secondary {
+  background: #f3f3f7;
+  color: #22223b;
+  border: none;
+  font-weight: 600;
+  padding: 8px 24px;
+  border-radius: 6px;
+}
+.form-create .btn-secondary:hover {
+  background: #e0e0e7;
+}
+.form-create .form-text {
+  color: #566787;
+  font-size: 0.95em;
+}
+/* FIN FORMULARIO CREAR EQUIPO */

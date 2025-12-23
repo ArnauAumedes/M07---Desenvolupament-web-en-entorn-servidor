@@ -14,18 +14,19 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Eliminar Article</h1>
-    
-        <form method="GET" action="/practicas/public/index.php">
+        <form method="GET" action="/practicas/public/index.php" class="form-create">
+            <h1>Eliminar Equipo</h1>
             <input type="hidden" name="action" value="delete">
             <div class="form-group">
-                <label for="id">ID de l'article a eliminar:</label>
+                <label for="id">ID del equipo a eliminar:</label>
                 <input type="number" name="id" id="id" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Estàs segur que vols eliminar aquest article?')">
-                Eliminar Article
-            </button>
-            <a href="/practicas/public/index.php" class="btn btn-secondary">Tornar al menú</a>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro que quieres eliminar este equipo?')">
+                    Eliminar Equipo
+                </button>
+                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
+            </div>
         </form>
     </div>
 </body>

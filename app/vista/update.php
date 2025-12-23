@@ -5,6 +5,7 @@
 -->
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,64 +13,91 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/practicas/public/css/style.css">
 </head>
+
 <body>
     <div class="container mt-5">
-        <h1>Actualitzar Article</h1>
-
+        <?php
+        require_once __DIR__ . '/../model/database/database.php';
+        require_once __DIR__ . '/../model/dao/EquipoDAO.php';
+        $db = new Database();
+        $equipoDAO = new EquipoDAO($db->getConnection());
+        $minJugados = $equipoDAO->getMinJugados();
+        $maxJugados = $equipoDAO->getMaxJugados();
+        ?>
         <!-- Formulario de búsqueda por ID (siempre visible) -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3>Buscar Article per ID</h3>
+        <form method="GET" action="/practicas/public/index.php" class="form-create mb-4">
+            <h1>Actualizar Equipo</h1>
+            <input type="hidden" name="action" value="update">
+            <div class="form-group">
+                <label for="id">ID del equipo a actualizar:</label>
+                <input type="number" name="id" id="id" class="form-control"
+                    value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>" required>
             </div>
-            <div class="card-body">
-                <form method="GET" action="/practicas/public/index.php">
-                    <input type="hidden" name="action" value="update">
-                    <div class="form-group">
-                        <label for="id">ID de l'article a actualitzar:</label>
-                        <input type="number" name="id" id="id" class="form-control" value="<?php echo htmlspecialchars($_GET['id'] ?? ''); ?>" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Cercar Article</button>
-                    <a href="/practicas/public/index.php" class="btn btn-secondary">Tornar al menú</a>
-                </form>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">Buscar Equipo</button>
+                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
-        </div>
+        </form>
 
-        <!-- Missatge  -->
-        <?php if (isset($message) && !empty($message)): ?>
-            <div class="alert alert-warning"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
-    
-        <!-- Formulari d'actualització (només es mostra si s'ha trobat l'article) -->
-        <?php if (isset($article) && $article): ?>
-            <div class="card">
-                <div class="card-header">
-                    <h3>Editar Article</h3>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="/practicas/public/index.php?action=update&id=<?php echo urlencode($article->getId()); ?>">
-                        <div class="form-group">
-                            <label for="id_display">ID:</label>
-                            <input type="text" id="id_display" class="form-control" value="<?php echo htmlspecialchars($article->getId()); ?>" readonly>
-                        </div>
-
-                        <!-- Article author is assigned automatically; cannot be edited here -->
-                        
-                        <div class="form-group">
-                            <label for="titol">Títol:</label>
-                            <input type="text" name="titol" id="titol" class="form-control" value="<?php echo htmlspecialchars($article->getTitol()); ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cos">Cos:</label>
-                            <textarea name="cos" id="cos" class="form-control" rows="5" required><?php echo htmlspecialchars($article->getCos()); ?></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-success">Actualitzar Article</button>
-                        <a href="/practicas/public/index.php" class="btn btn-secondary">Cancel·lar</a>
-                    </form>
-                </div>
+        <!-- Formulario de actualización (visible solo si $equipo está definido) -->
+        <?php if (isset($equipo)): ?>
+        <form method="POST" action="/practicas/public/index.php?action=update&id=<?php echo urlencode($equipo->getId()); ?>" class="form-create">
+            <h1>Editar Equipo</h1>
+            <?php if (!empty($error_partidos)): ?>
+                <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error_partidos); ?></div>
+            <?php endif; ?>
+            <div class="form-group">
+                <label for="id_display">ID:</label>
+                <input type="text" id="id_display" class="form-control"
+                    value="<?php echo htmlspecialchars($equipo->getId()); ?>" readonly>
             </div>
+            <div class="form-group">
+                <label for="equip">Nombre del equipo:</label>
+                <input type="text" name="equip" id="equip" class="form-control" required
+                    value="<?php echo isset($_POST['equip']) ? htmlspecialchars($_POST['equip']) : htmlspecialchars($equipo->getEquip()); ?>">
+            </div>
+            <div class="form-group">
+                <label for="objetivo">Objetivo:</label>
+                <input type="text" name="objetivo" id="objetivo" class="form-control" required
+                    value="<?php echo isset($_POST['objetivo']) ? htmlspecialchars($_POST['objetivo']) : htmlspecialchars($equipo->getObjetivo()); ?>">
+            </div>
+            <div class="form-group">
+                <label for="escudo">Escudo (URL de imagen):</label>
+                <input type="text" name="escudo" id="escudo" class="form-control" required
+                    value="<?php echo isset($_POST['escudo']) ? htmlspecialchars($_POST['escudo']) : htmlspecialchars($equipo->getEscudo()); ?>">
+            </div>
+            <div class="form-group">
+                <label for="jugados">Partidos jugados:</label>
+                <input type="number" name="jugados" id="jugados" class="form-control" min="0"
+                    max="<?php echo $maxJugados; ?>"
+                    value="<?php echo isset($_POST['jugados']) ? htmlspecialchars($_POST['jugados']) : htmlspecialchars($equipo->getJugados()); ?>"
+                    required>
+                <small class="form-text text-muted">Máximo permitido: <?php echo $maxJugados; ?></small>
+            </div>
+            <div class="form-group">
+                <label for="ganados">Partidos ganados:</label>
+                <input type="number" name="ganados" id="ganados" class="form-control" min="0"
+                    value="<?php echo isset($_POST['ganados']) ? htmlspecialchars($_POST['ganados']) : htmlspecialchars($equipo->getGanados()); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="empatados">Partidos empatados:</label>
+                <input type="number" name="empatados" id="empatados" class="form-control" min="0"
+                    value="<?php echo isset($_POST['empatados']) ? htmlspecialchars($_POST['empatados']) : htmlspecialchars($equipo->getEmpatados()); ?>"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="perdidos">Partidos perdidos:</label>
+                <input type="number" name="perdidos" id="perdidos" class="form-control" min="0"
+                    value="<?php echo isset($_POST['perdidos']) ? htmlspecialchars($_POST['perdidos']) : htmlspecialchars($equipo->getPerdidos()); ?>"
+                    required>
+            </div>
+            <div class="d-flex justify-content-center mt-3" style="gap: 0.5rem;">
+                <button type="submit" class="btn btn-primary">Actualizar Equipo</button>
+                <a href="/practicas/public/index.php" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
         <?php endif; ?>
     </div>
 </body>
+
 </html>
