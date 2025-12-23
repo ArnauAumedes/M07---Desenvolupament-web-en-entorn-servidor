@@ -241,6 +241,44 @@ class EquipoDAO extends Equipo implements DAO
             ];
         }
     }
+
+    /**
+     * Obtiene el valor mínimo de partidos jugados en la tabla equipos
+     * @return int Valor mínimo de jugados
+     */
+    public function getMinJugados()
+    {
+        $sql = "SELECT MIN(jugados) as min_jugados FROM equipos";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['min_jugados'] : 0;
+    }
+
+    /**
+     * Obtiene el valor máximo de partidos jugados en la tabla equipos
+     * @return int Valor máximo de jugados
+     */
+    public function getMaxJugados()
+    {
+        $sql = "SELECT MAX(jugados) as max_jugados FROM equipos";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['max_jugados'] : 0;
+    }
+    /**
+     * Funcio per comptar el nombre total d'equips a la base de dades
+     * @return int Número total de equipos en la base de datos
+     */
+    public function countAll()
+    {
+        $sql = "SELECT COUNT(*) as total FROM equipos";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['total'] : 0;
+    }
 }
 
 ?>

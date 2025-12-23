@@ -26,16 +26,8 @@ $username = $user['username'] ?? null;
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
 </head>
 
-<body>
-
-</body>
-
-</html>
-
-<!-- Header fragment: include this inside the <body> of your pages -->
 <nav id="header" class="navbar navbar-expand-sm navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="/practicas/public/index.php">Logo</a>
@@ -65,17 +57,18 @@ $username = $user['username'] ?? null;
         </ul>
         <ul class="navbar-nav nav-right">
             <?php if ($isLoggedIn): ?>
-                <li class="nav-item nav-profile">
+                <li class="nav-item nav-profile d-flex align-items-center">
                     <?php
-                    // small inline SVG placeholder as profile image (generic)
                     $svg = rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="#ffffff" opacity="0.15"/><path d="M12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z" fill="#ffffff" opacity="0.15"/></svg>');
                     $imgSrc = "data:image/svg+xml;utf8,{$svg}";
                     ?>
-                    <img src="<?php echo $imgSrc; ?>" alt="profile" class="profile-img" />
-                    <a class="nav-link text-white" href="#"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
+                    <span class="d-flex align-items-center">
+                        <img src="<?php echo $imgSrc; ?>" alt="profile" class="profile-img mr-2" />
+                        <a class="nav-link header-btn" href="#" style="line-height:1;"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
+                    </span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white logout-link" href="/practicas/public/index.php?action=logout">Logout</a>
+                    <a class="nav-link header-btn" href="/practicas/public/index.php?action=logout">Logout</a>
                 </li>
             <?php else: ?>
                 <li class="nav-item">
@@ -113,5 +106,4 @@ echo '<script>' . "\n" .
     '  });' . "\n" .
     '});' . "\n" .
     '</script>';
-// end header
 ?>

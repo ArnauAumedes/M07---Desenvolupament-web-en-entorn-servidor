@@ -53,10 +53,12 @@ echo '<script>console.log(' . json_encode(["source" => "singleArticle.php", "tit
                 </div>
                 <header class="single-article-header d-flex justify-content-between align-items-start">
                     <h3 class="single-article-title mb-0"><?php echo htmlspecialchars($title); ?></h3>
-                    <time class="single-article-time small text-muted">Data de publicacio: <?php echo htmlspecialchars($created ?? date('Y-m-d')); ?></time>
+                    <time class="single-article-time small text-muted">Data de publicacio:
+                        <?php echo htmlspecialchars($created ?? date('Y-m-d')); ?></time>
                 </header>
                 <?php if (!empty($author)): ?>
-                    <div class="single-article-meta small text-muted mt-2">Article creat per: <strong class="single-author-name"><?php echo htmlspecialchars($author); ?></strong></div>
+                    <div class="single-article-meta small text-muted mt-2">Article creat per: <strong
+                            class="single-author-name"><?php echo htmlspecialchars($author); ?></strong></div>
                 <?php endif; ?>
                 <div class="article-body p-4">
                     <div class="mb-3 text-body">
