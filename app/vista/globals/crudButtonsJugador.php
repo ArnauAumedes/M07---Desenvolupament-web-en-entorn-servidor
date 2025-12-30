@@ -15,22 +15,22 @@ $username = $user['username'] ?? null;
 <div class="container my-3 crud-buttons-container">
     <?php if ($isLoggedIn): ?>
         <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
-            <span>Bienvenido, puedes gestionar tus equipos:</span>
+            <span>Bienvenido, puedes gestionar tus jugadores:</span>
             <div>
-                <a href="/practicas/public/index.php?action=create"
+                <a href="/practicas/public/index.php?action=createJugador"
                     class="btn btn-primary btn-sm mr-2">Crear
-                    equipo</a>
-                <a href="/practicas/public/index.php?action=update"
+                    jugador</a>
+                <a href="/practicas/public/index.php?action=updateJugador"
                     class="btn btn-warning btn-sm mr-2">Actualizar
-                    equipo</a>
-                <a href="/practicas/public/index.php?action=delete"
+                    jugador</a>
+                <a href="/practicas/public/index.php?action=deleteJugador"
                     class="btn btn-danger btn-sm">Eliminar
-                    equipo</a>
+                    jugador</a>
             </div>
         </div>
     <?php else: ?>
         <div class="alert alert-info" role="alert">
-            Debes iniciar sesión para crear, actualizar o eliminar equipos.
+            Debes iniciar sesión para crear, actualizar o eliminar jugadores.
         </div>
     <?php endif; ?>
 </div>

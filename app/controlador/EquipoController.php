@@ -56,14 +56,14 @@ class EquipoController
 				$perdidos = (int)($_POST['perdidos'] ?? 0);
 				if (($ganados + $empatados + $perdidos) !== $jugados) {
 					$error_partidos = 'La suma de partidos ganados, empatados y perdidos debe ser igual a los partidos jugados (' . $jugados . ').';
-					include __DIR__ . '/../vista/create.php';
+					include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
 					return;
 				}
 				// Validación de objetivo
 				$totalEquipos = $this->equipoDAO->countAll();
 				if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
 					$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
-					include __DIR__ . '/../vista/create.php';
+					include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
 					return;
 				}
 				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
@@ -80,7 +80,7 @@ class EquipoController
 				exit();
 			}
 		} else {
-			include __DIR__ . '/../vista/create.php';
+			include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
 		}
 	}
 
@@ -136,7 +136,7 @@ class EquipoController
 				$message = "Error cercant l'equip: " . $e->getMessage();
 			}
 		}
-		include __DIR__ . '/../vista/update.php';
+		include __DIR__ . '/../vista/crudEquipos/updateEquipos.php';
 	}
 
 	private function deleteEquipo()
@@ -157,7 +157,7 @@ class EquipoController
 				exit();
 			}
 		} else {
-			include __DIR__ . '/../vista/delete.php';
+			include __DIR__ . '/../vista/crudEquipos/deleteEquipos.php';
 		}
 	}
 

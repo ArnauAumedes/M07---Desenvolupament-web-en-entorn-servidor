@@ -1,7 +1,7 @@
 <?php
 
 class Jugador {
-    private int $id;
+    private ?int $id;
     private string $nombre_completo;
     private int $equipo_id;
     private float $valor;
@@ -10,7 +10,7 @@ class Jugador {
     private int $asistencias;
 
     public function __construct(
-        int $id = 0,
+        ?int $id = null,
         string $nombre_completo = '',
         int $equipo_id = 0,
         float $valor = 0.00,
@@ -27,10 +27,10 @@ class Jugador {
         $this->asistencias = $asistencias;
     }
 
-    public function getId(): int {
+    public function getId(): ?int {
         return $this->id;
     }
-    public function setId(int $id): void {
+    public function setId(?int $id): void {
         $this->id = $id;
     }
 
