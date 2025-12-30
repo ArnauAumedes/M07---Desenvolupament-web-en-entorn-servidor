@@ -176,17 +176,17 @@ class EquipoDAO extends Equipo implements DAO
     }
 
     /**
-     * Ordena un array de objetos (equipos o jugadores) según un valor calculado por callback o método.
-     * @param array $items Array de objetos a ordenar
-     * @param callable $valueCallback Callback que recibe el objeto y devuelve el valor para ordenar
-     * @param string $order 'desc' para descendente, 'asc' para ascendente
+     * Ordena un array de objetos (equipos o jugadores) según un valor calculado.
+     * @param $items Array de objetos a ordenar
+     * @param $value Recibe el objeto y devuelve el valor para ordenar
+     * @param $order 'desc' para descendente, 'asc' para ascendente
      * @return array Array ordenado
      */
-    public function ordenarPorValor(array $items, callable $valueCallback, string $order = 'desc')
+    public function ordenarPorValor($items, $value, $order = 'desc')
     {
-        usort($items, function ($a, $b) use ($valueCallback, $order) {
-            $valorA = $valueCallback($a);
-            $valorB = $valueCallback($b);
+        usort($items, function ($a, $b) use ($value, $order) {
+            $valorA = $value($a);
+            $valorB = $value($b);
             if ($order === 'desc') {
                 return $valorB <=> $valorA;
             } else {
@@ -216,7 +216,7 @@ class EquipoDAO extends Equipo implements DAO
      * Devuelve un array con el valor, el símbolo y la clase de color.
      * @param int $objetivo
      * @param int $posicionActual
-     * @return array ['valor' => int, 'simbolo' => string, 'color' => string]
+     * @return array ['valor' => int, 'simbolo' =>, 'color' =>]
      */
     public function getDiferenciaObjetivoPosicion($objetivo, $posicionActual)
     {

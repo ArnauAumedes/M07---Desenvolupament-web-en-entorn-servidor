@@ -1,18 +1,24 @@
 <?php
 require_once __DIR__ . '/../model/database/database.php';
 require_once __DIR__ . '/../model/entities/Jugador.php';
+
 require_once __DIR__ . '/../model/dao/JugadorDAO.php';
+require_once __DIR__ . '/../model/dao/EquipoDAO.php';
+
 
 class JugadorController
 {
     private $jugadorDAO;
+    private $equipoDAO;
     private $db;
+
 
     public function __construct()
     {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->jugadorDAO = new JugadorDAO($this->db);
+        $this->equipoDAO = new EquipoDAO($this->db);
     }
 
     public function handleRequest()
@@ -45,13 +51,26 @@ class JugadorController
                 $nombre_completo = $_POST['nombre_completo'] ?? '';
                 $equipo_id = $_POST['equipo_id'] ?? '';
                 $valor = $_POST['valor'] ?? '';
-                $partidos = (int)($_POST['partidos'] ?? 0);
-                $goles = (int)($_POST['goles'] ?? 0);
-                $asistencias = (int)($_POST['asistencias'] ?? 0);
+                $partidos = (int) ($_POST['partidos'] ?? 0);
+                $goles = (int) ($_POST['goles'] ?? 0);
+                $asistencias = (int) ($_POST['asistencias'] ?? 0);
                 // Validaciones básicas
                 $error_jugador = '';
                 if (empty($nombre_completo) || empty($equipo_id) || $valor === '') {
                     $error_jugador = 'Todos los campos son obligatorios.';
+                    include __DIR__ . '/../vista/crudJugadores/createJugadores.php';
+                    return;
+                }
+                // Validar que ningún valor sea menor que 0
+                if ($valor < 0 || $partidos < 0 || $goles < 0 || $asistencias < 0) {
+                    $error_jugador = 'Ningún valor puede ser menor que 0.';
+                    include __DIR__ . '/../vista/crudJugadores/createJugadores.php';
+                    return;
+                }
+                // Comprobar que el equipo existe
+                $equipo = $this->equipoDAO->findById($equipo_id);
+                if (!$equipo) {
+                    $error_jugador = 'El equipo seleccionado no existe.';
                     include __DIR__ . '/../vista/crudJugadores/createJugadores.php';
                     return;
                 }
@@ -84,19 +103,25 @@ class JugadorController
                 $nombre_completo = $_POST['nombre_completo'] ?? '';
                 $equipo_id = $_POST['equipo_id'] ?? '';
                 $valor = $_POST['valor'] ?? '';
-                $partidos = (int)($_POST['partidos'] ?? 0);
-                $goles = (int)($_POST['goles'] ?? 0);
-                $asistencias = (int)($_POST['asistencias'] ?? 0);
+                $partidos = (int) ($_POST['partidos'] ?? 0);
+                $goles = (int) ($_POST['goles'] ?? 0);
+                $asistencias = (int) ($_POST['asistencias'] ?? 0);
                 if (empty($nombre_completo) || empty($equipo_id) || $valor === '') {
                     $error_jugador = 'Todos los campos son obligatorios.';
                 } else {
-                    $jugador = new Jugador($id, $nombre_completo, $equipo_id, $valor, $partidos, $goles, $asistencias);
-                    $rowsAffected = $this->jugadorDAO->update($jugador);
-                    if ($rowsAffected > 0) {
-                        header("Location: /practicas/public/index.php?updatedJugador=success");
-                        exit();
+                    // Comprobar que el equipo existe
+                    $equipo = $this->equipoDAO->findById($equipo_id);
+                    if (!$equipo) {
+                        $error_jugador = 'El equipo seleccionado no existe.';
                     } else {
-                        $message = "No se ha podido actualizar el jugador.";
+                        $jugador = new Jugador($id, $nombre_completo, $equipo_id, $valor, $partidos, $goles, $asistencias);
+                        $rowsAffected = $this->jugadorDAO->update($jugador);
+                        if ($rowsAffected > 0) {
+                            header("Location: /practicas/public/index.php?updatedJugador=success");
+                            exit();
+                        } else {
+                            $message = "No se ha podido actualizar el jugador.";
+                        }
                     }
                 }
             } catch (Exception $e) {
