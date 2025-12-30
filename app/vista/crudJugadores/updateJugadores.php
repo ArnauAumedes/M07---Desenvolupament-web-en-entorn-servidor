@@ -33,7 +33,14 @@
         </form>
 
         <!-- Formulario de actualización (visible solo si $jugador está definido) -->
-        <?php if (isset($jugador)): ?>
+        <?php if (isset($jugador)):
+            require_once __DIR__ . '/../../model/database/database.php';
+            require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
+            $db = new Database();
+            $equipoDAO = new EquipoDAO($db->getConnection());
+            $minJugados = $equipoDAO->getMinJugados();
+            $maxJugados = $equipoDAO->getMaxJugados();
+        ?>
             <form method="POST" action="/practicas/public/index.php?action=updateJugador&id=<?php echo urlencode($jugador->getId()); ?>" class="form-create">
                 <h1>Editar Jugador</h1>
                 <?php if (!empty($error_jugador)): ?>
@@ -55,23 +62,27 @@
                 </div>
                 <div class="form-group">
                     <label for="valor">Valor:</label>
-                    <input type="text" name="valor" id="valor" class="form-control" required
+                    <input type="number" name="valor" id="valor" class="form-control" max="300" required
                         value="<?php echo isset($_POST['valor']) ? htmlspecialchars($_POST['valor']) : htmlspecialchars($jugador->getValor()); ?>">
+                    <small class="form-text text-muted">Máximo permitido: 300</small>
                 </div>
                 <div class="form-group">
                     <label for="partidos">Partidos jugados:</label>
-                    <input type="number" name="partidos" id="partidos" class="form-control" min="0" required
+                    <input type="number" name="partidos" id="partidos" class="form-control" min="0" max="<?php echo $maxJugados; ?>" required
                         value="<?php echo isset($_POST['partidos']) ? htmlspecialchars($_POST['partidos']) : htmlspecialchars($jugador->getPartidos()); ?>">
+                    <small class="form-text text-muted">Máximo permitido: <?php echo $maxJugados; ?></small>
                 </div>
                 <div class="form-group">
                     <label for="goles">Goles:</label>
-                    <input type="number" name="goles" id="goles" class="form-control" min="0" required
+                    <input type="number" name="goles" id="goles" class="form-control" min="0" max="100" required
                         value="<?php echo isset($_POST['goles']) ? htmlspecialchars($_POST['goles']) : htmlspecialchars($jugador->getGoles()); ?>">
+                    <small class="form-text text-muted">Máximo permitido: 100</small>
                 </div>
                 <div class="form-group">
                     <label for="asistencias">Asistencias:</label>
-                    <input type="number" name="asistencias" id="asistencias" class="form-control" min="0" required
+                    <input type="number" name="asistencias" id="asistencias" class="form-control" min="0" max="100" required
                         value="<?php echo isset($_POST['asistencias']) ? htmlspecialchars($_POST['asistencias']) : htmlspecialchars($jugador->getAsistencias()); ?>">
+                    <small class="form-text text-muted">Máximo permitido: 100</small>
                 </div>
                 <div class="d-flex justify-content-center mt-3" style="gap: 0.5rem;">
                     <button type="submit" class="btn btn-primary">Actualizar Jugador</button>
