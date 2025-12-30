@@ -186,10 +186,18 @@ class JugadorController
 
     private function listJugadores()
     {
+        $message = '';
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $validLimits = [1, 5, 10, 20];
+        $limit = isset($_GET['limit']) && in_array((int)$_GET['limit'], $validLimits) ? (int)$_GET['limit'] : 10;
+        $offset = ($page - 1) * $limit;
         try {
-            $jugadores = $this->jugadorDAO->findAll();
+            $jugadores = $this->jugadorDAO->getJugadoresPaginados($limit, $offset);
+            $totalJugadores = $this->jugadorDAO->countJugadores();
+            $totalPages = (int) ceil($totalJugadores / $limit);
         } catch (Exception $e) {
             $jugadores = [];
+            $totalPages = 1;
             $message = "Error obteniendo jugadores: " . $e->getMessage();
         }
         include __DIR__ . '/../vista/crudJugadores/listJugadores.php';

@@ -26,7 +26,7 @@ if ($action === 'register') {
 }
 
 // Accions de jugadors
-$accionsJugador = ['createJugador', 'updateJugador', 'deleteJugador', 'viewJugador', 'listJugador'];
+$accionsJugador = ['createJugador', 'updateJugador', 'deleteJugador', 'viewJugador', 'listJugador', 'mejoresValorados', 'pichichis', 'asistencias'];
 if (in_array($action, $accionsJugador)) {
 	require_once __DIR__ . '/../app/controlador/JugadorController.php';
 	$jugadorController = new JugadorController();
