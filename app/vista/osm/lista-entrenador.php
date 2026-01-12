@@ -37,34 +37,45 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($equipos as $index => $equipo): ?>
-                        <tr>
-                            <td class="align-middle fw-bold">
-                                <?php
-                                $user = $userDAO->getById($equipo->getUserId());
-                                echo htmlspecialchars($user['username'] ?? '');
-                                ?>
-                            </td>
-                            <td class="align-middle d-flex align-items-center gap-2">
-                                <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
-                                    alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
-                                    style="height:32px; margin-right:8px;">
-                                <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
-                            </td>
-                            <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
-                            <td class="text-center align-middle"><?= $index + 1 ?></td>
-                            <?php
-                            $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $index + 1);
-                            ?>
-                            <td class="text-center align-middle">
-                                <span class="fw-bold" style="color: <?= htmlspecialchars($dif['color']) ?>;">
-                                    <?= $dif['simbolo'] . $dif['valor'] ?>
-                                </span>
-                            </td>
-                            <td class="text-center align-middle">
-                                <?= htmlspecialchars($user['created_at'] ?? '-') ?>
-                            </td>
-                        </tr>
+                    <?php $posicion = 1; ?>
+                    <?php foreach ($entrenadoresConEquipos as $entrenadorConEquipos): ?>
+                        <?php $entrenador = $entrenadorConEquipos['entrenador']; ?>
+                        <?php $user = $userDAO->getById($entrenador->getId()); ?>
+                        <?php if (!empty($entrenadorConEquipos['equipos'])): ?>
+                            <?php foreach ($entrenadorConEquipos['equipos'] as $equipo): ?>
+                                <tr>
+                                    <td class="align-middle fw-bold">
+                                        <?= htmlspecialchars($user['username'] ?? '') ?>
+                                    </td>
+                                    <td class="align-middle d-flex align-items-center gap-2">
+                                        <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
+                                            alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
+                                            style="height:32px; margin-right:8px;">
+                                        <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
+                                    </td>
+                                    <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
+                                    <td class="text-center align-middle"><?= $posicion ?></td>
+                                    <?php $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $posicion); ?>
+                                    <td class="text-center align-middle">
+                                        <span class="fw-bold" style="color: <?= htmlspecialchars($dif['color'] ?? '#000') ?>;">
+                                            <?= ($dif['simbolo'] ?? '') . ($dif['valor'] ?? '') ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <?= htmlspecialchars($user['created_at'] ?? '-') ?>
+                                    </td>
+                                </tr>
+                                <?php $posicion++; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td class="align-middle fw-bold">
+                                    <?= htmlspecialchars($user['username'] ?? '') ?>
+                                </td>
+                                <td class="align-middle text-muted" colspan="5">Sin equipo</td>
+                            </tr>
+                            <?php $posicion++; ?>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </tbody>
             </table>
