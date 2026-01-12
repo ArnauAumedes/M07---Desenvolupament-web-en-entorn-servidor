@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,74 +11,69 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/practicas/public/css/style.css">
 </head>
+
 <body>
-<?php
-require_once __DIR__ . '/../globals/header.php';
-require_once __DIR__ . '/../../model/database/database.php';
-require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
+    <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-/**
- * Definir variables i ordenar la taula de valor per valor d'equip
- * @var Database $db Instancia de la base de dades
- * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
- * @var array $equipos Llista d'equips
- */
-$db = new Database();
-$equipoDAO = new EquipoDAO($db->getConnection());
-$equipos = $equipoDAO->findAll();
-$equipos = $equipoDAO->ordenarPorValor(
-	$equipos,
-	function ($equipo) use ($equipoDAO) {
-		return $equipoDAO->getValorEquipo($equipo->getId());
-	},
-);
-
-?>
-<div class="main">
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
-            <thead class="thead-dark">
-                <tr>
-                    <th class="align-middle" style="width:8%">POSICIÓN</th>
-                    <th class="align-middle" style="width:22%">CLUB</th>
-                    <th class="text-center align-middle" style="width:20%">VALOR TOTAL (€)</th>
-                    <th class="text-center align-middle" style="width:20%">JUGADORES</th>
-                    <th class="text-center align-middle" style="width:20%">VALOR PROMEDIO (€)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($equipos as $index => $equipo): ?>
-                    <?php
+    // Incloure capçalera i fitxers necessaris
+    require_once __DIR__ . '/../globals/header.php';
+    require_once __DIR__ . '/../../model/components/auth.php';
+    $isLoggedIn = isLoggedIn();
+    ?>
+    <div class="main">
+        <?php
+        require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
+        ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="align-middle" style="width:8%">POSICIÓN</th>
+                        <th class="align-middle" style="width:22%">CLUB</th>
+                        <th class="text-center align-middle" style="width:20%">VALOR TOTAL (€)</th>
+                        <th class="text-center align-middle" style="width:20%">JUGADORES</th>
+                        <th class="text-center align-middle" style="width:20%">VALOR PROMEDIO (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($equipos as $index => $equipo):
                         $equipoId = $equipo->getId();
                         $valorTotal = $equipoDAO->getValorEquipo($equipoId);
                         $cantidadJugadores = $equipoDAO->getCantidadJugadores($equipoId);
                         $valorPromedio = $cantidadJugadores > 0 ? $equipoDAO->getMediaValorJugadores($equipoId) : 0;
-                    ?>
-                    <tr>
-                        <td class="align-middle fs-4 fw-bold">
-                            <?= $index + 1 ?>
-                        </td>
-                        <td class="align-middle d-flex align-items-center gap-2">
-                            <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>" alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
-                                style="height:32px; margin-right:8px;">
-                            <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
-                        </td>
-                        <td class="text-center align-middle" style="font-weight:bold; color:#2c3e50;">
-                            <?= number_format($valorTotal, 2) ?> €
-                        </td>
-                        <td class="text-center align-middle">
-                            <?= $cantidadJugadores ?>
-                        </td>
-                        <td class="text-center align-middle">
-                            <?= number_format($valorPromedio, 2) ?> €
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                        ?>
+                        <tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
+                            style="cursor:pointer;">
+                            <td class="align-middle fs-4 fw-bold">
+                                <?= $index + 1 ?>
+                            </td>
+                            <td class="align-middle d-flex align-items-center gap-2">
+                                <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
+                                    alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
+                                    style="height:32px; margin-right:8px;">
+                                <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
+                            </td>
+                            <td class="text-center align-middle" style="font-weight:bold; color:#2c3e50;">
+                                <?= number_format($valorTotal, 2) ?> €
+                            </td>
+                            <td class="text-center align-middle">
+                                <?= $cantidadJugadores ?>
+                            </td>
+                            <td class="text-center align-middle">
+                                <?= number_format($valorPromedio, 2) ?> €
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<?php require_once __DIR__ . '/../globals/footer.php'; ?>
+    <?php require_once __DIR__ . '/../globals/pagination.php'; ?>
+    <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
+
+
 </html>

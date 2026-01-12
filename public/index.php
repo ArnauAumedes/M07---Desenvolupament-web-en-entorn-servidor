@@ -6,28 +6,45 @@
  * Autor: Arnau Aumedes Jimenez
  */
 // Front controller: route by ?action=
+
 $action = $_GET['action'] ?? 'menu';
 
+
 if ($action === 'login') {
-	// Delegate login handling to the dedicated controller
 	require_once __DIR__ . '/../app/controlador/loginController.php';
 	exit;
 }
 
 if ($action === 'logout') {
-	// Simple logout endpoint handled by public script or controller
-	// If you want to centralize, you can create app/controlador/logoutController.php
 	require_once __DIR__ . '/../app/controlador/logoutController.php';
 	exit;
 }
 
 if ($action === 'register') {
 	require_once __DIR__ . '/../app/controlador/registerController.php';
-	exit;	
+	exit;
 }
 
-require_once __DIR__ . '/../app/controlador/EquipoController.php';
+// Accions de jugadors
+$accionsJugador = ['createJugador', 'updateJugador', 'deleteJugador', 'viewJugadores', 'listJugador', 'mejores-valorados', 'pichichis', 'asistencias'];
+if (in_array($action, $accionsJugador)) {
+	require_once __DIR__ . '/../app/controlador/JugadorController.php';
+	$jugadorController = new JugadorController();
+	$jugadorController->handleRequest();
+	exit;
+}
 
+//Accions d'usuari
+$accionsUsuari = ['lista-entrenador'];
+if (in_array($action, $accionsUsuari)) {
+	require_once __DIR__ . '/../app/controlador/UserController.php';
+	$userController = new UserController();
+	$userController->handleRequest();
+	exit;
+}
+
+// Per defecte es crida el controlador d'equips
+require_once __DIR__ . '/../app/controlador/EquipoController.php';
 $controller = new EquipoController();
 $controller->handleRequest();
 ?>

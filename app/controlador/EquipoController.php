@@ -8,6 +8,10 @@ class EquipoController
 	private $equipoDAO;
 	private $db;
 
+	/**
+	 * Constructor de EquipoController
+	 * Inicializa la conexión a la base de datos y el DAO de equipos
+	 */
 	public function __construct()
 	{
 		$database = new Database();
@@ -15,6 +19,12 @@ class EquipoController
 		$this->equipoDAO = new EquipoDAO($this->db);
 	}
 
+	/**
+	 * Maneja la petición HTTP y redirige a la acción correspondiente
+	 * según el parámetro 'action' recibido por GET.
+	 *
+	 * @return void
+	 */
 	public function handleRequest()
 	{
 		$action = $_GET['action'] ?? 'list';
@@ -31,31 +41,55 @@ class EquipoController
 			case 'view':
 				$this->viewEquipo();
 				break;
-			case 'list':
+			case 'valor-equipo':
+				$this->listEquipos('valor-equipo', function ($equipo) {
+					return $this->equipoDAO->getValorEquipo($equipo->getId());
+				});
+				break;
 			default:
-				$this->listEquipos();
+				$this->listEquipos('tabla-clasificacion', function ($equipo) {
+					return $this->equipoDAO->getPuntos($equipo->getId());
+				});
 				break;
 		}
 	}
 
+	/**
+	 * Crea un nuevo equipo a partir de los datos del formulario POST.
+	 * Valida los datos recibidos y redirige según el resultado de la operación.
+	 *
+	 * @return void
+	 */
 	private function createEquipo()
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
-				if (session_status() === PHP_SESSION_NONE) session_start();
+				if (session_status() === PHP_SESSION_NONE)
+					session_start();
 				$user_id = $_SESSION['user']['user_id'] ?? null;
 				if ($user_id === null) {
 					throw new Exception('User not authenticated');
 				}
 				$equip = $_POST['equip'] ?? '';
+				$objetivo = $_POST['objetivo'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
-				$jugados = $_POST['jugados'] ?? 0;
-				$ganados = $_POST['ganados'] ?? 0;
-				$empatados = $_POST['empatados'] ?? 0;
-				$perdidos = $_POST['perdidos'] ?? 0;
-				$puntos = $_POST['puntos'] ?? 0;
-				$gf_gc = $_POST['gf_gc'] ?? '';
-				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
+				$jugados = (int) ($_POST['jugados'] ?? 0);
+				$ganados = (int) ($_POST['ganados'] ?? 0);
+				$empatados = (int) ($_POST['empatados'] ?? 0);
+				$perdidos = (int) ($_POST['perdidos'] ?? 0);
+				if (($ganados + $empatados + $perdidos) !== $jugados) {
+					$error_partidos = 'La suma de partidos ganados, empatados y perdidos debe ser igual a los partidos jugados (' . $jugados . ').';
+					include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
+					return;
+				}
+				// Validación de objetivo
+				$totalEquipos = $this->equipoDAO->countAll();
+				if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
+					$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
+					include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
+					return;
+				}
+				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 				$result = $this->equipoDAO->create($equipo);
 				if ($result) {
 					header("Location: /practicas/public/index.php?created=success&id=" . $result);
@@ -69,37 +103,54 @@ class EquipoController
 				exit();
 			}
 		} else {
-			include __DIR__ . '/../vista/createEquipo.php';
+			include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
 		}
 	}
 
+	/**
+	 * Actualiza los datos de un equipo existente a partir del formulario POST.
+	 * Valida los datos recibidos y redirige según el resultado de la operación.
+	 *
+	 * @return void
+	 */
 	private function updateEquipo()
 	{
 		$equipo = null;
 		$message = "";
+		$error_partidos = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
-				if (session_status() === PHP_SESSION_NONE) session_start();
+				if (session_status() === PHP_SESSION_NONE)
+					session_start();
 				$user_id = $_SESSION['user']['user_id'] ?? null;
 				if ($user_id === null) {
 					throw new Exception('User not authenticated');
 				}
 				$id = $_POST['id'] ?? '';
 				$equip = $_POST['equip'] ?? '';
+				$objetivo = $_POST['objetivo'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
-				$jugados = $_POST['jugados'] ?? 0;
-				$ganados = $_POST['ganados'] ?? 0;
-				$empatados = $_POST['empatados'] ?? 0;
-				$perdidos = $_POST['perdidos'] ?? 0;
-				$puntos = $_POST['puntos'] ?? 0;
-				$gf_gc = $_POST['gf_gc'] ?? '';
-				$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $puntos, $gf_gc);
-				$rowsAffected = $this->equipoDAO->update($equipo);
-				if ($rowsAffected > 0) {
-					header("Location: /practicas/public/index.php?updated=success");
-					exit();
+				$jugados = (int) ($_POST['jugados'] ?? 0);
+				$ganados = (int) ($_POST['ganados'] ?? 0);
+				$empatados = (int) ($_POST['empatados'] ?? 0);
+				$perdidos = (int) ($_POST['perdidos'] ?? 0);
+				if (($ganados + $empatados + $perdidos) !== $jugados) {
+					$error_partidos = 'La suma de partidos ganados, empatados y perdidos debe ser igual a los partidos jugados (' . $jugados . ').';
 				} else {
-					$message = "No s'ha pogut actualitzar l'equip";
+					// Validación de objetivo
+					$totalEquipos = $this->equipoDAO->countAll();
+					if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
+						$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
+					} else {
+						$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
+						$rowsAffected = $this->equipoDAO->update($equipo);
+						if ($rowsAffected > 0) {
+							header("Location: /practicas/public/index.php?updated=success");
+							exit();
+						} else {
+							$message = "No s'ha pogut actualitzar l'equip";
+						}
+					}
 				}
 			} catch (Exception $e) {
 				$message = "Error: " . $e->getMessage();
@@ -115,9 +166,15 @@ class EquipoController
 				$message = "Error cercant l'equip: " . $e->getMessage();
 			}
 		}
-		include __DIR__ . '/../vista/updateEquipo.php';
+		include __DIR__ . '/../vista/crudEquipos/updateEquipos.php';
 	}
 
+	/**
+	 * Elimina un equipo por su ID recibido por GET.
+	 * Redirige según el resultado de la operación.
+	 *
+	 * @return void
+	 */
 	private function deleteEquipo()
 	{
 		if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -136,11 +193,16 @@ class EquipoController
 				exit();
 			}
 		} else {
-			header("Location: /practicas/public/index.php?deleted=noid");
-			exit();
+			include __DIR__ . '/../vista/crudEquipos/deleteEquipos.php';
 		}
 	}
 
+	/**
+	 * Muestra los datos de un equipo por su ID recibido por GET.
+	 * Incluye la vista correspondiente para mostrar los detalles del equipo.
+	 *
+	 * @return void
+	 */
 	private function viewEquipo()
 	{
 		$equipo = null;
@@ -159,33 +221,41 @@ class EquipoController
 			$message = "ID no proporcionat";
 			header("HTTP/1.0 400 Bad Request");
 		}
-		include __DIR__ . '/../vista/singleEquipo.php';
+		include __DIR__ . '/../vista/crudEquipos/singleEquipo.php';
 	}
-
-	private function listEquipos()
+	/**
+	 * Lista los equipos de forma paginada y opcionalmente ordenada.
+	 * Incluye la vista especificada para mostrar los equipos.
+	 *
+	 * @param string $vista Nombre del archivo de vista a incluir (sin extensión ni ruta completa)
+	 * @param callable|null $ordenCallback Función de callback para ordenar los equipos (opcional)
+	 * @return void
+	 */
+	private function listEquipos($vista = 'tabla-clasificacion', $ordenCallback = null)
 	{
 		require_once __DIR__ . '/../model/dao/UserDAO.php';
+
+		$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+		$limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? (int) $_GET['limit'] : 10;
+		$offset = ($page - 1) * $limit;
+
 		try {
-			$equiposRaw = $this->equipoDAO->findAll();
-			$userDAO = new UserDAO($this->db);
-			$equipos = [];
-			foreach ($equiposRaw as $equipo) {
-				$user = $userDAO->getById($equipo->getUserId());
-				$nombreEntrenador = $user ? $user['username'] : 'Desconocido';
-				$fechaCreacion = $user ? $user['created_at'] : '';
-				$diferencia = $equipo->getObjetivo();
-				$equipos[] = [
-					'nombreEntrenador' => $nombreEntrenador,
-					'equipo' => $equipo,
-					'fechaCreacion' => $fechaCreacion,
-					'diferencia' => $diferencia
-				];
+			$totalEquipos = $this->equipoDAO->countAll();
+			$totalPages = max(1, ceil($totalEquipos / $limit));
+			$equipos = $this->equipoDAO->getEquiposPaginados($limit, $offset);
+
+			if ($ordenCallback !== null) {
+				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, 'desc');
 			}
 		} catch (Exception $e) {
 			$equipos = [];
-			$message = "Error obtenint equips: " . $e->getMessage();
+			$message = "Error obteniendo equipos: " . $e->getMessage();
+			$totalPages = 1;
+			$page = 1;
+			$limit = 10;
 		}
-		include __DIR__ . '/../vista/osm/tabla-clasificacion.php';
+		$equipoDAO = $this->equipoDAO;
+		include __DIR__ . "/../vista/osm/{$vista}.php";
 	}
 }
 ?>

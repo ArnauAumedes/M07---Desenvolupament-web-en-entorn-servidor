@@ -241,6 +241,48 @@ class JugadorDAO extends Jugador implements DAO
         });
         return $jugadores;
     }
+
+    /**
+     * Cuenta el total de jugadores en la base de datos
+     * @return int Número total de jugadores
+     */
+    public function countAll()
+    {
+        $sql = "SELECT COUNT(*) as total FROM jugadores";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['total'] : 0;
+    }
+
+    /**
+     * Obtiene jugadores paginados
+     * @param int $limit Número de registros por página
+     * @param int $offset Desplazamiento de registros
+     * @return Jugador[] Array de instancias de Jugador
+     */
+    public function getJugadoresPaginados($limit, $offset)
+    {
+        $sql = "SELECT * FROM jugadores LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugadores[] = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+        }
+        return $jugadores;
+    }
 }
 
 ?>

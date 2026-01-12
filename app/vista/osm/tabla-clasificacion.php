@@ -9,42 +9,34 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="/practicas/app/controlador/EquipoController.php.css">
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="/practicas/app/controlador/EquipoController.php.css">
 </head>
 
 
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Incloure capçalera i fitxers necessaris
 require_once __DIR__ . '/../globals/header.php';
-require_once __DIR__ . '/../../model/database/database.php';
-require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-
-/**
- * Definir variables i ordenar la taula de classificació per puntuatge 
- * @var Database $db Instancia de la base de dades
- * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
- * @var array $equipos Llista d'equips
- */
-$db = new Database();
-$equipoDAO = new EquipoDAO($db->getConnection());
-$equipos = $equipoDAO->findAll();
-$equipos = $equipoDAO->ordenarPorValor(
-	$equipos,
-	function ($equipo) use ($equipoDAO) {
-		return $equipoDAO->getPuntos($equipo->getId());
-	},
-);
-
+require_once __DIR__ . '/../../model/components/auth.php';
+$isLoggedIn = isLoggedIn();
 ?>
+
 <div class="main">
+	<?php
+	require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
+	?>
 	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
 			<thead class="thead-dark">
 				<tr>
-					<th class="align-middle" style="width:8%">POSITION</th>
+					<th class="align-middle" style="width:8%">POSICIÓN</th>
 					<th class="align-middle" style="width:22%">CLUB</th>
 					<th class="text-center align-middle" style="width:10%">JUGADOS</th>
 					<th class="text-center align-middle" style="width:10%">GANADOS</th>
@@ -55,7 +47,7 @@ $equipos = $equipoDAO->ordenarPorValor(
 			</thead>
 			<tbody>
 				<?php foreach ($equipos as $index => $equipo): ?>
-					<tr>
+					<tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'" style="cursor:pointer;">
 						<td class="align-middle fs-4 fw-bold">
 							<?= $index + 1 ?>
 						</td>
@@ -73,7 +65,8 @@ $equipos = $equipoDAO->ordenarPorValor(
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getEmpatados()) ?></td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getPerdidos()) ?></td>
 						<td class="text-center align-middle">
-							<?= htmlspecialchars($equipoDAO->getPuntos($equipo->getId())) ?></td>
+							<?= htmlspecialchars($equipoDAO->getPuntos($equipo->getId())) ?>
+						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
@@ -81,7 +74,8 @@ $equipos = $equipoDAO->ordenarPorValor(
 	</div>
 </div>
 </body>
-<?php
+<?php 
+require_once __DIR__ . '/../globals/pagination.php';
 require_once __DIR__ . '/../globals/footer.php';
 ?>
 

@@ -14,32 +14,20 @@
 
 <body>
     <?php
-    require_once __DIR__ . '/../globals/header.php';
-    require_once __DIR__ . '/../../model/database/database.php';
-    require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
-    require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-    /**
-     * Definir variables i ordenar la taula de maxim contribuidors per majors contribuidors
-     * @var Database $db Instancia de la base de dades
-     * @var JugadorDAO $jugadorDAO Instancia del DAO de jugadors
-     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
-     * @var array $jugadores Llista de jugadors
-     */
-    $db = new Database();
-    $jugadorDAO = new JugadorDAO($db->getConnection());
-    $equipoDAO = new EquipoDAO($db->getConnection());
-    $jugadores = $jugadorDAO->findAll();
-    $jugadores = $jugadorDAO->ordenarPorValor(
-        $jugadores,
-        function ($jugador) use ($jugadorDAO) {
-            return $jugadorDAO->getSumaGolesAsistencias($jugador->getId());
-        },
-        'desc'
-    );
+    // Incloure capçalera i fitxers necessaris
+    require_once __DIR__ . '/../globals/header.php';
+    require_once __DIR__ . '/../../model/components/auth.php';
+    $isLoggedIn = isLoggedIn();
     ?>
 
     <div class="main">
+        <?php
+        require_once __DIR__ . '/../globals/crudButtonsJugador.php';
+        ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
@@ -53,17 +41,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($jugadores as $jugador): ?>
-                        <?php
-                        $equipo = $equipoDAO->findById($jugador->getEquipoId());
-                        $sumaGA = $jugadorDAO->getSumaGolesAsistencias($jugador->getId());
-                        ?>
-                        <tr>
+                    <?php foreach ($jugadores as $jugador):
+                        $equipo = $equipoDAO->findById($jugador->getEquipoId()); ?>
+                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                            style="cursor:pointer;">
                             <td class="align-middle fw-bold text-uppercase">
                                 <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
                             </td>
                             <td class="align-middle d-flex align-items-center gap-2">
-                                <?php if ($equipo): ?>
+                                <?php if ($jugador): ?>
                                     <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
                                         alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
                                         style="height:32px; margin-right:8px;">
@@ -83,7 +69,7 @@
                                 <?= htmlspecialchars($jugador->getAsistencias()) ?>
                             </td>
                             <td class="text-center align-middle" style="font-weight:bold;">
-                                <?= $sumaGA ?>
+                                <?= htmlspecialchars($jugadorDAO->getSumaGolesAsistencias($jugador->getId())) ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -91,6 +77,9 @@
             </table>
         </div>
     </div>
+
+    <!-- Paginación -->
+    <?php include __DIR__ . '/../globals/pagination.php'; ?>
     <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 

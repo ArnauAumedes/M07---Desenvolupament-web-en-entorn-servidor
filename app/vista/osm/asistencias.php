@@ -14,32 +14,20 @@
 
 <body>
     <?php
-    require_once __DIR__ . '/../globals/header.php';
-    require_once __DIR__ . '/../../model/database/database.php';
-    require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
-    require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-    /**
-     * Definir variables i ordenar la taula d'assistencias per majors assistents
-     * @var Database $db Instancia de la base de dades
-     * @var JugadorDAO $jugadorDAO Instancia del DAO de jugadors
-     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
-     * @var array $jugadores Llista de jugadors
-     */
-    $db = new Database();
-    $jugadorDAO = new JugadorDAO($db->getConnection());
-    $equipoDAO = new EquipoDAO($db->getConnection());
-    $jugadores = $jugadorDAO->findAll();
-    $jugadores = $jugadorDAO->ordenarPorValor(
-        $jugadores,
-        function ($jugador) {
-            return $jugador->getAsistencias();
-        },
-        'desc'
-    );
+    // Incloure capçalera i fitxers necessaris
+    require_once __DIR__ . '/../globals/header.php';
+    require_once __DIR__ . '/../../model/components/auth.php';
+    $isLoggedIn = isLoggedIn();
     ?>
-    
+
     <div class="main">
+        <?php
+        require_once __DIR__ . '/../globals/crudButtonsJugador.php';
+        ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
@@ -57,7 +45,8 @@
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
                         ?>
-                        <tr>
+                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                            style="cursor:pointer;">
                             <td class="align-middle fw-bold text-uppercase">
                                 <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
                             </td>
@@ -87,6 +76,7 @@
             </table>
         </div>
     </div>
+    <?php require_once __DIR__ . '/../globals/pagination.php'; ?>
     <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 
