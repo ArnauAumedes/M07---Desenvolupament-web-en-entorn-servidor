@@ -216,11 +216,14 @@ class JugadorController
         try {
             $totalJugadores = $this->jugadorDAO->countAll();
             $totalPages = max(1, ceil($totalJugadores / $limit));
-            $jugadores = $this->jugadorDAO->getJugadoresPaginados($limit, $offset);
+            $jugadores = $this->jugadorDAO->findAll();
 
             if ($ordenCallback !== null) {
                 $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, $ordenCallback, 'desc');
             }
+
+            $jugadores = array_slice($jugadores, $offset, $limit); 
+
         } catch (Exception $e) {
             $jugadores = [];
             $message = "Error obteniendo jugadores: " . $e->getMessage();
