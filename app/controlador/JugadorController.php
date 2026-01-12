@@ -25,7 +25,7 @@ class JugadorController
 
     public function handleRequest()
     {
-        $action = $_GET['action'] ?? 'list';
+        $action = $_GET['action'] ?? 'mejores-valorados';
         switch ($action) {
             case 'createJugador':
                 $this->createJugador();

@@ -311,6 +311,34 @@ class EquipoDAO extends Equipo implements DAO
         }
         return $equipos;
     }
+
+    /**
+     * Obtiene los equipos de un entrenador por su ID
+     * @param int $entrenadorId ID del entrenador
+     * @return Equipo[] Array de instancias de Equipo
+     */
+    function findByEntrenadorId($entrenadorId)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM equipos WHERE user_id = :user_id");
+        $stmt->bindValue(':user_id', $entrenadorId, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $equipos = [];
+        foreach ($rows as $row) {
+            $equipos[] = new Equipo(
+                $row['id'],
+                $row['equip'],
+                $row['user_id'],
+                $row['escudo'],
+                $row['jugados'],
+                $row['ganados'],
+                $row['empatados'],
+                $row['perdidos'],
+                $row['objetivo'] ?? 0
+            );
+        }
+        return $equipos;
+    }
 }
 
 ?>

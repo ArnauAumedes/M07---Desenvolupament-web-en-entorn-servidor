@@ -7,6 +7,7 @@ require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 class UserController
 {
 	private $userDAO;
+	private $equipoDAO;
 	private $db;
 
 	/**
@@ -18,6 +19,7 @@ class UserController
 		$database = new Database();
 		$this->db = $database->getConnection();
 		$this->userDAO = new UserDAO($this->db);
+		$this->equipoDAO = new EquipoDAO($this->db);
 	}
 
 	/**
@@ -28,7 +30,7 @@ class UserController
 	 */
 	public function handleRequest()
 	{
-		$action = $_GET['action'] ?? 'list';
+		$action = $_GET['action'] ?? 'lista-entrenador';
 		switch ($action) {
 			case 'lista-entrenador':
 				$this->listEntrenadores();
@@ -42,7 +44,6 @@ class UserController
 	/**
 	 * Lista los entrenadores de forma paginada y opcionalmente ordenada.
 	 * Incluye la vista correspondiente para mostrar los entrenadores.
-	 *
 	 * @param callable|null $ordenCallback Función de callback para ordenar los entrenadores (opcional)
 	 * @return void
 	 */
@@ -53,24 +54,34 @@ class UserController
 		$offset = ($page - 1) * $limit;
 
 		try {
-			// Suponiendo que hay un método countEntrenadores en UserDAO
 			$totalEntrenadores = $this->userDAO->countAll();
 			$totalPages = max(1, ceil($totalEntrenadores / $limit));
-			// Suponiendo que hay un método getEntrenadoresPaginados en UserDAO
-			$entrenadores = $this->userDAO->getUsersPaginados($limit, $offset);
+			$entrenadores = $this->userDAO->findAll();
 
 			if ($ordenCallback !== null) {
-				// Suponiendo que hay un método ordenarPorValor en UserDAO
 				$entrenadores = $this->userDAO->ordenarPorValor($entrenadores, $ordenCallback, 'desc');
 			}
+
+			$entrenadores = array_slice($entrenadores, $offset, $limit);
+
+			// Para cada entrenador, obtener todos sus equipos
+			$entrenadoresConEquipos = [];
+			foreach ($entrenadores as $entrenador) {
+				$equipoList = $this->equipoDAO->findByEntrenadorId($entrenador->getId());
+				$entrenadoresConEquipos[] = [
+					'entrenador' => $entrenador,
+					'equipos' => $equipoList
+				];
+			}
 		} catch (Exception $e) {
-			$entrenadores = [];
+			$entrenadoresConEquipos = [];
 			$message = "Error obteniendo entrenadores: " . $e->getMessage();
 			$totalPages = 1;
 			$page = 1;
 			$limit = 10;
 		}
 		$userDAO = $this->userDAO;
+		$equipoDAO = $this->equipoDAO;
 		include __DIR__ . '/../vista/osm/lista-entrenador.php';
 	}
 }

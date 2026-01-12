@@ -7,7 +7,7 @@
  */
 // Front controller: route by ?action=
 
-$action = $_GET['action'] ?? 'menu';
+$action = $_GET['action'] ?? 'list';
 
 
 if ($action === 'login') {

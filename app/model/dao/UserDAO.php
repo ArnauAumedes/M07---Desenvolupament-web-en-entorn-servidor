@@ -137,5 +137,27 @@ class UserDAO extends User
         });
         return $items;
     }
+    
+    /**
+     * Funcion para obtener todos los usuarios
+     * @return User[] Array de instancias de User
+     */
+    public function findAll()
+    {
+        $sql = "SELECT * FROM users";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $usuarios = [];
+        foreach ($rows as $row) {
+            $usuarios[] = new User(
+                $row['user_id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+            );
+        }
+        return $usuarios;
+    }
 }
 ?>
