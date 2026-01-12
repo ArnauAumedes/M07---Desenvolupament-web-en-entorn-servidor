@@ -246,7 +246,7 @@ class JugadorDAO extends Jugador implements DAO
      * Cuenta el total de jugadores en la base de datos
      * @return int Número total de jugadores
      */
-    public function countJugadores()
+    public function countAll()
     {
         $sql = "SELECT COUNT(*) as total FROM jugadores";
         $stmt = $this->db->prepare($sql);
