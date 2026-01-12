@@ -16,7 +16,7 @@ VALUES
 (
   1,
   'ARSENAL',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -24,7 +24,7 @@ VALUES
 (
   2,
   'MANCHESTER CITY',
-  100,
+  101,
   'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -32,7 +32,7 @@ VALUES
 (
   3,
   'TOTTENHAM',
-  100,
+  102,
   'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
   10, 9, 0, 1,
   NULL, NULL, 0
@@ -40,7 +40,7 @@ VALUES
 (
   4,
   'LIVERPOOL',
-  100,
+  103,
   'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -48,7 +48,7 @@ VALUES
 (
   5,
   'CHELSEA',
-  100,
+  104,
   'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -56,7 +56,7 @@ VALUES
 (
   6,
   'MANCHESTER UNITED',
-  100,
+  105,
   'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -64,7 +64,7 @@ VALUES
 (
   7,
   'NEWCASTLE UNITED',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -72,7 +72,7 @@ VALUES
 (
   8,
   'ASTON VILLA',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -80,7 +80,7 @@ VALUES
 (
   9,
   'WEST HAM',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -88,7 +88,7 @@ VALUES
 (
   10,
   'BRIGHTON',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -96,7 +96,7 @@ VALUES
 (
   11,
   'BRENTFORD',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -104,7 +104,7 @@ VALUES
 (
   12,
   'FULHAM',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -112,7 +112,7 @@ VALUES
 (
   13,
   'CRYSTAL PALACE',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/0/0c/Crystal_Palace_FC_logo.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -120,7 +120,7 @@ VALUES
 (
   14,
   'WOLVES',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -128,7 +128,7 @@ VALUES
 (
   15,
   'BOURNEMOUTH',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -136,7 +136,7 @@ VALUES
 (
   16,
   'EVERTON',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -144,7 +144,7 @@ VALUES
 (
   17,
   'NOTTINGHAM FOREST',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/6/6b/Nottingham_Forest_FC_logo.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -152,7 +152,7 @@ VALUES
 (
   18,
   'SOUTHAMPTON',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -160,7 +160,7 @@ VALUES
 (
   19,
   'LEICESTER CITY',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/6/6d/Leicester_City_crest.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -168,7 +168,7 @@ VALUES
 (
   20,
   'IPSWICH TOWN',
-  100,
+  NULL,
   'https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg',
   0, 0, 0, 0,
   NULL, NULL, 0
@@ -187,7 +187,7 @@ INSERT INTO
   )
 VALUES
   (
-    '100',
+    'NULL',
     'admin',
     'admin@admin.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
