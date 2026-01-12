@@ -242,11 +242,14 @@ class EquipoController
 		try {
 			$totalEquipos = $this->equipoDAO->countAll();
 			$totalPages = max(1, ceil($totalEquipos / $limit));
-			$equipos = $this->equipoDAO->getEquiposPaginados($limit, $offset);
+			$equipos = $this->equipoDAO->findAll(); 
 
 			if ($ordenCallback !== null) {
-				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, 'desc');
+				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, 'desc'); 
 			}
+
+			$equipos = array_slice($equipos, $offset, $limit); 
+
 		} catch (Exception $e) {
 			$equipos = [];
 			$message = "Error obteniendo equipos: " . $e->getMessage();
