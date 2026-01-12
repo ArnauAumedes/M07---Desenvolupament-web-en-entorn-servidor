@@ -14,27 +14,14 @@
 
 <body>
     <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    // Incloure capçalera i fitxers necessaris
     require_once __DIR__ . '/../globals/header.php';
-    require_once __DIR__ . '/../../model/database/database.php';
-    require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
-    require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-
-    // --- Lógica de datos y tabla ---
-    $db = new Database();
-    $jugadorDAO = new JugadorDAO($db->getConnection());
-    $equipoDAO = new EquipoDAO($db->getConnection());
-    // Paginación (separada en componente)
-    include __DIR__ . '/../globals/paginationLogicJugador.php';
-
-    // Obtener jugadores paginados y ordenarlos por asistencias
-    $jugadores = $jugadorDAO->getJugadoresPaginados($limit, $offset);
-    $jugadores = $jugadorDAO->ordenarPorValor(
-        $jugadores,
-        function ($jugador) use ($jugadorDAO) {
-            return $jugador->getAsistencias();
-        },
-        'desc'
-    );
+    require_once __DIR__ . '/../../model/components/auth.php';
+    $isLoggedIn = isLoggedIn();
     ?>
 
     <div class="main">

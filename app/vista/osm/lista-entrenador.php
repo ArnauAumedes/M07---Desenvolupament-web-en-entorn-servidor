@@ -14,31 +14,14 @@
 
 <body>
     <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
+    // Incloure capçalera i fitxers necessaris
     require_once __DIR__ . '/../globals/header.php';
-    require_once __DIR__ . '/../../model/database/database.php';
-    require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-    require_once __DIR__ . '/../../model/dao/UserDAO.php';
-
-    /**
-     * Definir variables i ordenar la taula d'entrenadors per punts
-     * @var Database $db Instancia de la base de dades
-     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
-     * @var UserDAO $userDAO Instancia del DAO d'usuaris
-     * @var array $equipos Llista d'equips
-     */
-    $db = new Database();
-    $equipoDAO = new EquipoDAO($db->getConnection());
-    $userDAO = new UserDAO($db->getConnection());
-    // Obtener usuarios paginados y ordenarlos por clasificación de su equipo
-    $equipos = $equipoDAO->findAll();
-    $equipos = $equipoDAO->ordenarPorValor(
-        $equipos,
-        function ($equipo) use ($equipoDAO) {
-            return $equipoDAO->getPuntos($equipo->getId());
-        },
-    );
-
+    require_once __DIR__ . '/../../model/components/auth.php';
+    $isLoggedIn = isLoggedIn();
     ?>
     <div class="main">
         <div class="table-responsive">

@@ -9,6 +9,7 @@ require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 class JugadorController
 {
     private $jugadorDAO;
+    private $jugador;
     private $equipoDAO;
     private $db;
 
@@ -19,6 +20,7 @@ class JugadorController
         $this->db = $database->getConnection();
         $this->jugadorDAO = new JugadorDAO($this->db);
         $this->equipoDAO = new EquipoDAO($this->db);
+        $this->jugador = new Jugador();
     }
 
     public function handleRequest()
@@ -37,9 +39,20 @@ class JugadorController
             case 'viewJugador':
                 $this->viewJugador();
                 break;
-            case 'listJugador':
+            case 'pichichis':
+                $this->listJugadores('pichichis', function ($jugador) {
+                    return $jugador->getGoles();
+                });
+                break;
+            case 'asistencias':
+                $this->listJugadores('asistencias', function ($jugador) {
+                    return $jugador->getAsistencias();
+                });
+                break;
             default:
-                $this->listJugadores();
+                $this->listJugadores('mejores-valorados', function ($jugador) {
+                    return $this->jugadorDAO->getSumaGolesAsistencias($jugador->getId());
+                });
                 break;
         }
     }
@@ -184,23 +197,40 @@ class JugadorController
         include __DIR__ . '/../vista/crudJugadores/singleJugador.php';
     }
 
-    private function listJugadores()
+    /**
+     * Lista los jugadores de forma paginada y opcionalmente ordenada.
+     * Incluye la vista especificada para mostrar los jugadores.
+     *
+     * @param string $vista Nombre del archivo de vista a incluir (sin extensión ni ruta completa)
+     * @param callable|null $ordenCallback Función de callback para ordenar los jugadores (opcional)
+     * @return void
+     */
+    private function listJugadores($vista = 'mejores-valorados', $ordenCallback = null)
     {
-        $message = '';
-        $page = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
-        $validLimits = [1, 5, 10, 20];
-        $limit = isset($_GET['limit']) && in_array((int)$_GET['limit'], $validLimits) ? (int)$_GET['limit'] : 10;
+        require_once __DIR__ . '/../model/dao/UserDAO.php';
+
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+        $limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? (int) $_GET['limit'] : 10;
         $offset = ($page - 1) * $limit;
+
         try {
+            $totalJugadores = $this->jugadorDAO->countAll();
+            $totalPages = max(1, ceil($totalJugadores / $limit));
             $jugadores = $this->jugadorDAO->getJugadoresPaginados($limit, $offset);
-            $totalJugadores = $this->jugadorDAO->countJugadores();
-            $totalPages = (int) ceil($totalJugadores / $limit);
+
+            if ($ordenCallback !== null) {
+                $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, $ordenCallback, 'desc');
+            }
         } catch (Exception $e) {
             $jugadores = [];
-            $totalPages = 1;
             $message = "Error obteniendo jugadores: " . $e->getMessage();
+            $totalPages = 1;
+            $page = 1;
+            $limit = 10;
         }
-        include __DIR__ . '/../vista/crudJugadores/listJugadores.php';
+        $jugadorDAO = $this->jugadorDAO;
+        $equipoDAO = $this->equipoDAO;
+        include __DIR__ . "/../vista/osm/{$vista}.php";
     }
 }
 ?>

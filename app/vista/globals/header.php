@@ -42,7 +42,7 @@ $username = $user['username'] ?? null;
                 <a class="nav-link" href="/practicas/public/index.php?action=valor-equipo">VALOR DE EQUIPO</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=lista-entrenador">LISTA DE ENTRENADOR</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=lista-entrenadores">LISTA DE ENTRENADORES</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/practicas/public/index.php?action=pichichis">PICHICHIS</a>
