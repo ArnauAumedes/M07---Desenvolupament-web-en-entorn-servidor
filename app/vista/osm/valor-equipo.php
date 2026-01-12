@@ -14,27 +14,14 @@
 
 <body>
     <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    // Incloure capçalera i fitxers necessaris
     require_once __DIR__ . '/../globals/header.php';
-    require_once __DIR__ . '/../../model/database/database.php';
-    require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-    require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
-
-    /**
-     * Definir variables i ordenar la taula de valor per valor d'equip
-     * @var Database $db Instancia de la base de dades
-     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
-     * @var array $equipos Llista d'equips
-     */
-    $db = new Database();
-    $equipoDAO = new EquipoDAO($db->getConnection());
-    $equipos = $equipoDAO->findAll();
-    $equipos = $equipoDAO->ordenarPorValor(
-        $equipos,
-        function ($equipo) use ($equipoDAO) {
-            return $equipoDAO->getValorEquipo($equipo->getId());
-        },
-    );
-
+    require_once __DIR__ . '/../../model/components/auth.php';
+    $isLoggedIn = isLoggedIn();
     ?>
     <div class="main">
         <?php
@@ -52,14 +39,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($equipos as $index => $equipo): ?>
-                        <?php
+                    <?php foreach ($equipos as $index => $equipo):
                         $equipoId = $equipo->getId();
                         $valorTotal = $equipoDAO->getValorEquipo($equipoId);
                         $cantidadJugadores = $equipoDAO->getCantidadJugadores($equipoId);
                         $valorPromedio = $cantidadJugadores > 0 ? $equipoDAO->getMediaValorJugadores($equipoId) : 0;
                         ?>
-                        <tr>
+                        <tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
+                            style="cursor:pointer;">
                             <td class="align-middle fs-4 fw-bold">
                                 <?= $index + 1 ?>
                             </td>
@@ -84,7 +71,9 @@
             </table>
         </div>
     </div>
+    <?php require_once __DIR__ . '/../globals/pagination.php'; ?>
     <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
+
 
 </html>

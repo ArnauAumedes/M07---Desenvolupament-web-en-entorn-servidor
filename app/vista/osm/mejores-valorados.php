@@ -19,17 +19,15 @@
     require_once __DIR__ . '/../../model/dao/JugadorDAO.php';
     require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
 
-    /**
-     * Definir variables i ordenar la taula de maxim contribuidors per majors contribuidors
-     * @var Database $db Instancia de la base de dades
-     * @var JugadorDAO $jugadorDAO Instancia del DAO de jugadors
-     * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
-     * @var array $jugadores Llista de jugadors
-     */
+    // --- Lógica de datos y tabla ---
     $db = new Database();
     $jugadorDAO = new JugadorDAO($db->getConnection());
     $equipoDAO = new EquipoDAO($db->getConnection());
-    $jugadores = $jugadorDAO->findAll();
+    // Paginación (separada en componente)
+    include __DIR__ . '/../globals/paginationLogicJugador.php';
+
+    // Obtener jugadores paginados y ordenarlos por suma de goles+asistencias
+    $jugadores = $jugadorDAO->getJugadoresPaginados($limit, $offset);
     $jugadores = $jugadorDAO->ordenarPorValor(
         $jugadores,
         function ($jugador) use ($jugadorDAO) {
@@ -61,7 +59,8 @@
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $sumaGA = $jugadorDAO->getSumaGolesAsistencias($jugador->getId());
                         ?>
-                        <tr>
+                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                            style="cursor:pointer;">
                             <td class="align-middle fw-bold text-uppercase">
                                 <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
                             </td>
@@ -94,6 +93,9 @@
             </table>
         </div>
     </div>
+
+    <!-- Paginación -->
+    <?php include __DIR__ . '/../globals/pagination.php'; ?>
     <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 

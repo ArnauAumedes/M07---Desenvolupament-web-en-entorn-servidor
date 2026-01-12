@@ -1,17 +1,17 @@
 <?php
 class User
 {
-    public $id;
-    private $username;
-    private $email;
-    private $password;
-    private $active;
+    public int $id;
+    private string $username;
+    private string $email;
+    private string $password;
+    private int $active;
     private $created_at;
     private $updated_at;
-    private $last_login;
 
-    public function __construct($username, $email, $password, $active = 1)
+    public function __construct(int $id, string $username, string $email, string $password, int $active = 1)
     {
+        $this->id = $id;
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
@@ -35,28 +35,23 @@ class User
     {
         return $this->password;
     }
-    public function isActive()
+    public function isActive()      
     {
         return $this->active;
     }
 
     // Setters
-    public function setId($timestamp)
-    {
-        $this->last_login = $timestamp;
-    }
-
-    public function setName($username)
+    public function setName(string $username): void
     {
         $this->username = $username;
     }
 
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
 
-    public function setActive($active)
+    public function setActive(int $active): void
     {
         $this->active = $active;
     }
