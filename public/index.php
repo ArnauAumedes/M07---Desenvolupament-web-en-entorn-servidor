@@ -34,6 +34,15 @@ if (in_array($action, $accionsJugador)) {
 	exit;
 }
 
+//Accions d'usuari
+$accionsUsuari = ['lista-entrenador'];
+if (in_array($action, $accionsUsuari)) {
+	require_once __DIR__ . '/../app/controlador/UserController.php';
+	$userController = new UserController();
+	$userController->handleRequest();
+	exit;
+}
+
 // Per defecte es crida el controlador d'equips
 require_once __DIR__ . '/../app/controlador/EquipoController.php';
 $controller = new EquipoController();

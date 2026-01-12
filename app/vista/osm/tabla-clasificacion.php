@@ -18,32 +18,16 @@
 
 
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Incloure capçalera i fitxers necessaris
 require_once __DIR__ . '/../globals/header.php';
-require_once __DIR__ . '/../../model/database/database.php';
-require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
-
-// Comprovar si l'usuari està autenticat
 require_once __DIR__ . '/../../model/components/auth.php';
 $isLoggedIn = isLoggedIn();
-
-/**
- * Definir variables i ordenar la taula de classificació per puntuatge 
- * @var Database $db Instancia de la base de dades
- * @var EquipoDAO $equipoDAO Instancia del DAO d'equips
- * @var array $equipos Llista d'equips
- */
-$db = new Database();
-$equipoDAO = new EquipoDAO($db->getConnection());
-$equipos = $equipoDAO->findAll();
-$equipos = $equipoDAO->ordenarPorValor(
-	$equipos,
-	function ($equipo) use ($equipoDAO) {
-		return $equipoDAO->getPuntos($equipo->getId());
-	},
-);
-
 ?>
+
 <div class="main">
 	<?php
 	require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
@@ -63,7 +47,7 @@ $equipos = $equipoDAO->ordenarPorValor(
 			</thead>
 			<tbody>
 				<?php foreach ($equipos as $index => $equipo): ?>
-					<tr>
+					<tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'" style="cursor:pointer;">
 						<td class="align-middle fs-4 fw-bold">
 							<?= $index + 1 ?>
 						</td>
@@ -90,7 +74,8 @@ $equipos = $equipoDAO->ordenarPorValor(
 	</div>
 </div>
 </body>
-<?php
+<?php 
+require_once __DIR__ . '/../globals/pagination.php';
 require_once __DIR__ . '/../globals/footer.php';
 ?>
 

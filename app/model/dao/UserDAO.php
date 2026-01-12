@@ -77,5 +77,65 @@ class UserDAO extends User
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Funcio per comptar el nombre total d'usuaris a la base de dades
+     * @return int Número total de usuarios en la base de datos
+     */
+    public function countAll()
+    {
+        $sql = "SELECT COUNT(*) as total FROM users";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['total'] : 0;
+    }
+
+    /**
+     * Obtiene usuarios paginados
+     * @param int $limit Número de registros por página
+     * @param int $offset Desplazamiento de registros
+     * @return User[] Array de instancias de User
+     */
+    public function getUsersPaginados($limit, $offset)
+    {
+        $sql = "SELECT * FROM users LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $usuarios = [];
+        foreach ($rows as $row) {
+            $usuarios[] = new User(
+                $row['user_id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+            );
+        }
+        return $usuarios;
+    }
+
+    /**
+     * Ordena un array de objetos (equipos o jugadores) según un valor calculado.
+     * @param $items Array de objetos a ordenar
+     * @param $value Recibe el objeto y devuelve el valor para ordenar
+     * @param $order 'desc' para descendente, 'asc' para ascendente
+     * @return array Array ordenado
+     */
+    public function ordenarPorValor($items, $value, $order = 'desc')
+    {
+        usort($items, function ($a, $b) use ($value, $order) {
+            $valorA = $value($a);
+            $valorB = $value($b);
+            if ($order === 'desc') {
+                return $valorB <=> $valorA;
+            } else {
+                return $valorA <=> $valorB;
+            }
+        });
+        return $items;
+    }
 }
 ?>

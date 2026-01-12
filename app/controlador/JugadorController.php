@@ -181,7 +181,7 @@ class JugadorController
             $message = "ID no proporcionado";
             header("HTTP/1.0 400 Bad Request");
         }
-        include __DIR__ . '/../vista/singleJugador.php';
+        include __DIR__ . '/../vista/crudJugadores/singleJugador.php';
     }
 
     private function listJugadores()

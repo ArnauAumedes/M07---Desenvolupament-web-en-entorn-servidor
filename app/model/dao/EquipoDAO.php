@@ -267,6 +267,7 @@ class EquipoDAO extends Equipo implements DAO
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['max_jugados'] : 0;
     }
+    
     /**
      * Funcio per comptar el nombre total d'equips a la base de dades
      * @return int Número total de equipos en la base de datos
@@ -278,6 +279,37 @@ class EquipoDAO extends Equipo implements DAO
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['total'] : 0;
+    }
+
+    /**
+     * Obtiene equipos paginados
+     * @param int $limit Número de registros por página
+     * @param int $offset Desplazamiento de registros
+     * @return Equipo[] Array de instancias de Equipo
+     */
+    public function getEquiposPaginados($limit, $offset)
+    {
+        $sql = "SELECT * FROM equipos LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $equipos = [];
+        foreach ($rows as $row) {
+            $equipos[] = new Equipo(
+                $row['id'],
+                $row['equip'],
+                $row['user_id'],
+                $row['escudo'],
+                $row['jugados'],
+                $row['ganados'],
+                $row['empatados'],
+                $row['perdidos'],
+                $row['objetivo'] ?? 0
+            );
+        }
+        return $equipos;
     }
 }
 

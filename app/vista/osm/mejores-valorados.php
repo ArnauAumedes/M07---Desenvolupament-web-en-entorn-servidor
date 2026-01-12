@@ -37,11 +37,11 @@
     );
     ?>
 
-    <div class="main mb-5">
+    <div class="main">
         <?php
         require_once __DIR__ . '/../globals/crudButtonsJugador.php';
         ?>
-        <div class="table-responsive mb-5">
+        <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
                     <tr>
@@ -59,7 +59,8 @@
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $sumaGA = $jugadorDAO->getSumaGolesAsistencias($jugador->getId());
                         ?>
-                        <tr>
+                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                            style="cursor:pointer;">
                             <td class="align-middle fw-bold text-uppercase">
                                 <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
                             </td>
@@ -94,7 +95,7 @@
     </div>
 
     <!-- Paginación -->
-    <?php include __DIR__ . '/../globals/paginationJugador.php'; ?>
+    <?php include __DIR__ . '/../globals/pagination.php'; ?>
     <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 

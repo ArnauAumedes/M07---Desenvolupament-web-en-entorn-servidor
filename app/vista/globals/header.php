@@ -36,23 +36,22 @@ $username = $user['username'] ?? null;
         </button>
         <ul class="navbar-nav nav-left">
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/tabla-clasificacion.php">TABLA DE
-                    CLASIFICACION</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=list">TABLA DE CLASIFICACION</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/valor-equipo.php">VALOR DE EQUIPO</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=valor-equipo">VALOR DE EQUIPO</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/lista-entrenador.php">LISTA DE ENTRENADOR</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=lista-entrenador">LISTA DE ENTRENADOR</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/pichichis.php">PICHICHIS</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=pichichis">PICHICHIS</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/asistencias.php">ASISTENCIAS</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=asistencias">ASISTENCIAS</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/practicas/app/vista/osm/mejores-valorados.php">MEJORES VALORADOS</a>
+                <a class="nav-link" href="/practicas/public/index.php?action=mejores-valorados">MEJORES VALORADOS</a>
             </li>
         </ul>
         <ul class="navbar-nav nav-right">
@@ -64,7 +63,8 @@ $username = $user['username'] ?? null;
                     ?>
                     <span class="d-flex align-items-center">
                         <img src="<?php echo $imgSrc; ?>" alt="profile" class="profile-img mr-2" />
-                        <a class="nav-link header-btn" href="#" style="line-height:1;"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
+                        <a class="nav-link header-btn" href="#"
+                            style="line-height:1;"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
                     </span>
                 </li>
                 <li class="nav-item">

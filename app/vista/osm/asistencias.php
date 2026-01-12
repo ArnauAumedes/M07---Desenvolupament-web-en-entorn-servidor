@@ -26,7 +26,7 @@
     // Paginación (separada en componente)
     include __DIR__ . '/../globals/paginationLogicJugador.php';
 
-    // Obtener jugadores paginados y ordenarlos por suma de goles+asistencias
+    // Obtener jugadores paginados y ordenarlos por asistencias
     $jugadores = $jugadorDAO->getJugadoresPaginados($limit, $offset);
     $jugadores = $jugadorDAO->ordenarPorValor(
         $jugadores,
@@ -58,7 +58,8 @@
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
                         ?>
-                        <tr>
+                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                            style="cursor:pointer;">
                             <td class="align-middle fw-bold text-uppercase">
                                 <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
                             </td>
@@ -88,7 +89,7 @@
             </table>
         </div>
     </div>
-    <?php require_once __DIR__ . '/../globals/paginationJugador.php'; ?>
+    <?php require_once __DIR__ . '/../globals/pagination.php'; ?>
     <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 

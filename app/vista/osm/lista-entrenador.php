@@ -30,6 +30,7 @@
     $db = new Database();
     $equipoDAO = new EquipoDAO($db->getConnection());
     $userDAO = new UserDAO($db->getConnection());
+    // Obtener usuarios paginados y ordenarlos por clasificación de su equipo
     $equipos = $equipoDAO->findAll();
     $equipos = $equipoDAO->ordenarPorValor(
         $equipos,
@@ -70,7 +71,7 @@
                             <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
                             <td class="text-center align-middle"><?= $index + 1 ?></td>
                             <?php
-                                $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $index + 1);
+                            $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $index + 1);
                             ?>
                             <td class="text-center align-middle">
                                 <span class="fw-bold" style="color: <?= htmlspecialchars($dif['color']) ?>;">
@@ -88,6 +89,7 @@
     </div>
 </body>
 <?php
+require_once __DIR__ . '/../globals/pagination.php';
 require_once __DIR__ . '/../globals/footer.php';
 ?>
 
