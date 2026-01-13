@@ -251,8 +251,8 @@ INSERT INTO jugadores (
 
 -- MANCHESTER CITY (2)
 (4, 'Erling Haaland', 2, 180000000, 35, 36, 8),
-(5, 'Kevin De Bruyne', 2, NULL000000, 32, 10, 18),
-(6, 'Phil Foden', 2, 1NULL00000, 37, 15, 9),
+(5, 'Kevin De Bruyne', 2, 100000000, 32, 10, 18),
+(6, 'Phil Foden', 2, 110000000, 37, 15, 9),
 
 -- TOTTENHAM (3)
 (7, 'Heung-Min Son', 3, 90000000, 38, 23, 7),
