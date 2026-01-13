@@ -3,7 +3,7 @@ class Equipo
 {
 	private string $id;
 	private string $equip;
-	private string $user_id;
+	private ?int $user_id;
 	private string $escudo;
 	private int $jugados;
 	private int $ganados;
@@ -11,7 +11,7 @@ class Equipo
 	private int $perdidos;
 	private int $objetivo;
 
-	public function __construct(int $id, string $equip, int $user_id, string $escudo, int $jugados, int $ganados, int $empatados, int $perdidos, int $objetivo = 0)
+	public function __construct(int $id, string $equip, ?int $user_id, string $escudo, int $jugados, int $ganados, int $empatados, int $perdidos, int $objetivo = 0)
 	{
 		$this->id = $id;
 		$this->equip = $equip;
