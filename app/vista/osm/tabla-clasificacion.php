@@ -47,7 +47,8 @@ $isLoggedIn = isLoggedIn();
 			</thead>
 			<tbody>
 				<?php foreach ($equipos as $index => $equipo): ?>
-					<tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'" style="cursor:pointer;">
+					<tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
+						style="cursor:pointer;">
 						<td class="align-middle fs-4 fw-bold">
 							<?= $index + 1 ?>
 						</td>
@@ -57,7 +58,11 @@ $isLoggedIn = isLoggedIn();
 							<div>
 								<span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
 								<span class="text-muted club-usuario" style="font-size:0.95em;">
-									<?= htmlspecialchars($equipo->getUserId()) ?></span>
+									<?php if ($equipo->getUserId() === null || $equipo->getUserId() === ""): ?>
+										no tiene entrenador
+									<?php else: ?>
+										<?= htmlspecialchars($equipo->getUserId()) ?>
+									<?php endif; ?>
 							</div>
 						</td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getJugados()) ?></td>
@@ -74,7 +79,7 @@ $isLoggedIn = isLoggedIn();
 	</div>
 </div>
 </body>
-<?php 
+<?php
 require_once __DIR__ . '/../globals/pagination.php';
 require_once __DIR__ . '/../globals/footer.php';
 ?>

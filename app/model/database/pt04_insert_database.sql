@@ -58,7 +58,7 @@ VALUES
     CURRENT_TIMESTAMP
   );
 
--- Datos iniciales para la tabla equipos
+-- Datos iniciales actualizados para la tabla equipos
 INSERT INTO `equipos` (
   `id`,
   `equip`,
@@ -73,166 +73,27 @@ INSERT INTO `equipos` (
   `trofeo`
 )
 VALUES
-(
-  1,
-  'ARSENAL',
-  100,
-  'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  2,
-  'MANCHESTER CITY',
-  101,
-  'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  3,
-  'TOTTENHAM',
-  102,
-  'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
-  10, 9, 0, 1,
-  NULL, NULL, 0
-),
-(
-  4,
-  'LIVERPOOL',
-  103,
-  'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  5,
-  'CHELSEA',
-  104,
-  'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  6,
-  'MANCHESTER UNITED',
-  105,
-  'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  7,
-  'NEWCASTLE UNITED',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  8,
-  'ASTON VILLA',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  9,
-  'WEST HAM',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  10,
-  'BRIGHTON',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  11,
-  'BRENTFORD',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  12,
-  'FULHAM',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  13,
-  'CRYSTAL PALACE',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/0/0c/Crystal_Palace_FC_logo.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  14,
-  'WOLVES',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  15,
-  'BOURNEMOUTH',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  16,
-  'EVERTON',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  17,
-  'NOTTINGHAM FOREST',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/6/6b/Nottingham_Forest_FC_logo.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  18,
-  'SOUTHAMPTON',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  19,
-  'LEICESTER CITY',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/6/6d/Leicester_City_crest.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-),
-(
-  20,
-  'IPSWICH TOWN',
-  NULL,
-  'https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg',
-  0, 0, 0, 0,
-  NULL, NULL, 0
-);
+(1, 'ARSENAL', 100, 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg', 38, 22, 10, 6, 65.79, NULL, 0),
+(2, 'MANCHESTER CITY', 101, 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', 38, 28, 6, 4, 78.95, NULL, 0),
+(3, 'TOTTENHAM', 102, 'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg', 38, 21, 10, 7, 60.53, NULL, 0),
+(4, 'LIVERPOOL', 103, 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg', 38, 24, 8, 6, 68.42, NULL, 0),
+(5, 'CHELSEA', 104, 'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg', 38, 20, 9, 9, 60.53, NULL, 0),
+(6, 'MANCHESTER UNITED', 105, 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg', 38, 22, 10, 6, 65.79, NULL, 0),
+(7, 'NEWCASTLE UNITED', NULL, 'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg', 38, 21, 10, 7, 60.53, NULL, 0),
+(8, 'ASTON VILLA', NULL, 'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg', 38, 19, 12, 7, 57.89, NULL, 0),
+(9, 'WEST HAM', NULL, 'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg', 38, 18, 11, 9, 55.26, NULL, 0),
+(10, 'BRIGHTON', NULL, 'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg', 38, 17, 12, 9, 55.26, NULL, 0),
+(11, 'BRENTFORD', NULL, 'https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg', 37, 15, 10, 12, 54.05, NULL, 0),
+(12, 'FULHAM', NULL, 'https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg', 37, 16, 9, 12, 56.76, NULL, 0),
+(13, 'CRYSTAL PALACE', NULL, 'https://upload.wikimedia.org/wikipedia/en/0/0c/Crystal_Palace_FC_logo.svg', 37, 14, 10, 13, 51.35, NULL, 0),
+(14, 'WOLVES', NULL, 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg', 37, 13, 11, 13, 48.65, NULL, 0),
+(15, 'BOURNEMOUTH', NULL, 'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth.svg', 37, 12, 11, 14, 45.95, NULL, 0),
+(16, 'EVERTON', NULL, 'https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg', 37, 11, 10, 16, 43.24, NULL, 0),
+(17, 'NOTTINGHAM FOREST', NULL, 'https://upload.wikimedia.org/wikipedia/en/6/6b/Nottingham_Forest_FC_logo.svg', 37, 10, 12, 15, 40.54, NULL, 0),
+(18, 'SOUTHAMPTON', NULL, 'https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg', 37, 9, 11, 17, 37.84, NULL, 0),
+(19, 'LEICESTER CITY', NULL, 'https://upload.wikimedia.org/wikipedia/en/6/6d/Leicester_City_crest.svg', 37, 10, 10, 17, 40.54, NULL, 0),
+(20, 'IPSWICH TOWN', NULL, 'https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg', 37, 9, 11, 17, 37.84, NULL, 0);
+
 
 -- Datos iniciales para la tabla jugadores
 INSERT INTO jugadores (

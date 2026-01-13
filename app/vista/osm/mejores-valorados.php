@@ -55,7 +55,11 @@
                                         style="height:32px; margin-right:8px;">
                                     <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
                                     <span class="text-muted club-usuario" style="font-size:0.95em;">
-                                        <?= htmlspecialchars($equipo->getUserId()) ?>
+                                        <?php if ($equipo->getUserId() === null || $equipo->getUserId() === "") : ?>
+                                            no tiene entrenador
+                                        <?php else : ?>
+                                            <?= htmlspecialchars($equipo->getUserId()) ?>
+                                        <?php endif; ?>
                                     </span>
                                 <?php endif; ?>
                             </td>
