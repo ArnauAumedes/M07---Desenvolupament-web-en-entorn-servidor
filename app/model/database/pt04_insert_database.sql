@@ -1,3 +1,63 @@
+-- Datos iniciales para la tabla users
+INSERT INTO
+  `users` (
+    `user_id`,
+    `username`,
+    `email`,
+    `password`,
+    `active`,
+    `created_at`
+  )
+VALUES
+  (
+    '100',
+    'admin',
+    'admin@admin.com',
+    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    1,
+    CURRENT_TIMESTAMP
+  ),
+  (
+    '101',
+    'usuario1',
+    'usuario1@example.com',
+    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    1,
+    CURRENT_TIMESTAMP
+  ),
+  (
+    '102',
+    'usuario2',
+    'usuario2@example.com',
+    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    1,
+    CURRENT_TIMESTAMP
+  ),
+  (
+    '103',
+    'usuario3',
+    'usuario3@example.com',
+    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    1,
+    CURRENT_TIMESTAMP
+  ),
+  (
+    '104',
+    'usuario4',
+    'usuario4@example.com',
+    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    1,
+    CURRENT_TIMESTAMP
+  ),
+  (
+    '105',
+    'usuario5',
+    'usuario5@example.com',
+    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    1,
+    CURRENT_TIMESTAMP
+  );
+
 -- Datos iniciales para la tabla equipos
 INSERT INTO `equipos` (
   `id`,
@@ -173,67 +233,6 @@ VALUES
   0, 0, 0, 0,
   NULL, NULL, 0
 );
-
-
--- Datos iniciales para la tabla users
-INSERT INTO
-  `users` (
-    `user_id`,
-    `username`,
-    `email`,
-    `password`,
-    `active`,
-    `created_at`
-  )
-VALUES
-  (
-    '100',
-    'admin',
-    'admin@admin.com',
-    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
-    1,
-    CURRENT_TIMESTAMP
-  ),
-  (
-    '101',
-    'usuario1',
-    'usuario1@example.com',
-    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
-    1,
-    CURRENT_TIMESTAMP
-  ),
-  (
-    '102',
-    'usuario2',
-    'usuario2@example.com',
-    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
-    1,
-    CURRENT_TIMESTAMP
-  ),
-  (
-    '103',
-    'usuario3',
-    'usuario3@example.com',
-    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
-    1,
-    CURRENT_TIMESTAMP
-  ),
-  (
-    '104',
-    'usuario4',
-    'usuario4@example.com',
-    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
-    1,
-    CURRENT_TIMESTAMP
-  ),
-  (
-    '105',
-    'usuario5',
-    'usuario5@example.com',
-    '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
-    1,
-    CURRENT_TIMESTAMP
-  );
 
 -- Datos iniciales para la tabla jugadores
 INSERT INTO jugadores (

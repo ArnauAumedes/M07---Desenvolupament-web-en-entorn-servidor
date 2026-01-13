@@ -7,8 +7,6 @@ CREATE DATABASE IF NOT EXISTS `pt04_arnau_aumedes`;
 USE `pt04_arnau_aumedes`;
 
 -- --------------------------------------------------------
--- Estructura de tabla para la tabla `articles`
---
 -- Tabla users 
 CREATE TABLE
   IF NOT EXISTS `users` (
@@ -22,6 +20,7 @@ CREATE TABLE
     PRIMARY KEY (`user_id`)
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
+-- --------------------------------------------------------
 -- Tabla password_reset_temp
 CREATE TABLE
   IF NOT EXISTS `password_reset_temp` (
@@ -31,6 +30,7 @@ CREATE TABLE
     PRIMARY KEY (`email`, `key`)
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
+-- --------------------------------------------------------
 -- Tabla equipos
 CREATE TABLE
   IF NOT EXISTS `equipos` (
@@ -46,10 +46,15 @@ CREATE TABLE
     `rendimiento` DECIMAL(5, 2) DEFAULT NULL,
     `bg` VARCHAR(255) DEFAULT NULL,
     `trofeo` VARCHAR(100) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `fk_equipos_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
--- Estructura de tabla para la tabla `jugadores`
+-- --------------------------------------------------------
+-- Tabla jugadores
 CREATE TABLE
   IF NOT EXISTS `jugadores` (
     `id` INT (11) NOT NULL AUTO_INCREMENT,
@@ -61,5 +66,7 @@ CREATE TABLE
     `asistencias` INT (11) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `equipo_id` (`equipo_id`),
-    CONSTRAINT `jugadores_ibfk_1` FOREIGN KEY (`equipo_id`) REFERENCES `equipos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT `jugadores_ibfk_1` FOREIGN KEY (`equipo_id`) REFERENCES `equipos` (`id`)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
