@@ -32,6 +32,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th class="align-middle" style="width:8%">POSICIÓN</th>
+                        <th class="align-middle" style="width:8%">ID EQUIPO</th>
                         <th class="align-middle" style="width:22%">CLUB</th>
                         <th class="text-center align-middle" style="width:20%">VALOR TOTAL (€)</th>
                         <th class="text-center align-middle" style="width:20%">JUGADORES</th>
@@ -49,6 +50,9 @@
                             style="cursor:pointer;">
                             <td class="align-middle fs-4 fw-bold">
                                 <?= $index + 1 ?>
+                            </td>
+                            <td class="align-middle">
+                                <?= htmlspecialchars($equipo->getId()) ?>
                             </td>
                             <td class="align-middle d-flex align-items-center gap-2">
                                 <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
