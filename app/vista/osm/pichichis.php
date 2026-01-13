@@ -31,6 +31,7 @@
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
                     <tr>
+                        <th class="align-middle" style="width:10%">ID JUGADOR</th>
                         <th class="align-middle" style="width:20%">NOMBRE</th>
                         <th class="align-middle" style="width:22%">CLUB</th>
                         <th class="text-center align-middle" style="width:14%">PARTIDOS</th>
@@ -46,6 +47,9 @@
                         ?>
                         <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
                             style="cursor:pointer;">
+                            <td class="align-middle">
+                                <?= htmlspecialchars($jugador->getId()) ?>
+                            </td>
                             <td class="align-middle fw-bold text-uppercase">
                                 <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
                             </td>

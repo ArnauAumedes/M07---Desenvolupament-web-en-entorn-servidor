@@ -21,7 +21,7 @@
 	<div class="row justify-content-center">
 		<div class="col-md-6">
 			<div class="login-card p-4">
-				<h4 class="mb-3 text-center">Inicia sessió</h4>
+				<h4 class="mb-3 text-center">Iniciar Sesión</h4>
 				<?php
 				// Mensatges o errors generats pel controlador (si existeixen)
 				echo $messages ?? '';
@@ -36,13 +36,12 @@
 						<input id="password" name="password" type="password" name="password" class="form-control">
 					</div>
 					<div class="form-group text-center mt-2">
-						<a href="/practicas/app/vista/send-email.php" class="text-muted"><b><u>I Forgot my
-									Password</u></b>
+						<a href="/practicas/app/vista/send-email.php" class="text-muted"><b><u>Olvidé mi contraseña</u></b>
 						</a>
 					</div>
 					<div class="form-group text-center mt-4">
 						<button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
-						<a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
+						<a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
 					</div>
 				</form>
 			</div>
