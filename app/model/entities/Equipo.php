@@ -1,7 +1,7 @@
 <?php
 class Equipo
 {
-	private string $id;
+	private int|string|null $id;
 	private string $equip;
 	private ?int $user_id;
 	private string $escudo;
@@ -11,7 +11,7 @@ class Equipo
 	private int $perdidos;
 	private int $objetivo;
 
-	public function __construct(int $id, string $equip, ?int $user_id, string $escudo, int $jugados, int $ganados, int $empatados, int $perdidos, int $objetivo = 0)
+	public function __construct(int|string|null $id, string $equip, int|string|null $user_id, string $escudo, int $jugados, int $ganados, int $empatados, int $perdidos, int $objetivo)
 	{
 		$this->id = $id;
 		$this->equip = $equip;

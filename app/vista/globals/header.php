@@ -28,6 +28,12 @@ $username = $user['username'] ?? null;
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 
+<?php
+$currentAction = $_GET['action'] ?? 'list';
+function navActive($action, $currentAction) {
+    return $action === $currentAction ? 'active text-white' : '';
+}
+?>
 <nav id="header" class="navbar navbar-expand-sm navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href="/practicas/public/index.php">Logo</a>
@@ -35,23 +41,23 @@ $username = $user['username'] ?? null;
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav nav-left">
-            <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=list">TABLA DE CLASIFICACION</a>
+            <li class="nav-item <?php echo navActive('list', $currentAction); ?>">
+                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="/practicas/public/index.php?action=list">TABLA DE CLASIFICACION</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=valor-equipo">VALOR DE EQUIPO</a>
+            <li class="nav-item <?php echo navActive('valor-equipo', $currentAction); ?>">
+                <a class="nav-link <?php echo navActive('valor-equipo', $currentAction); ?>" href="/practicas/public/index.php?action=valor-equipo">VALOR DE EQUIPO</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=lista-entrenador">LISTA DE ENTRENADORES</a>
+            <li class="nav-item <?php echo navActive('lista-entrenador', $currentAction); ?>">
+                <a class="nav-link <?php echo navActive('lista-entrenador', $currentAction); ?>" href="/practicas/public/index.php?action=lista-entrenador">LISTA DE ENTRENADORES</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=pichichis">PICHICHIS</a>
+            <li class="nav-item <?php echo navActive('pichichis', $currentAction); ?>">
+                <a class="nav-link <?php echo navActive('pichichis', $currentAction); ?>" href="/practicas/public/index.php?action=pichichis">PICHICHIS</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=asistencias">ASISTENCIAS</a>
+            <li class="nav-item <?php echo navActive('asistencias', $currentAction); ?>">
+                <a class="nav-link <?php echo navActive('asistencias', $currentAction); ?>" href="/practicas/public/index.php?action=asistencias">ASISTENCIAS</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/practicas/public/index.php?action=mejores-valorados">MEJORES VALORADOS</a>
+            <li class="nav-item <?php echo navActive('mejores-valorados', $currentAction); ?>">
+                <a class="nav-link <?php echo navActive('mejores-valorados', $currentAction); ?>" href="/practicas/public/index.php?action=mejores-valorados">MEJORES VALORADOS</a>
             </li>
         </ul>
         <ul class="navbar-nav nav-right">

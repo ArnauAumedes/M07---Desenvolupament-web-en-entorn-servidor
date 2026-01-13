@@ -46,6 +46,7 @@ CREATE TABLE
     `rendimiento` DECIMAL(5, 2) DEFAULT NULL,
     `bg` VARCHAR(255) DEFAULT NULL,
     `trofeo` VARCHAR(100) DEFAULT NULL,
+    `objetivo` INT (11) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
     CONSTRAINT `fk_equipos_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)

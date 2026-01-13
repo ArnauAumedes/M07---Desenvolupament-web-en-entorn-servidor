@@ -84,8 +84,8 @@ class EquipoController
 				}
 				// Validación de objetivo
 				$totalEquipos = $this->equipoDAO->countAll();
-				if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
-					$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
+				if (!is_numeric($objetivo) || $objetivo < 1 || $objetivo >= $totalEquipos) {
+					$error_partidos = 'El objetivo debe ser un número mayor o igual que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
 					include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
 					return;
 				}
@@ -139,8 +139,8 @@ class EquipoController
 				} else {
 					// Validación de objetivo
 					$totalEquipos = $this->equipoDAO->countAll();
-					if (!is_numeric($objetivo) || $objetivo <= 1 || $objetivo >= $totalEquipos) {
-						$error_partidos = 'El objetivo debe ser un número mayor que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
+					if (!is_numeric($objetivo) || $objetivo < 1 || $objetivo >= $totalEquipos) {
+						$error_partidos = 'El objetivo debe ser un número mayor o igual que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
 					} else {
 						$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 						$rowsAffected = $this->equipoDAO->update($equipo);
