@@ -10,7 +10,7 @@ INSERT INTO
   )
 VALUES
   (
-    'NULL',
+    '100',
     'admin',
     'admin@admin.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
