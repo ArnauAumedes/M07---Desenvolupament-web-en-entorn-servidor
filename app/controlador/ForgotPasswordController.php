@@ -16,7 +16,7 @@ class ForgotPasswordController {
     public function __construct($db = null) {
         if ($db === null) {
             // Cargar conexión PDO por defecto si no se pasa
-            require_once __DIR__ . '/../model/database/database.php';
+            require_once __DIR__ . '/../../config/db-connection.php';
             $dbInstance = new Database();
             $this->db = $dbInstance->getConnection();
         } else {
@@ -54,7 +54,7 @@ class ForgotPasswordController {
             require_once __DIR__ . '/../lib/PHPMailer/src/SMTP.php';
             require_once __DIR__ . '/../lib/PHPMailer/src/Exception.php';
             $mail = new PHPMailer();
-            $config = include(__DIR__ . '/../config/smtp.php');
+            $config = include(__DIR__ . '/../../config/smtp.php');
             $mail->IsSMTP();
             $mail->SMTPDebug = 0;
             $mail->Host = $config['host'];

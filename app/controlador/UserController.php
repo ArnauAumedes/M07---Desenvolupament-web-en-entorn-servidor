@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/User.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';

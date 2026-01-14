@@ -6,16 +6,17 @@ class User
     private string $email;
     private string $password;
     private int $active;
-    private $created_at;
+    private ?string $created_at;
     private $updated_at;
 
-    public function __construct(int $id, string $username, string $email, string $password, int $active = 1)
+    public function __construct(int $id, string $username, string $email, string $password, int $active = 1, $created_at = null)
     {
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
         $this->active = $active;
+        $this->created_at = $created_at ?? date('Y-m-d H:i:s');
     }
 
     // Getters
@@ -35,6 +36,11 @@ class User
     {
         return $this->password;
     }
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
     public function isActive()      
     {
         return $this->active;

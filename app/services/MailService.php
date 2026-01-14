@@ -25,7 +25,7 @@ class MailService
         }
 
         // Try load config file app/config/smtp.php if exists
-        $cfgFile = __DIR__ . '/../config/smtp.php';
+        $cfgFile = __DIR__ . '/../../config/smtp.php';
         if (file_exists($cfgFile)) {
             $this->config = require $cfgFile;
             return;

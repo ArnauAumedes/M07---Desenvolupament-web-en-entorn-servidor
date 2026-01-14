@@ -1,6 +1,6 @@
 <?php
 // model/dao/PasswordResetDAO.php
-require_once __DIR__ . '/../database/database.php';
+require_once __DIR__ . '/../../../config/db-connection.php';
 
 class PasswordResetDAO  {
     private $db;

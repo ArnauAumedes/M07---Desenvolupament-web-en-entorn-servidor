@@ -4,7 +4,7 @@
  * Controlador per al logout: destrueix la sessió i redirigeix a l'index públic
  * Autor: Arnau Aumedes Jimenez
  */
-require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../../config/db-connection.php';
 
 try {
     $database = new Database();

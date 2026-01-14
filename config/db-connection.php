@@ -10,32 +10,35 @@
  * @author Arnau Aumedes
  * @version 1.0
  */
-class Database {
+require_once __DIR__ . '/env.php';
+loadEnv(__DIR__ . '/../.env');
+class Database
+{
     /**
      * @var string Host del servidor de base de dades
      */
-    private $host = '127.0.0.1';
-    
+    private $host;
+
     /**
      * @var string Nom de la base de dades
      */
-    private $dbname = 'pt04_arnau_aumedes';
-    
+    private $dbname;
+
     /**
      * @var string Nom d'usuari per connectar a la BD
      */
-    private $username = 'root';
-    
+    private $username;
+
     /**
      * @var string Contrasenya per connectar a la BD
      */
-    private $password = '';
-    
+    private $password;
+
     /**
      * @var string Joc de caràcters de la connexió
      */
-    private $charset = 'utf8mb4';
-    
+    private $charset;
+
     /**
      * @var PDO|null Objecte de connexió PDO
      */
@@ -47,7 +50,13 @@ class Database {
      * Inicialitza automàticament la connexió a la base de dades
      * en crear una instància de la classe.
      */
-    public function __construct() {
+    public function __construct()
+    {
+        $this->host = getenv('DB_HOST');
+        $this->dbname = getenv('DB_DATABASE');
+        $this->username = getenv('DB_USERNAME');
+        $this->password = getenv('DB_PASSWORD');
+        $this->charset = getenv('DB_CHARSET');
         $this->connect();
     }
 
@@ -62,15 +71,16 @@ class Database {
      * @return void
      * @throws PDOException Si hi ha errors en la connexió
      */
-    private function connect() {
+    private function connect()
+    {
         // DSN (Data Source Name)
         $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset={$this->charset}";
 
         // Opcions de PDO
         $options = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Mode d'errors amb excepcions
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Mode d'errors amb excepcions
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Mode de recuperació per defecte (array associatiu)
-            PDO::ATTR_EMULATE_PREPARES   => false,                  // Desactivar emulació de prepares (més segur)
+            PDO::ATTR_EMULATE_PREPARES => false,                  // Desactivar emulació de prepares (més segur)
         ];
 
         try {
@@ -90,7 +100,8 @@ class Database {
      * 
      * @return PDO Objecte de connexió PDO a la base de dades
      */
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->pdo;
     }
 }

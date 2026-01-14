@@ -6,13 +6,110 @@
  * Autor: Arnau Aumedes Jimenez
  */
 require_once __DIR__ . '/../entities/User.php';
+require_once __DIR__ . '/DAO.php';
 
-class UserDAO extends User
+class UserDAO extends User implements DAO
 {
     private $db;
     public function __construct($db)
     {
         $this->db = $db;
+    }
+
+    /**
+     * Crea un nou usuari a la base de dades
+     * @param User $user Instància de l'usuari a crear
+     * @return string ID del nou usuari inserit
+     */
+    public function create($user)
+    {
+        $sql = 'INSERT INTO users (username, email, password, trn_date) VALUES (:username, :email, :password, :trn_date)';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
+        $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindValue(':password', $user->getPassword(), PDO::PARAM_STR);
+        $stmt->bindValue(':trn_date', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $stmt->execute();
+        return $this->db->lastInsertId();
+    }
+
+    /**
+     * Actualitza un usuari existent a la base de dades
+     * @param User $user Instància de l'usuari a actualitzar
+     * @return int Nombre de files afectades
+     */
+    public function update($user)
+    {
+        $sql = 'UPDATE users SET username = :username, email = :email, password = :password WHERE user_id = :user_id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
+        $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindValue(':password', $user->getPassword(), PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $user->getId(), PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Elimina un usuari de la base de dades
+     * @param int $id ID de l'usuari a eliminar
+     * @return int Nombre de files afectades
+     */
+    public function delete($id)
+    {
+        $sql = 'DELETE FROM users WHERE user_id = :user_id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':user_id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
+     * Busca un usuari per ID
+     * @param int $id ID de l'usuari a cercar
+     * @return User|null Instància de User o null si no es troba
+     */
+    public function findById($id)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE user_id = :user_id LIMIT 1');
+        $stmt->bindValue(':user_id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new User(
+                $row['user_id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+                $row['active'],
+                $row['created_at']
+            );
+        }
+        return null;
+    }
+
+    /**
+     * Funcion para obtener todos los usuarios
+     * @return User[] Array de instancias de User
+     */
+
+    public function findAll()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE active = 1');
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $users = [];
+        foreach ($rows as $row) {
+            $users[] = new User(
+                $row['user_id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+                $row['active'],
+                $row['created_at']
+            );
+        }
+        return $users;
     }
 
     // Comprueba si existe un usuario por email
@@ -31,19 +128,11 @@ class UserDAO extends User
         return $stmt->fetch() !== false;
     }
 
-    // Inserta un nuevo usuario
-    public function createUser($username, $email, $hashedPassword)
-    {
-        $stmt = $this->db->prepare('INSERT INTO users (username, email, password, active) VALUES (:username, :email, :password, 1)');
-        $stmt->execute([
-            ':username' => $username,
-            ':email' => $email,
-            ':password' => $hashedPassword
-        ]);
-        return $this->db->lastInsertId();
-    }
-
-    // Obtiene usuario por email
+    /**
+     * Obtenir usuari per email
+     * @param string $email Email de l'usuari
+     * @return array|null Dades de l'usuari o null si no es troba
+     */
     public function getByEmail($email)
     {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
@@ -51,15 +140,13 @@ class UserDAO extends User
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Obtiene usuario por username
-    public function getByUsername($username)
-    {
-        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = :username LIMIT 1');
-        $stmt->execute([':username' => $username]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // Actualiza la contraseña por email
+    /**
+     * Actualitza la contrasenya d'un usuari per email
+     * @param string $email Email de l'usuari
+     * @param string $hashedPassword Nova contrasenya hashada
+     * @param string $trnDate Data de la transacció
+     * @return void 
+     */
     public function updatePasswordByEmail($email, $hashedPassword, $trnDate)
     {
         $stmt = $this->db->prepare('UPDATE users SET password = :password, trn_date = :trn_date WHERE email = :email');
@@ -68,14 +155,6 @@ class UserDAO extends User
             ':trn_date' => $trnDate,
             ':email' => $email
         ]);
-    }
-
-    // Obtiene usuario por id
-    public function getById($id)
-    {
-        $stmt = $this->db->prepare('SELECT * FROM users WHERE user_id = :id LIMIT 1');
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -112,6 +191,7 @@ class UserDAO extends User
                 $row['username'],
                 $row['email'],
                 $row['password'],
+                $row['active']
             );
         }
         return $usuarios;
@@ -136,28 +216,6 @@ class UserDAO extends User
             }
         });
         return $items;
-    }
-    
-    /**
-     * Funcion para obtener todos los usuarios
-     * @return User[] Array de instancias de User
-     */
-    public function findAll()
-    {
-        $sql = "SELECT * FROM users";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $usuarios = [];
-        foreach ($rows as $row) {
-            $usuarios[] = new User(
-                $row['user_id'],
-                $row['username'],
-                $row['email'],
-                $row['password'],
-            );
-        }
-        return $usuarios;
     }
 }
 ?>
