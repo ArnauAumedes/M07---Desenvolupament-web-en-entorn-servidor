@@ -75,8 +75,14 @@
             </table>
         </div>
     </div>
-    <?php require_once __DIR__ . '/../globals/pagination.php'; ?>
-    <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+    <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
+        <?php
+        require_once __DIR__ . '/../globals/order.php';
+        ?>
+        <?php
+        require_once __DIR__ . '/../globals/pagination.php';
+        ?>
+    </div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 
 

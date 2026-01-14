@@ -218,8 +218,9 @@ class JugadorController
             $totalPages = max(1, ceil($totalJugadores / $limit));
             $jugadores = $this->jugadorDAO->findAll();
 
+			$order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc']) ? strtolower($_GET['order']) : 'desc';
             if ($ordenCallback !== null) {
-                $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, $ordenCallback, 'desc');
+                $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, $ordenCallback, $order);
             }
 
             $jugadores = array_slice($jugadores, $offset, $limit); 
