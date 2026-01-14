@@ -19,7 +19,7 @@ class EquipoDAO extends Equipo implements DAO
     /**
      * Crea un nuevo equipo en la base de datos
      * @param Equipo $equipo Instancia del equipo a crear
-     * @return int ID del nuevo equipo insertado
+     * @return bool|string ID del nuevo equipo insertado
      */
     public function create($equipo)
     {
