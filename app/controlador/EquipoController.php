@@ -244,8 +244,9 @@ class EquipoController
 			$totalPages = max(1, ceil($totalEquipos / $limit));
 			$equipos = $this->equipoDAO->findAll(); 
 
+			$order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc']) ? strtolower($_GET['order']) : 'desc';
 			if ($ordenCallback !== null) {
-				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, 'desc'); 
+				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, $order); 
 			}
 
 			$equipos = array_slice($equipos, $offset, $limit); 
