@@ -35,8 +35,15 @@
 						<label for="password">Contrasenya</label>
 						<input id="password" name="password" type="password" name="password" class="form-control">
 					</div>
-					<div class="form-group text-center mt-2">
-						<a href="/practicas/app/vista/send-email.php" class="text-muted"><b><u>Olvidé mi contraseña</u></b>
+					<div class="form-group text-center mt-2 d-flex justify-content-center" style="gap: 16px">
+						<div class="form-group form-check text-left">
+							<input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+							<label class="form-check-label" for="rememberMe">Recordarme</label>
+						</div>
+						<a href="/practicas/app/vista/send-email.php"><b><u>Olvidé mi
+									contraseña</u></b>
+						</a>
+						<a href="/practicas/app/vista/register.php"><b><u>Crear cuenta</u></b>
 						</a>
 					</div>
 					<div class="form-group text-center mt-4">
