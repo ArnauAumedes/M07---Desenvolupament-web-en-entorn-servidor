@@ -61,9 +61,9 @@
                                         style="height:32px; margin-right:8px;">
                                     <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
                                     <span class="text-muted club-usuario" style="font-size:0.95em;">
-                                        <?php if ($equipo->getUserId() === null || $equipo->getUserId() === "") : ?>
+                                        <?php if ($equipo->getUserId() === null || $equipo->getUserId() === ""): ?>
                                             no tiene entrenador
-                                        <?php else : ?>
+                                        <?php else: ?>
                                             <?= htmlspecialchars($equipo->getUserId()) ?>
                                         <?php endif; ?>
                                     </span>
@@ -84,8 +84,14 @@
             </table>
         </div>
     </div>
-    <?php require_once __DIR__ . '/../globals/pagination.php'; ?>
-    <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+    <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
+        <?php
+        require_once __DIR__ . '/../globals/order.php';
+        ?>
+        <?php
+        require_once __DIR__ . '/../globals/pagination.php';
+        ?>
+    </div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </body>
 
 </html>
