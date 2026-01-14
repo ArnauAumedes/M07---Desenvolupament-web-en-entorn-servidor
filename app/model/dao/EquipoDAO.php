@@ -128,7 +128,7 @@ class EquipoDAO extends Equipo implements DAO
 
     /**
      * Funcio per obtenir el valor total dels jugadors d'un equip
-     * @param mixed $equipoId ID de l'equip
+     * @param int $equipoId ID de l'equip
      * @return float|int Valor total dels jugadors de l'equip
      */
     public function getValorEquipo($equipoId)
@@ -143,7 +143,7 @@ class EquipoDAO extends Equipo implements DAO
 
     /**
      * Funcio per obtenir la mitja del valor dels jugadors d'un equip
-     * @param mixed $equipoId ID de l'equip
+     * @param int $equipoId ID de l'equip
      * @return float|int Mitja del valor dels jugadors de l'equip
      */
     public function getMediaValorJugadores($equipoId)
@@ -158,7 +158,7 @@ class EquipoDAO extends Equipo implements DAO
 
     /**
      * Funcio per obtenir els punts d'un equip
-     * @param mixed $equipoId ID de l'equip
+     * @param int $equipoId ID de l'equip
      * @return int Punts totals de l'equip
      */
     public function getPuntos($equipoId)

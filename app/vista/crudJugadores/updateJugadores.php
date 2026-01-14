@@ -34,7 +34,7 @@
 
         <!-- Formulario de actualización (visible solo si $jugador está definido) -->
         <?php if (isset($jugador)):
-            require_once __DIR__ . '/../../model/database/database.php';
+            require_once __DIR__ . '/../../../config/db-connection.php';
             require_once __DIR__ . '/../../model/dao/EquipoDAO.php';
             $db = new Database();
             $equipoDAO = new EquipoDAO($db->getConnection());

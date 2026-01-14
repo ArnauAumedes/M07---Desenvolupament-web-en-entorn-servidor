@@ -16,7 +16,7 @@ class ResetPasswordController {
 
     public function __construct($db = null) {
         if ($db === null) {
-            require_once __DIR__ . '/../model/database/database.php';
+            require_once __DIR__ . '/../../config/db-connection.php';
             $dbInstance = new Database();
             $this->db = $dbInstance->getConnection();
         } else {

@@ -4,7 +4,7 @@
  * Controlador per al registre: crea la connexió, crida al model i mostra la vista
  * Autor: Arnau Aumedes Jimenez
  */
-require_once __DIR__ . '/../model/database/database.php';
+require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 
 $messages = '';
@@ -48,7 +48,8 @@ if ($pdo instanceof PDO) {
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             try {
-                $userId = $userDAO->createUser($username, $email, $hash);
+                $user = new User($username, $email, $hash);
+                $userId = $userDAO->create($user);
                 session_regenerate_id(true);
                 $_SESSION['user'] = [
                     'user_id' => $userId,

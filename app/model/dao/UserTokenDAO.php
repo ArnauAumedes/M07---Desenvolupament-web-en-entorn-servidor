@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../entities/UserToken.php';
-require_once __DIR__ . '/../database/database.php';
+require_once __DIR__ . '/../../../config/db-connection.php';
 require_once __DIR__ . '/DAO.php';
 
 class UserTokenDAO extends UserToken implements DAO {
@@ -51,7 +51,7 @@ class UserTokenDAO extends UserToken implements DAO {
 
     /**
      * Obté un token d'usuari per ID
-     * @param mixed $id ID del token a obtenir 
+     * @param int $id ID del token a obtenir 
      * @return UserToken|null Instància de UserToken o null si no es troba
      */
     public function findById($id): ?UserToken {

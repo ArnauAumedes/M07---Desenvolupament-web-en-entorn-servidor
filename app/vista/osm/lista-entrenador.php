@@ -40,12 +40,12 @@
                     <?php $posicion = 1; ?>
                     <?php foreach ($entrenadoresConEquipos as $entrenadorConEquipos): ?>
                         <?php $entrenador = $entrenadorConEquipos['entrenador']; ?>
-                        <?php $user = $userDAO->getById($entrenador->getId()); ?>
+                        <?php $user = $userDAO->findById($entrenador->getId()); ?>
                         <?php if (!empty($entrenadorConEquipos['equipos'])): ?>
                             <?php foreach ($entrenadorConEquipos['equipos'] as $equipo): ?>
                                 <tr>
                                     <td class="align-middle fw-bold">
-                                        <?= htmlspecialchars($user['username'] ?? '') ?>
+                                        <?= htmlspecialchars($user ? $user->getUsername() : '') ?>
                                     </td>
                                     <td class="align-middle d-flex align-items-center gap-2">
                                         <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
@@ -62,7 +62,7 @@
                                         </span>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <?= htmlspecialchars($user['created_at'] ?? '-') ?>
+                                        <?= htmlspecialchars($user ? $user->getCreatedAt() : '-') ?>
                                     </td>
                                 </tr>
                                 <?php $posicion++; ?>
@@ -70,9 +70,12 @@
                         <?php else: ?>
                             <tr>
                                 <td class="align-middle fw-bold">
-                                    <?= htmlspecialchars($user['username'] ?? '') ?>
+                                    <?= htmlspecialchars($user ? $user->getUsername() : '') ?>
                                 </td>
-                                <td class="align-middle text-muted" colspan="5">Sin equipo</td>
+                                <td class="align-middle text-muted" colspan="4">Sin equipo</td>
+                                <td class="text-center align-middle">
+                                    <?= htmlspecialchars($user ? $user->getCreatedAt() : '-') ?>
+                                </td>
                             </tr>
                             <?php $posicion++; ?>
                         <?php endif; ?>
