@@ -30,25 +30,62 @@ if ($pdo instanceof PDO) {
         session_set_cookie_params(2400);
         session_start();
     }
+    // Inicialitzar intents de login
+    if (!isset($_SESSION['login_attempts']))
+        $_SESSION['login_attempts'] = 0;
+    
     // Comprovar si s'ha enviat el formulari de login
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSubmit'])) {
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
+        $login_fallido = false;
 
         if ($email === '' || $password === '') {
             $messages = '<div class="alert alert-danger">ELS CAMPS NO PODEN ESTAR BUITS</div>';
+            $login_fallido = true;
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $messages = '<div class="alert alert-danger">Email invàlid</div>';
+            $login_fallido = true;
         } else {
-            // Comprovar credencials
-            $user = $userDAO->getByEmail($email);
-            if (!$user) {
-                $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
-            } elseif (!isset($user['password']) || !password_verify($password, $user['password'])) {
-                $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
-            } elseif (isset($user['active']) && !$user['active']) {
-                $messages = '<div class="alert alert-danger">El compte no està actiu.</div>';
+            // Validar reCAPTCHA si hay 3 o más intentos fallidos
+            if ($_SESSION['login_attempts'] >= 3) {
+                if (empty($_POST['g-recaptcha-response'])) {
+                    $messages = '<div class="alert alert-danger">Por favor, confirma el reCAPTCHA.</div>';
+                    $login_fallido = true;
+                } else {
+                    $recaptcha = $_POST['g-recaptcha-response'];
+                    $secret = getenv('RECAPTCHA_SECRET_KEY');
+                    $response = file_get_contents(
+                        "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$recaptcha"
+                    );
+                    $result = json_decode($response, true);
+                    if (!$result['success']) {
+                        $messages = '<div class="alert alert-danger">Por favor, confirma el reCAPTCHA.</div>';
+                        $login_fallido = true;
+                    }
+                }
+            }
+
+            // Comprobar credenciales solo si no ha fallado antes
+            if (!$login_fallido) {
+                $user = $userDAO->getByEmail($email);
+                if (!$user) {
+                    $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
+                    $login_fallido = true;
+                } elseif (!isset($user['password']) || !password_verify($password, $user['password'])) {
+                    $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
+                    $login_fallido = true;
+                } elseif (isset($user['active']) && !$user['active']) {
+                    $messages = '<div class="alert alert-danger">El compte no està actiu.</div>';
+                    $login_fallido = true;
+                }
+            }
+
+            // Actualizar contador de intentos
+            if ($login_fallido) {
+                $_SESSION['login_attempts']++;
             } else {
+                $_SESSION['login_attempts'] = 0; // reset on success
                 // Login correcte: guardar dades en sessió
                 session_regenerate_id(true);
                 $_SESSION['user'] = [
@@ -62,7 +99,6 @@ if ($pdo instanceof PDO) {
                     $token = bin2hex(random_bytes(32));
                     $userId = $user['user_id'];
                     $expires = date('Y-m-d H:i:s', time() + 60 * 60 * 24 * 30);
-                    $userId = $user['user_id'];
                     $stmt = $usuarioTokenDAO->create(new UserToken($userId, $token, $expires));
                     setcookie('rememberme', $token, time() + (86400 * 30), "/", "", true, true);
                 }
