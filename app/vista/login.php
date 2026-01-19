@@ -18,47 +18,60 @@
 </head>
 
 <body>
-	<div class="row justify-content-center">
-		<div class="col-md-6">
-			<div class="login-card p-4">
-				<h4 class="mb-3 text-center">Iniciar Sesión</h4>
-				<?php
-				// Mensatges o errors generats pel controlador (si existeixen)
-				echo $messages ?? '';
-				?>
-				<form method="post" action="/practicas/public/index.php?action=login">
-					<div class="form-group">
-						<label for="email">Email</label>
-						<input id="email" name="email" type="text" name="email" class="form-control" autofocus>
-					</div>
-					<div class="form-group">
-						<label for="password">Contrasenya</label>
-						<input id="password" name="password" type="password" name="password" class="form-control">
-					</div>
-					<div class="form-group text-center mt-2 d-flex justify-content-center" style="gap: 16px">
-						<div class="form-group form-check text-left">
-							<input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
-							<label class="form-check-label" for="rememberMe">Recordarme</label>
-						</div>
-						<a href="/practicas/app/vista/send-email.php"><b><u>Olvidé mi
-									contraseña</u></b>
-						</a>
-						<a href="/practicas/app/vista/register.php"><b><u>Crear cuenta</u></b>
-						</a>
-					</div>
-					<div class="form-group text-center mt-4">
-						<button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
-						<a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	   <div class="row justify-content-center">
+		   <div class="col-md-6">
+			   <div class="login-card p-4">
+				   <h4 class="mb-3 text-center">Iniciar Sesión</h4>
+				   <?php
+				   // Mensajes o errores generados por el controlador (si existen)
+				   echo $messages ?? '';
+				   // Aseguramos que la variable de sesión existe
+				   if (!isset($_SESSION['login_attempts'])) {
+					   $_SESSION['login_attempts'] = 0;
+				   }
+				   ?>
+				   <form method="post" action="/practicas/public/index.php?action=login">
+					   <div class="form-group">
+						   <label for="email">Email</label>
+						   <input id="email" name="email" type="text" class="form-control" autofocus value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+					   </div>
+					   <div class="form-group">
+						   <label for="password">Contrasenya</label>
+						   <input id="password" name="password" type="password" class="form-control">
+					   </div>
+					   <?php if ($_SESSION['login_attempts'] >= 3): ?>
+						   <div class="g-recaptcha" data-sitekey="<?php echo getenv('RECAPTCHA_SITE_KEY'); ?>"></div>
+						   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+					   <?php endif; ?>
+					   <div class="form-group text-center mt-2 d-flex justify-content-center" style="gap: 16px">
+						   <div class="form-group form-check text-left">
+							   <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
+							   <label class="form-check-label" for="rememberMe">Recordarme</label>
+						   </div>
+						   <a href="/practicas/app/vista/send-email.php"><b><u>Olvidé mi
+									   contraseña</u></b>
+						   </a>
+						   <a href="/practicas/app/vista/register.php"><b><u>Crear cuenta</u></b>
+						   </a>
+					   </div>
+					   <div class="form-group text-center mt-4">
+						   <button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
+						   <a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
+					   </div>
+				   </form>
+			   </div>
+		   </div>
+	   </div>
 
 
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<?php if (!empty($messages)): ?>
+	<script>
+		document.getElementById('password').focus();
+	</script>
+	<?php endif; ?>
 </body>
 
 </html>
