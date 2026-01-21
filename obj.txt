@@ -1,0 +1,1 @@
+- Actualizar crud: los usuarios solo pueden actualizar o eliminar sus propios equipos y jugadores. 
