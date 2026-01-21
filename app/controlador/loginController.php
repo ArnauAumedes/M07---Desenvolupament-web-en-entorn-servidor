@@ -92,7 +92,8 @@ if ($pdo instanceof PDO) {
                     'user_id' => $user['user_id'],
                     'username' => $user['username'],
                     'email' => $user['email'],
-                    'dni' => $user['dni'] ?? null
+                    'dni' => $user['dni'] ?? null,
+                    'isAdmin' => $user['isAdmin'] ?? 0
                 ];
                 // Gestionar el "remember me"
                 if (isset($_POST['rememberMe'])) {

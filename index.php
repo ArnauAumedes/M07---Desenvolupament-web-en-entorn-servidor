@@ -35,7 +35,7 @@ if (in_array($action, $accionsJugador)) {
 }
 
 //Accions d'usuari
-$accionsUsuari = ['lista-entrenador', 'edit-profile'];
+$accionsUsuari = ['lista-entrenador', 'edit-profile', 'createUser', 'updateUser', 'deleteUser'];
 if (in_array($action, $accionsUsuari)) {
 	require_once __DIR__ . '/./app/controlador/UserController.php';
 	$userController = new UserController();

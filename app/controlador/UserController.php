@@ -32,8 +32,14 @@ class UserController
 	{
 		$action = $_GET['action'] ?? 'lista-entrenador';
 		switch ($action) {
-			case 'lista-entrenador':
-				$this->listEntrenadores();
+			case 'createUser':
+				$this->createUser();
+				break;
+			case 'updateUser':
+				$this->updateUser();
+				break;
+			case 'deleteUser':
+				$this->deleteUser();
 				break;
 			case 'edit-profile':
 				$this->editProfile();
@@ -44,6 +50,151 @@ class UserController
 		}
 	}
 
+	private function createUser()
+	{
+		$messages = '';
+		// Solo mostrar equipos sin user_id o el equipo actual del usuario
+		$equipos = [];
+		$allEquipos = $this->equipoDAO->findAll();
+		$userIdForEdit = null;
+		if (isset($_GET['id']) && !empty($_GET['id'])) {
+			$userIdForEdit = $_GET['id'];
+		} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+			$userIdForEdit = $_POST['id'];
+		}
+		foreach ($allEquipos as $equipo) {
+			if ($equipo->getUserId() === null || ($userIdForEdit && $equipo->getUserId() == $userIdForEdit)) {
+				$equipos[] = $equipo;
+			}
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$username = trim($_POST['username'] ?? '');
+			$email = trim($_POST['email'] ?? '');
+			$password = $_POST['password'] ?? '';
+			$password2 = $_POST['password2'] ?? '';
+			$isAdmin = (!empty($_SESSION['user']['isAdmin']) && $_SESSION['user']['isAdmin'] == 1 && isset($_POST['isAdmin'])) ? 1 : 0;
+
+			// Validaciones
+			if ($username === '' || $email === '' || $password === '' || $password2 === '' || empty($_POST['equipo_id'])) {
+				$messages = 'Tots els camps són obligatoris';
+			} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				$messages = 'Email invàlid';
+			} elseif ($password !== $password2) {
+				$messages = 'Les contrasenyes no coincideixen';
+			} elseif (strlen($password) < 8 || !preg_match('/[A-Z]/i', $password) || !preg_match('/[0-9]/', $password)) {
+				$messages = 'La contrasenya ha de tenir almenys 8 caràcters i incloure lletres i números';
+			} elseif ($this->userDAO->existsByEmail($email)) {
+				$messages = 'Ja existeix un usuari amb aquest email';
+			} elseif ($this->userDAO->existsByUsername($username)) {
+				$messages = 'Ja existeix un usuari amb aquest nom d\'usuari';
+			} else {
+				$hash = password_hash($password, PASSWORD_DEFAULT);
+				$user = new User(null, $username, $email, $hash, 1, $isAdmin);
+				$userId = $this->userDAO->create($user);
+				if ($userId) {
+					if ($userId && isset($_POST['equipo_id']) && $_POST['equipo_id'] !== '') {
+						$equipoId = $_POST['equipo_id'];
+						$equipo = $this->equipoDAO->findById($equipoId);
+						if ($equipo) {
+							$equipo->setUserId($userId);
+							$this->equipoDAO->update($equipo);
+						}
+					}
+					header("Location: /practicas/index.php?createdUser=success&id=" . $userId);
+					exit();
+				} else {
+					$messages = 'Error al crear l\'usuari.';
+				}
+			}
+		}
+		include __DIR__ . '/../vista/crudUsers/createUser.php';
+	}
+
+
+	private function updateUser()
+	{
+		$user = null;
+		$messages = '';
+		// Solo mostrar equipos sin user_id o el equipo actual del usuario
+		$equipos = [];
+		$allEquipos = $this->equipoDAO->findAll();
+		$userIdForEdit = null;
+		if (isset($_GET['id']) && !empty($_GET['id'])) {
+			$userIdForEdit = $_GET['id'];
+		} elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+			$userIdForEdit = $_POST['id'];
+		}
+		foreach ($allEquipos as $equipo) {
+			if ($equipo->getUserId() === null || ($userIdForEdit && $equipo->getUserId() == $userIdForEdit)) {
+				$equipos[] = $equipo;
+			}
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$id = $_POST['id'] ?? '';
+			$username = trim($_POST['username'] ?? '');
+			$email = trim($_POST['email'] ?? '');
+			$isAdmin = (!empty($_SESSION['user']['isAdmin']) && $_SESSION['user']['isAdmin'] == 1 && isset($_POST['isAdmin'])) ? 1 : 0;
+			$equipoId = $_POST['equipo_id'] ?? '';
+
+			if ($username === '' || $email === '' || empty($_POST['equipo_id'])) {
+				$messages = 'Tots els camps són obligatoris';
+			} else {
+				$user = $this->userDAO->findById($id);
+				if ($user) {
+					$user->setUserName($username);
+					$user->setEmail($email);
+					if (!empty($_SESSION['user']['isAdmin']) && $_SESSION['user']['isAdmin'] == 1) {
+						$user->setIsAdmin($isAdmin);
+					}
+					$rowsAffected = $this->userDAO->updateProfile($user);
+
+					// Actualizar equipo si se selecciona
+					if (!empty($equipoId)) {
+						$equipo = $this->equipoDAO->findById($equipoId);
+						if ($equipo) {
+							$equipo->setUserId($user->getId());
+							$this->equipoDAO->update($equipo);
+						}
+					}
+
+					if ($rowsAffected > 0) {
+						header("Location: /practicas/index.php?updatedUser=success");
+						exit();
+					} else {
+						$messages = "No s'ha pogut actualitzar l'usuari.";
+					}
+				} else {
+					$messages = "No s'ha trobat l'usuari.";
+				}
+			}
+		}
+		if (isset($_GET['id']) && !empty($_GET['id'])) {
+			$user = $this->userDAO->findById($_GET['id']);
+			if (!$user) {
+				$messages = "No s'ha trobat cap usuari amb aquest ID.";
+			}
+		}
+		include __DIR__ . '/../vista/crudUsers/updateUser.php';
+	}
+
+	private function deleteUser()
+	{
+		$messages = '';
+		if (isset($_GET['id']) && !empty($_GET['id'])) {
+			$id = $_GET['id'];
+			$rowsAffected = $this->userDAO->delete($id);
+			if ($rowsAffected > 0) {
+				header("Location: /practicas/index.php?deletedUser=success&id=" . $id);
+				exit();
+			} else {
+				header("Location: /practicas/index.php?deletedUser=error");
+				exit();
+			}
+		}
+		include __DIR__ . '/../vista/crudUsers/deleteUser.php';
+	}
 	/**
 	 * Lista los entrenadores de forma paginada y opcionalmente ordenada.
 	 * Incluye la vista correspondiente para mostrar los entrenadores.
@@ -110,23 +261,23 @@ class UserController
 			} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 				$messages = '<div class="alert alert-danger">El correu no és vàlid.</div>';
 			} else {
-				   // Actualizar en la base de datos
-				   $userObj = $this->userDAO->findById($_SESSION['user']['user_id']);
-				   if ($userObj) {
-					   $userObj->setUsername($nickname);
-					   $userObj->setEmail($email);
-					   $rowsAffected = $this->userDAO->updateProfile($userObj);
-					   if ($rowsAffected > 0) {
-						   // Actualizar el nombre en la sesión para reflejar el cambio en el header
-						   $_SESSION['user']['username'] = $nickname;
-						   echo '<script>alert("Perfil actualizado correctamente."); window.location.href = "/practicas/index.php";</script>';
-						   exit();
-					   } else {
-						   $messages = '<div class="alert alert-warning">No s\'ha actualitzat cap dada (potser no has canviat res).</div>';
-					   }
-				   } else {
-					   $messages = '<div class="alert alert-danger">Usuari no trobat.</div>';
-				   }
+				// Actualizar en la base de datos
+				$userObj = $this->userDAO->findById($_SESSION['user']['user_id']);
+				if ($userObj) {
+					$userObj->setUsername($nickname);
+					$userObj->setEmail($email);
+					$rowsAffected = $this->userDAO->updateProfile($userObj);
+					if ($rowsAffected > 0) {
+						// Actualizar el nombre en la sesión para reflejar el cambio en el header
+						$_SESSION['user']['username'] = $nickname;
+						echo '<script>alert("Perfil actualizado correctamente."); window.location.href = "/practicas/index.php";</script>';
+						exit();
+					} else {
+						$messages = '<div class="alert alert-warning">No s\'ha actualitzat cap dada (potser no has canviat res).</div>';
+					}
+				} else {
+					$messages = '<div class="alert alert-danger">Usuari no trobat.</div>';
+				}
 			}
 		}
 

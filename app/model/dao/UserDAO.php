@@ -98,6 +98,7 @@ class UserDAO extends User implements DAO
                 $row['email'],
                 $row['password'],
                 $row['active'],
+                $row['isAdmin'],
                 $row['created_at']
             );
         }
@@ -122,6 +123,7 @@ class UserDAO extends User implements DAO
                 $row['email'],
                 $row['password'],
                 $row['active'],
+                $row['isAdmin'],
                 $row['created_at']
             );
         }

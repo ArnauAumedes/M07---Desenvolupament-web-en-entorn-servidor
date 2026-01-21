@@ -48,13 +48,15 @@ if ($pdo instanceof PDO) {
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             try {
-                $user = new User($username, $email, $hash);
+                // Crear usuario con isAdmin=0 siempre
+                $user = new User(null, $username, $email, $hash, 1, 0);
                 $userId = $userDAO->create($user);
                 session_regenerate_id(true);
                 $_SESSION['user'] = [
                     'user_id' => $userId,
                     'username' => $username,
-                    'email' => $email
+                    'email' => $email,
+                    'isAdmin' => 0
                 ];
                 $_SESSION['flash_welcome'] = $username;
                 header('Location: /practicas/index.php?action=menu');

@@ -22,8 +22,13 @@
     require_once __DIR__ . '/../globals/header.php';
     require_once __DIR__ . '/../../model/components/auth.php';
     $isLoggedIn = isLoggedIn();
+    $user = getLoggedUser();
+    $isAdmin = !empty($user['isAdmin']) && $user['isAdmin'] == 1;
     ?>
     <div class="main">
+        <?php if ($isLoggedIn && $isAdmin):
+        require_once __DIR__ . '/../globals/crudButtonsUsers.php';
+        endif; ?>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
