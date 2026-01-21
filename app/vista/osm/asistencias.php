@@ -46,7 +46,7 @@
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
                         ?>
-                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                        <tr onclick="window.location='/practicas/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
                             style="cursor:pointer;">
                             <td class="align-middle">
                                 <?= htmlspecialchars($jugador->getId()) ?>

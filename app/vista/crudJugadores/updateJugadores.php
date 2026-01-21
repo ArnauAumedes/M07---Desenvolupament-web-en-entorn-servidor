@@ -15,7 +15,7 @@
 <body>
     <div class="container mt-5">
         <!-- Formulario de búsqueda por ID (siempre visible) -->
-        <form method="GET" action="/practicas/public/index.php" class="form-create mb-4">
+        <form method="GET" action="/practicas/index.php" class="form-create mb-4">
             <h1>Actualizar Jugador</h1>
             <input type="hidden" name="action" value="updateJugador">
             <div class="form-group">
@@ -28,7 +28,7 @@
             </div>
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Buscar Jugador</button>
-                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
+                <a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
         </form>
 
@@ -41,7 +41,7 @@
             $minJugados = $equipoDAO->getMinJugados();
             $maxJugados = $equipoDAO->getMaxJugados();
         ?>
-            <form method="POST" action="/practicas/public/index.php?action=updateJugador&id=<?php echo urlencode($jugador->getId()); ?>" class="form-create">
+            <form method="POST" action="/practicas/index.php?action=updateJugador&id=<?php echo urlencode($jugador->getId()); ?>" class="form-create">
                 <h1>Editar Jugador</h1>
                 <?php if (!empty($error_jugador)): ?>
                     <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error_jugador); ?></div>
@@ -86,7 +86,7 @@
                 </div>
                 <div class="d-flex justify-content-center mt-3" style="gap: 0.5rem;">
                     <button type="submit" class="btn btn-primary">Actualizar Jugador</button>
-                    <a href="/practicas/public/index.php" class="btn btn-secondary">Cancelar</a>
+                    <a href="/practicas/index.php" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         <?php endif; ?>

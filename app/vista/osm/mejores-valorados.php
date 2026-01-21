@@ -44,7 +44,7 @@
                 <tbody>
                     <?php foreach ($jugadores as $jugador):
                         $equipo = $equipoDAO->findById($jugador->getEquipoId()); ?>
-                        <tr onclick="window.location='/practicas/public/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                        <tr onclick="window.location='/practicas/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
                             style="cursor:pointer;">
                             <td class="align-middle">
                                 <?= htmlspecialchars($jugador->getId()) ?>
