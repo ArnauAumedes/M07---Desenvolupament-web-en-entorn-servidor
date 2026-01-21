@@ -30,7 +30,7 @@
 					   $_SESSION['login_attempts'] = 0;
 				   }
 				   ?>
-				   <form method="post" action="/practicas/public/index.php?action=login">
+				   <form method="post" action="/practicas/index.php?action=login">
 					   <div class="form-group">
 						   <label for="email">Email</label>
 						   <input id="email" name="email" type="text" class="form-control" autofocus value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -56,7 +56,7 @@
 					   </div>
 					   <div class="form-group text-center mt-4">
 						   <button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
-						   <a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
+						   <a href="/practicas/index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
 					   </div>
 				   </form>
 			   </div>

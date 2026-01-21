@@ -35,6 +35,9 @@ class UserController
 			case 'lista-entrenador':
 				$this->listEntrenadores();
 				break;
+			case 'edit-profile':
+				$this->editProfile();
+				break;
 			default:
 				$this->listEntrenadores();
 				break;
@@ -83,5 +86,62 @@ class UserController
 		$userDAO = $this->userDAO;
 		$equipoDAO = $this->equipoDAO;
 		include __DIR__ . '/../vista/osm/lista-entrenador.php';
+	}
+
+	private function editProfile()
+	{
+		session_start();
+		$messages = '';
+		// Comprobar si el usuario está logueado
+		if (!isset($_SESSION['user']['user_id'])) {
+			// Redirigir al login si no está logueado
+			header('Location: /practicas/app/vista/login.php');
+			exit();
+		}
+
+		// Si el formulario ha sido enviado
+		if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btnSubmit'])) {
+			$nickname = trim($_POST['nickname'] ?? '');
+			$email = trim($_POST['email'] ?? '');
+
+			// Validación básica
+			if ($nickname === '' || $email === '') {
+				$messages = '<div class="alert alert-danger">Tots els camps són obligatoris.</div>';
+			} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				$messages = '<div class="alert alert-danger">El correu no és vàlid.</div>';
+			} else {
+				   // Actualizar en la base de datos
+				   $userObj = $this->userDAO->findById($_SESSION['user']['user_id']);
+				   if ($userObj) {
+					   $userObj->setUsername($nickname);
+					   $userObj->setEmail($email);
+					   $rowsAffected = $this->userDAO->updateProfile($userObj);
+					   if ($rowsAffected > 0) {
+						   // Actualizar el nombre en la sesión para reflejar el cambio en el header
+						   $_SESSION['user']['username'] = $nickname;
+						   echo '<script>alert("Perfil actualizado correctamente."); window.location.href = "/practicas/index.php";</script>';
+						   exit();
+					   } else {
+						   $messages = '<div class="alert alert-warning">No s\'ha actualitzat cap dada (potser no has canviat res).</div>';
+					   }
+				   } else {
+					   $messages = '<div class="alert alert-danger">Usuari no trobat.</div>';
+				   }
+			}
+		}
+
+		// Obtener los datos del usuario desde la base de datos
+		$userObj = $this->userDAO->findById($_SESSION['user']['user_id']);
+		if ($userObj) {
+			$user = [
+				'nickname' => $userObj->getUsername(),
+				'email' => $userObj->getEmail()
+			];
+		} else {
+			$user = ['nickname' => '', 'email' => ''];
+			$messages = '<div class="alert alert-danger">No s\'han pogut carregar les dades de l\'usuari.</div>';
+		}
+
+		include __DIR__ . '/../vista/edit-profile.php';
 	}
 }

@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <form method="GET" action="/practicas/public/index.php" class="form-create">
+        <form method="GET" action="/practicas/index.php" class="form-create">
             <h1>Eliminar Jugador</h1>
             <input type="hidden" name="action" value="deleteJugador">
             <div class="form-group">
@@ -25,7 +25,7 @@
                 <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro que quieres eliminar este jugador?')">
                     Eliminar Jugador
                 </button>
-                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
+                <a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
         </form>
     </div>

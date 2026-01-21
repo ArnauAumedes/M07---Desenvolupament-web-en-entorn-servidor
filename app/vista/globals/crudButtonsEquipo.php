@@ -17,13 +17,13 @@ $username = $user['username'] ?? null;
         <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
             <span>Bienvenido, puedes gestionar tus equipos:</span>
             <div>
-                <a href="/practicas/public/index.php?action=create"
+                <a href="/practicas/index.php?action=create"
                     class="btn btn-primary btn-sm mr-2">Crear
                     equipo</a>
-                <a href="/practicas/public/index.php?action=update"
+                <a href="/practicas/index.php?action=update"
                     class="btn btn-warning btn-sm mr-2">Actualizar
                     equipo</a>
-                <a href="/practicas/public/index.php?action=delete"
+                <a href="/practicas/index.php?action=delete"
                     class="btn btn-danger btn-sm">Eliminar
                     equipo</a>
             </div>

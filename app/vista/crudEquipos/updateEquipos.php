@@ -25,7 +25,7 @@
         $maxJugados = $equipoDAO->getMaxJugados();
         ?>
         <!-- Formulario de búsqueda por ID (siempre visible) -->
-        <form method="GET" action="/practicas/public/index.php" class="form-create mb-4">
+        <form method="GET" action="/practicas/index.php" class="form-create mb-4">
             <h1>Actualizar Equipo</h1>
             <input type="hidden" name="action" value="update">
             <div class="form-group">
@@ -38,7 +38,7 @@
             </div>
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Buscar Equipo</button>
-                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
+                <a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
         </form>
 
@@ -46,7 +46,7 @@
 
         <?php if (isset($equipo)): ?>
             <form method="POST"
-                action="/practicas/public/index.php?action=update&id=<?php echo urlencode($equipo->getId()); ?>"
+                action="/practicas/index.php?action=update&id=<?php echo urlencode($equipo->getId()); ?>"
                 class="form-create">
                 <h1>Editar Equipo</h1>
                 <?php if (!empty($error_partidos)): ?>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="d-flex justify-content-center mt-3" style="gap: 0.5rem;">
                     <button type="submit" class="btn btn-primary">Actualizar Equipo</button>
-                    <a href="/practicas/public/index.php" class="btn btn-secondary">Cancelar</a>
+                    <a href="/practicas/index.php" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         <?php endif; ?>

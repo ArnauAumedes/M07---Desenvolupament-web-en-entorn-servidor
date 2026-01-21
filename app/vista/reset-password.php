@@ -42,7 +42,7 @@ $controller->handleRequest();
                         <input type="hidden" name="email" value="<?php echo htmlspecialchars($controller->email); ?>" />
                         <div class="form-group text-center mt-4">
                             <input type="submit" id="reset" value="Restablir contrasenya" class="btn btn-primary px-4" />
-                            <a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Tornar al menú</a>
+                            <a href="/practicas/index.php" class="btn btn-outline-secondary ml-2">Tornar al menú</a>
                         </div>
                     </form>
                 <?php endif; ?>

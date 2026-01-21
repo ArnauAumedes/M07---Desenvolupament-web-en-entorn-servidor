@@ -24,7 +24,7 @@
         $minJugados = $equipoDAO->getMinJugados();
         $maxJugados = $equipoDAO->getMaxJugados();
         ?>
-        <form method="POST" action="/practicas/public/index.php?action=createJugador" class="form-create">
+        <form method="POST" action="/practicas/index.php?action=createJugador" class="form-create">
             <h1>Crear Nuevo Jugador</h1>
             <?php if (!empty($error_jugador)): ?>
                 <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error_jugador); ?></div>
@@ -67,7 +67,7 @@
             </div>
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Crear Jugador</button>
-                <a href="/practicas/public/index.php" class="btn btn-secondary">Volver al menú</a>
+                <a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
         </form>
     </div>
