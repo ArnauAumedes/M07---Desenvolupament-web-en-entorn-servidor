@@ -36,7 +36,7 @@ function getLoggedUserDni(): ?string {
 }
 
 /** Redirige si no está logado */
-function requireLogin(string $redirect = '/practicas/public/index.php'): void {
+function requireLogin(string $redirect = '/practicas/index.php'): void {
     if (!isLoggedIn()) {
         header('Location: ' . $redirect);
         exit;

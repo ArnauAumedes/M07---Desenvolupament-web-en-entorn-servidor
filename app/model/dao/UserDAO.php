@@ -51,6 +51,22 @@ class UserDAO extends User implements DAO
     }
 
     /**
+     * Actualitza el perfil d'un usuari (sense contrasenya)
+     * @param User $user Instància de l'usuari a actualitzar
+     * @return int Nombre de files afectades
+     */
+    public function updateProfile($user)
+    {
+        $sql = 'UPDATE users SET username = :username, email = :email WHERE user_id = :user_id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
+        $stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $user->getId(), PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+    /**
      * Elimina un usuari de la base de dades
      * @param int $id ID de l'usuari a eliminar
      * @return int Nombre de files afectades

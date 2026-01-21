@@ -57,7 +57,7 @@ if ($pdo instanceof PDO) {
                     'email' => $email
                 ];
                 $_SESSION['flash_welcome'] = $username;
-                header('Location: /practicas/public/index.php?action=menu');
+                header('Location: /practicas/index.php?action=menu');
                 exit;
             } catch (Exception $e) {
                 $messages = '<div class="alert alert-danger">Error del servidor. Torna-ho a intentar més tard.</div>';

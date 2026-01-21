@@ -37,7 +37,7 @@
             <div class="col-sm-6 col-md-4 item">
                 <h3>USEFUL LINKS</h3>
                 <ul>
-                    <li><a href="/practicas/public/index.php">Home</a></li>
+                    <li><a href="/practicas/index.php">Home</a></li>
                     <li><a href="/practicas/app/vista/register.php">Register</a></li>
                     <li><a href="/practicas/app/vista/login.php">Login</a></li>
                 </ul>

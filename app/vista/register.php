@@ -23,7 +23,7 @@
             <div class="login-card p-4">
                 <h4 class="mb-3 text-center">Registre d'usuari</h4>
                 <?php echo $messages ?? ''; ?>
-                <form method="post" action="/practicas/public/index.php?action=register">
+                <form method="post" action="/practicas/index.php?action=register">
                     <div class="form-group">
                         <label for="username">Nom d'usuari</label>
                         <input id="username" name="username" type="text" class="form-control"
@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group text-center mt-4">
                         <button name="btnRegister" type="submit" class="btn btn-success px-4">Registrar</button>
-                        <a href="/practicas/public/index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
+                        <a href="/practicas/index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
                     </div>
                 </form>
             </div>

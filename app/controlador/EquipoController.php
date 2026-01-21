@@ -92,14 +92,14 @@ class EquipoController
 				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 				$result = $this->equipoDAO->create($equipo);
 				if ($result) {
-					header("Location: /practicas/public/index.php?created=success&id=" . $result);
+					header("Location: /practicas/index.php?created=success&id=" . $result);
 					exit();
 				} else {
-					header("Location: /practicas/public/index.php?created=error");
+					header("Location: /practicas/index.php?created=error");
 					exit();
 				}
 			} catch (Exception $e) {
-				header("Location: /practicas/public/index.php?created=error&msg=" . urlencode($e->getMessage()));
+				header("Location: /practicas/index.php?created=error&msg=" . urlencode($e->getMessage()));
 				exit();
 			}
 		} else {
@@ -145,7 +145,7 @@ class EquipoController
 						$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 						$rowsAffected = $this->equipoDAO->update($equipo);
 						if ($rowsAffected > 0) {
-							header("Location: /practicas/public/index.php?updated=success");
+							header("Location: /practicas/index.php?updated=success");
 							exit();
 						} else {
 							$message = "No s'ha pogut actualitzar l'equip";
@@ -182,14 +182,14 @@ class EquipoController
 				$id = $_GET['id'];
 				$rowsAffected = $this->equipoDAO->delete($id);
 				if ($rowsAffected > 0) {
-					header("Location: /practicas/public/index.php?deleted=success&id=" . $id);
+					header("Location: /practicas/index.php?deleted=success&id=" . $id);
 					exit();
 				} else {
-					header("Location: /practicas/public/index.php?deleted=error");
+					header("Location: /practicas/index.php?deleted=error");
 					exit();
 				}
 			} catch (Exception $e) {
-				header("Location: /practicas/public/index.php?deleted=error&msg=" . urlencode($e->getMessage()));
+				header("Location: /practicas/index.php?deleted=error&msg=" . urlencode($e->getMessage()));
 				exit();
 			}
 		} else {

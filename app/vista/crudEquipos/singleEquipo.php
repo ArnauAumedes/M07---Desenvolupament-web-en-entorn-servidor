@@ -36,7 +36,7 @@
 					</ul>
 				</div>
 			</div>
-			<a href="/practicas/public/index.php" class="btn btn-secondary mt-3">Volver al listado</a>
+			<a href="/practicas/index.php" class="btn btn-secondary mt-3">Volver al listado</a>
 		<?php else: ?>
 			<div class="alert alert-warning">No se ha encontrado el equipo solicitado.</div>
 		<?php endif; ?>

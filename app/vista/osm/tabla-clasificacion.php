@@ -48,7 +48,7 @@ $isLoggedIn = isLoggedIn();
 			</thead>
 			<tbody>
 				<?php foreach ($equipos as $index => $equipo): ?>
-					<tr onclick="window.location='/practicas/public/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
+					<tr onclick="window.location='/practicas/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
 						style="cursor:pointer;">
 						<td class="align-middle fs-4 fw-bold">
 							<?= $index + 1 ?>

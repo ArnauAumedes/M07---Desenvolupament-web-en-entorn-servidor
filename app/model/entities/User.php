@@ -47,7 +47,7 @@ class User
     }
 
     // Setters
-    public function setName(string $username): void
+    public function setUserName(string $username): void
     {
         $this->username = $username;
     }
