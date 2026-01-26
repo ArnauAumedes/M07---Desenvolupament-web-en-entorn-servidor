@@ -24,9 +24,15 @@
     $isLoggedIn = isLoggedIn();
     ?>
     <div class="main">
-        <?php
-        require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
-        ?>
+        <div class="d-flex align-items-center justify-content-center mb-3"
+            style="gap: 16px; max-width: 1100px; margin: auto;">
+            <?php
+            require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
+            ?>
+            <?php
+            require_once __DIR__ . '/../globals/searchBar.php';
+            ?>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
@@ -39,7 +45,7 @@
                         <th class="text-center align-middle" style="width:20%">VALOR PROMEDIO (€)</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tabla-equipos-body">
                     <?php foreach ($equipos as $index => $equipo):
                         $equipoId = $equipo->getId();
                         $valorTotal = $equipoDAO->getValorEquipo($equipoId);
@@ -75,15 +81,15 @@
             </table>
         </div>
     </div>
-    <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
-        <?php
-        require_once __DIR__ . '/../globals/order.php';
-        ?>
-        <?php
-        require_once __DIR__ . '/../globals/pagination.php';
-        ?>
-    </div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+    <script src="/practicas/resources/js/equipoSearch.js"></script>
 </body>
-
-
+<div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
+    <?php
+    require_once __DIR__ . '/../globals/order.php';
+    ?>
+    <?php
+    require_once __DIR__ . '/../globals/pagination.php';
+    ?>
+</div>
+<?php require_once __DIR__ . '/../globals/footer.php'; ?>
 </html>

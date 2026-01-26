@@ -1,3 +1,39 @@
+/* SEARCH BAR COMPONENT */
+.search-bar-component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 24px 0 24px 0;
+}
+.search-bar-component input[type="text"] {
+  width: 320px;
+  padding: 10px 16px;
+  border: 1px solid #e0e0e7;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #fff;
+  color: #22223b;
+  margin-bottom: 12px;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(34, 34, 59, 0.04);
+}
+.search-bar-component input[type="text"]:focus {
+  border-color: #22223b;
+  outline: none;
+  box-shadow: 0 2px 12px rgba(34, 34, 59, 0.10);
+}
+.search-bar-component #results {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(34, 34, 59, 0.08);
+  padding: 12px 18px;
+  min-height: 40px;
+  color: #22223b;
+  font-size: 1rem;
+}
+/* END SEARCH BAR COMPONENT */
 /*
   style.css
   Autor: Arnau Aumedes Jimenez

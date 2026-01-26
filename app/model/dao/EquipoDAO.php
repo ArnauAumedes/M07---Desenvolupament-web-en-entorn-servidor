@@ -339,6 +339,34 @@ class EquipoDAO extends Equipo implements DAO
         }
         return $equipos;
     }
+
+    /**
+     * Busca equipos por nombre
+     * @param string $name Nombre o parte del nombre del equipo
+     * @return Equipo[] Array de instancias de Equipo
+     */
+    public function findByName($name)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM equipos WHERE equip LIKE :name");
+        $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $equipos = [];
+        foreach ($rows as $row) {
+            $equipos[] = new Equipo(
+                $row['id'],
+                $row['equip'],
+                $row['user_id'],
+                $row['escudo'],
+                $row['jugados'],
+                $row['ganados'],
+                $row['empatados'],
+                $row['perdidos'],
+                $row['objetivo'] ?? 0
+            );
+        }
+        return $equipos;
+    }
 }
 
 ?>
