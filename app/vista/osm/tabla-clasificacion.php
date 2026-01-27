@@ -29,9 +29,15 @@ $isLoggedIn = isLoggedIn();
 ?>
 
 <div class="main">
-	<?php
-	require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
-	?>
+	<div class="d-flex align-items-center justify-content-center mb-3"
+		style="gap: 16px; max-width: 1100px; margin: auto;">
+		<?php
+		require_once __DIR__ . '/../globals/crudButtonsEquipo.php';
+		?>
+		<?php
+		require_once __DIR__ . '/../globals/searchBar.php';
+		?>
+	</div>
 	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
 			<thead class="thead-dark">
@@ -46,7 +52,7 @@ $isLoggedIn = isLoggedIn();
 					<th class="text-center align-middle" style="width:10%">PUNTOS</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="tabla-equipos-body">
 				<?php foreach ($equipos as $index => $equipo): ?>
 					<tr onclick="window.location='/practicas/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
 						style="cursor:pointer;">
@@ -82,6 +88,7 @@ $isLoggedIn = isLoggedIn();
 		</table>
 	</div>
 </div>
+<script src="/practicas/resources/js/equipoSearch.js"></script>
 </body>
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
 	<?php
