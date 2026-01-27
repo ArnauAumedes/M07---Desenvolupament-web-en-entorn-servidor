@@ -5,6 +5,7 @@ INSERT INTO
     `username`,
     `email`,
     `password`,
+    `isAdmin`,
     `active`,
     `created_at`
   )
@@ -15,6 +16,7 @@ VALUES
     'admin@admin.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
     1,
+    1,
     CURRENT_TIMESTAMP
   ),
   (
@@ -22,6 +24,7 @@ VALUES
     'usuario1',
     'usuario1@example.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    0,
     1,
     CURRENT_TIMESTAMP
   ),
@@ -30,6 +33,7 @@ VALUES
     'usuario2',
     'usuario2@example.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    0,
     1,
     CURRENT_TIMESTAMP
   ),
@@ -38,6 +42,7 @@ VALUES
     'usuario3',
     'usuario3@example.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    0,
     1,
     CURRENT_TIMESTAMP
   ),
@@ -46,6 +51,7 @@ VALUES
     'usuario4',
     'usuario4@example.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    0,
     1,
     CURRENT_TIMESTAMP
   ),
@@ -54,6 +60,7 @@ VALUES
     'usuario5',
     'usuario5@example.com',
     '$2y$10$joWmJvece7Q.tg018cEbfOa2rDdqjCPX/W0pP3bGl4WqZrTdN1Ehe',
+    0,
     1,
     CURRENT_TIMESTAMP
   );
