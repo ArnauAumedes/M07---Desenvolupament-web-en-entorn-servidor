@@ -1,1 +1,3 @@
 - Actualizar crud: los usuarios solo pueden actualizar o eliminar sus propios equipos y jugadores. 
+- Actulizar el .sql de la bd para incluir el campo isAdmin
+- 

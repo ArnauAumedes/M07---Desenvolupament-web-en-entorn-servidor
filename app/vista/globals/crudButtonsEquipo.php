@@ -12,10 +12,10 @@ $username = $user['username'] ?? null;
 
 ?>
 
-<div class="container my-3 crud-buttons-container">
+<div class="container my-3 crud-buttons-container" style="max-width: 800px;">
     <?php if ($isLoggedIn): ?>
-        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
-            <span>Bienvenido, puedes gestionar tus equipos:</span>
+        <div class="alert alert-info d-flex justify-content-center align-items-center" role="alert">
+            <span class="mr-2">Bienvenido, puedes gestionar tus equipos:</span>
             <div>
                 <a href="/practicas/index.php?action=create"
                     class="btn btn-primary btn-sm mr-2">Crear
