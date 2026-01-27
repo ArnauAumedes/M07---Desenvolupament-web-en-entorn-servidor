@@ -1,3 +1,6 @@
+-- Selecciona la base de datos si existe
+USE pt04_arnau_aumedes;
+
 -- Datos iniciales para la tabla users
 INSERT INTO
   `users` (
