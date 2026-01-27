@@ -1,3 +1,18 @@
+## Instalación de la base de datos
+
+Antes de utilizar la aplicación, debes importar la base de datos en tu servidor MySQL (por ejemplo, usando phpMyAdmin). Es importante seguir este orden:
+
+1. Primero importa el archivo `config/pt04_arnau_aumedes.sql`.
+2. Después importa el archivo `config/pt04_insert_database.sql`.
+
+Esto asegurará que la estructura y los datos iniciales se creen correctamente.
+
+### Usuario administrador por defecto
+
+Después de importar la base de datos, puedes iniciar sesión como administrador con las siguientes credenciales:
+
+- **Usuario:** admin@admin.com
+- **Contraseña:** 123
 ## Connexió PDO
 
 La connexió a la base de dades es gestiona mitjançant la classe `Database` ubicada a `config/db-connection.php`. Aquesta classe implementa el **patró Singleton**, el que garanteix que només existeixi una única instància de la connexió PDO durant tota l'execució de l'aplicació. Això millora el rendiment i la gestió de recursos.
