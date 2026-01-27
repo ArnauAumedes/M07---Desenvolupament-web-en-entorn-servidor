@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/Equipo.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
+require_once __DIR__ . '/../model/components/CookieHelper.php';
 
 class EquipoController
 {
@@ -242,14 +243,18 @@ class EquipoController
 		try {
 			$totalEquipos = $this->equipoDAO->countAll();
 			$totalPages = max(1, ceil($totalEquipos / $limit));
-			$equipos = $this->equipoDAO->findAll(); 
+			$equipos = $this->equipoDAO->findAll();
 
-			$order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc']) ? strtolower($_GET['order']) : 'desc';
+			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
+			$order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
+			if (!in_array(strtolower($order), ['asc', 'desc'])) {
+				$order = 'desc';
+			}
 			if ($ordenCallback !== null) {
-				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, $order); 
+				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, $order);
 			}
 
-			$equipos = array_slice($equipos, $offset, $limit); 
+			$equipos = array_slice($equipos, $offset, $limit);
 
 		} catch (Exception $e) {
 			$equipos = [];
