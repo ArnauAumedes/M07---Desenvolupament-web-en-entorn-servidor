@@ -90,14 +90,14 @@ class JugadorController
                 $jugador = new Jugador(null, $nombre_completo, $equipo_id, $valor, $partidos, $goles, $asistencias);
                 $result = $this->jugadorDAO->create($jugador);
                 if ($result) {
-                    header("Location: /practicas/index.php?createdJugador=success&id=" . $result);
+                    header("Location: index.php?createdJugador=success&id=" . $result);
                     exit();
                 } else {
-                    header("Location: /practicas/index.php?createdJugador=error");
+                    header("Location: index.php?createdJugador=error");
                     exit();
                 }
             } catch (Exception $e) {
-                header("Location: /practicas/index.php?createdJugador=error&msg=" . urlencode($e->getMessage()));
+                header("Location: index.php?createdJugador=error&msg=" . urlencode($e->getMessage()));
                 exit();
             }
         } else {
@@ -130,7 +130,7 @@ class JugadorController
                         $jugador = new Jugador($id, $nombre_completo, $equipo_id, $valor, $partidos, $goles, $asistencias);
                         $rowsAffected = $this->jugadorDAO->update($jugador);
                         if ($rowsAffected > 0) {
-                            header("Location: /practicas/index.php?updatedJugador=success");
+                            header("Location: index.php?updatedJugador=success");
                             exit();
                         } else {
                             $message = "No se ha podido actualizar el jugador.";
@@ -161,14 +161,14 @@ class JugadorController
                 $id = $_GET['id'];
                 $rowsAffected = $this->jugadorDAO->delete($id);
                 if ($rowsAffected > 0) {
-                    header("Location: /practicas/index.php?deletedJugador=success&id=" . $id);
+                    header("Location: index.php?deletedJugador=success&id=" . $id);
                     exit();
                 } else {
-                    header("Location: /practicas/index.php?deletedJugador=error");
+                    header("Location: index.php?deletedJugador=error");
                     exit();
                 }
             } catch (Exception $e) {
-                header("Location: /practicas/index.php?deletedJugador=error&msg=" . urlencode($e->getMessage()));
+                header("Location: index.php?deletedJugador=error&msg=" . urlencode($e->getMessage()));
                 exit();
             }
         } else {

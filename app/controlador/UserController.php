@@ -102,7 +102,7 @@ class UserController
 							$this->equipoDAO->update($equipo);
 						}
 					}
-					header("Location: /practicas/index.php?createdUser=success&id=" . $userId);
+					header("Location: index.php?createdUser=success&id=" . $userId);
 					exit();
 				} else {
 					$messages = 'Error al crear l\'usuari.';
@@ -161,7 +161,7 @@ class UserController
 					}
 
 					if ($rowsAffected > 0) {
-						header("Location: /practicas/index.php?updatedUser=success");
+						header("Location: index.php?updatedUser=success");
 						exit();
 					} else {
 						$messages = "No s'ha pogut actualitzar l'usuari.";
@@ -187,10 +187,10 @@ class UserController
 			$id = $_GET['id'];
 			$rowsAffected = $this->userDAO->delete($id);
 			if ($rowsAffected > 0) {
-				header("Location: /practicas/index.php?deletedUser=success&id=" . $id);
+				header("Location: index.php?deletedUser=success&id=" . $id);
 				exit();
 			} else {
-				header("Location: /practicas/index.php?deletedUser=error");
+				header("Location: index.php?deletedUser=error");
 				exit();
 			}
 		}

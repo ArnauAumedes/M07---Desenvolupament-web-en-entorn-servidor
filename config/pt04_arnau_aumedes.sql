@@ -50,9 +50,7 @@ CREATE TABLE
     `objetivo` INT (11) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
-    CONSTRAINT `fk_equipos_users` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
+    CONSTRAINT `fk_equipos_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -68,17 +66,16 @@ CREATE TABLE
     `asistencias` INT (11) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `equipo_id` (`equipo_id`),
-    CONSTRAINT `jugadores_ibfk_1` FOREIGN KEY (`equipo_id`) REFERENCES `equipos` (`id`)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    CONSTRAINT `jugadores_ibfk_1` FOREIGN KEY (`equipo_id`) REFERENCES `equipos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 -- Tabla tokens
-CREATE TABLE user_tokens (
+CREATE TABLE
+  IF NOT EXISTS `user_tokens` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     token VARCHAR(255) NOT NULL,
     expires_at DATETIME NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+  );
