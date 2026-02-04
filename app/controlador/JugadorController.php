@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/Jugador.php';
-
 require_once __DIR__ . '/../model/dao/JugadorDAO.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
+require_once __DIR__ . '/../model/components/CookieHelper.php';
 
 
 class JugadorController
@@ -208,29 +208,40 @@ class JugadorController
     private function listJugadores($vista = 'mejores-valorados', $ordenCallback = null)
     {
         require_once __DIR__ . '/../model/dao/UserDAO.php';
-
-        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-        $limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? (int) $_GET['limit'] : 10;
-        $offset = ($page - 1) * $limit;
+        
+        // Usar CookieHelper para obtener la página actual (GET o cookie)
+        $page = CookieHelper::getPagePreference('page', 'page_preference', 1);
+        $limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 10);
 
         try {
+            // Calcular total de jugadores y páginas
             $totalJugadores = $this->jugadorDAO->countAll();
             $totalPages = max(1, ceil($totalJugadores / $limit));
-            $jugadores = $this->jugadorDAO->findAll();
+            
+            // Ajustar la página si excede el total de páginas
+            if ($page > $totalPages) {
+                $page = 1;
+                CookieHelper::set('page_preference', $page);
+            }
 
-			$order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc']) ? strtolower($_GET['order']) : 'desc';
+            $offset = ($page - 1) * $limit;
+            $jugadores = $this->jugadorDAO->findAll();
+            
+            // Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
+            $order = CookieHelper::getOrderPreference('order', 'order_preference');
             if ($ordenCallback !== null) {
                 $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, $ordenCallback, $order);
             }
-
-            $jugadores = array_slice($jugadores, $offset, $limit); 
+            
+            // Paginación
+            $jugadores = array_slice($jugadores, $offset, $limit);
 
         } catch (Exception $e) {
             $jugadores = [];
             $message = "Error obteniendo jugadores: " . $e->getMessage();
             $totalPages = 1;
             $page = 1;
-            $limit = 10;
+            $limit = 5;
         }
         $jugadorDAO = $this->jugadorDAO;
         $equipoDAO = $this->equipoDAO;

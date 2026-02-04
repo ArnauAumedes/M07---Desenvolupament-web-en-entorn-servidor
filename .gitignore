@@ -1,4 +1,4 @@
 # Archivos de configuración sensibles
 config/smtp.php
 .env
-obj.txt
+TODO.txt

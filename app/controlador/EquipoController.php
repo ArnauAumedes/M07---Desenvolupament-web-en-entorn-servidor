@@ -224,10 +224,10 @@ class EquipoController
 		}
 		include __DIR__ . '/../vista/crudEquipos/singleEquipo.php';
 	}
+
 	/**
 	 * Lista los equipos de forma paginada y opcionalmente ordenada.
 	 * Incluye la vista especificada para mostrar los equipos.
-	 *
 	 * @param string $vista Nombre del archivo de vista a incluir (sin extensión ni ruta completa)
 	 * @param callable|null $ordenCallback Función de callback para ordenar los equipos (opcional)
 	 * @return void
@@ -236,17 +236,26 @@ class EquipoController
 	{
 		require_once __DIR__ . '/../model/dao/UserDAO.php';
 
-		$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-		$limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? (int) $_GET['limit'] : 10;
-		$offset = ($page - 1) * $limit;
+		// Usar CookieHelper para obtener la página actual (GET o cookie)
+		$page = CookieHelper::getPagePreference('page', 'page_preference', 1);
+		$limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 5);
 
 		try {
+			// Calcular total de páginas
 			$totalEquipos = $this->equipoDAO->countAll();
 			$totalPages = max(1, ceil($totalEquipos / $limit));
+
+			// Asegurarse de que la página actual no exceda el total de páginas
+			if ($page > $totalPages) {
+				$page = 1;
+				CookieHelper::set('page_preference', $page);
+			}
+
+			$offset = ($page - 1) * $limit;
 			$equipos = $this->equipoDAO->findAll();
 
 			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
-			$order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
+			$order = CookieHelper::getOrderPreference('order', 'order_preference');
 			if (!in_array(strtolower($order), ['asc', 'desc'])) {
 				$order = 'desc';
 			}
@@ -261,7 +270,7 @@ class EquipoController
 			$message = "Error obteniendo equipos: " . $e->getMessage();
 			$totalPages = 1;
 			$page = 1;
-			$limit = 10;
+			$limit = 5;
 		}
 		$equipoDAO = $this->equipoDAO;
 		include __DIR__ . "/../vista/osm/{$vista}.php";
