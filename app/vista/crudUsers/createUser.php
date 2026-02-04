@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Usuari</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -19,7 +19,7 @@
         <?php
         // Aquí podrías requerir el DAO si necesitas datos auxiliares
         ?>
-        <form method="POST" action="/practicas/index.php?action=createUser" class="form-create">
+        <form method="POST" action="index.php?action=createUser" class="form-create">
             <h1>Crear Nou Usuari</h1>
             <!--  Mensajes de error o confirmación -->
             <?php if (!empty($messages)): ?>
@@ -63,7 +63,7 @@
             <?php endif; ?>
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Crear Usuari</button>
-                <a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
+                <a href="index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
         </form>
     </div>

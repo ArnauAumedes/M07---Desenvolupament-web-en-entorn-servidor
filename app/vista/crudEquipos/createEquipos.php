@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Article</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -24,7 +24,7 @@
         $minJugados = $equipoDAO->getMinJugados();
         $maxJugados = $equipoDAO->getMaxJugados();
         ?>
-        <form method="POST" action="/practicas/index.php?action=create" class="form-create">
+        <form method="POST" action="index.php?action=create" class="form-create">
             <h1>Crear Nuevo Equipo</h1>
             <?php if (!empty($error_partidos)): ?>
                 <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error_partidos); ?></div>
@@ -71,7 +71,7 @@
             </div>
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="submit" class="btn btn-primary">Crear Equipo</button>
-                <a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
+                <a href="index.php" class="btn btn-secondary">Volver al menú</a>
             </div>
         </form>
     </div>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -50,7 +50,7 @@
                 <tbody id="tabla-jugadores-body">
                     <?php foreach ($jugadores as $jugador):
                         $equipo = $equipoDAO->findById($jugador->getEquipoId()); ?>
-                        <tr onclick="window.location='/practicas/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
+                        <tr onclick="window.location='index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
                             style="cursor:pointer;">
                             <td class="align-middle">
                                 <?= htmlspecialchars($jugador->getId()) ?>
@@ -91,7 +91,7 @@
             </table>
         </div>
     </div>
-    <script src="/practicas/resources/js/jugadorSearch.js"></script>
+    <script src="resources/js/jugadorSearch.js"></script>
 </body>
 <!-- Paginacion -->
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">

@@ -1,6 +1,6 @@
 RewriteEngine On
 # Rutes específiques
-RewriteRule ^inici$ /index.php [L]
+RewriteRule ^inici$ index.php [L]
 RewriteRule ^login$ /Vista/login/login.php [L]
 #....
 # Maneig d'errors

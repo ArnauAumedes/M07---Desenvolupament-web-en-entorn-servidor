@@ -10,11 +10,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Eliminar Usuari</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
 	<div class="container mt-5">
-		<form method="GET" action="/practicas/index.php" class="form-create">
+		<form method="GET" action="index.php" class="form-create">
 			<h1>Eliminar Usuari</h1>
 			<input type="hidden" name="action" value="deleteUser">
 			<div class="form-group">
@@ -25,7 +25,7 @@
 				<button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro que quieres eliminar este usuario?')">
 					Eliminar Usuari
 				</button>
-				<a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
+				<a href="index.php" class="btn btn-secondary">Volver al menú</a>
 			</div>
 		</form>
 	</div>

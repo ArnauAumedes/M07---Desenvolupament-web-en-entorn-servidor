@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function buscarEquipos() {
     const query = searchInput.value;
     fetch(
-      "/practicas/app/controlador/searchBarControllerEquipo.php?tipo=" +
+      "app/controlador/searchBarControllerEquipo.php?tipo=" +
         tipo +
         "&q=" +
         encodeURIComponent(query),
