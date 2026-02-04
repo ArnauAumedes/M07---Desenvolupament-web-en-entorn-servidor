@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/User.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
+require_once __DIR__ . '/../model/components/CookieHelper.php';
 
 class UserController
 {
@@ -101,7 +102,7 @@ class UserController
 							$this->equipoDAO->update($equipo);
 						}
 					}
-					header("Location: /practicas/index.php?createdUser=success&id=" . $userId);
+					header("Location: index.php?createdUser=success&id=" . $userId);
 					exit();
 				} else {
 					$messages = 'Error al crear l\'usuari.';
@@ -160,7 +161,7 @@ class UserController
 					}
 
 					if ($rowsAffected > 0) {
-						header("Location: /practicas/index.php?updatedUser=success");
+						header("Location: index.php?updatedUser=success");
 						exit();
 					} else {
 						$messages = "No s'ha pogut actualitzar l'usuari.";
@@ -186,10 +187,10 @@ class UserController
 			$id = $_GET['id'];
 			$rowsAffected = $this->userDAO->delete($id);
 			if ($rowsAffected > 0) {
-				header("Location: /practicas/index.php?deletedUser=success&id=" . $id);
+				header("Location: index.php?deletedUser=success&id=" . $id);
 				exit();
 			} else {
-				header("Location: /practicas/index.php?deletedUser=error");
+				header("Location: index.php?deletedUser=error");
 				exit();
 			}
 		}
@@ -203,19 +204,31 @@ class UserController
 	 */
 	private function listEntrenadores($ordenCallback = null)
 	{
-		$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-		$limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? (int) $_GET['limit'] : 10;
-		$offset = ($page - 1) * $limit;
+		// Usar CookieHelper para obtener la página actual (GET o cookie)
+		$page = CookieHelper::getPagePreference('page', 'page_preference', 1);
+		$limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 10);
 
 		try {
+			// Calcular total de entrenadores y páginas
 			$totalEntrenadores = $this->userDAO->countAll();
 			$totalPages = max(1, ceil($totalEntrenadores / $limit));
+
+			// Ajustar la página si excede el total de páginas
+			if ($page > $totalPages) {
+				$page = 1;
+				CookieHelper::set('page_preference', $page);
+			}
+			
+			$offset = ($page - 1) * $limit;
 			$entrenadores = $this->userDAO->findAll();
 
+			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
+			$order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
 			if ($ordenCallback !== null) {
-				$entrenadores = $this->userDAO->ordenarPorValor($entrenadores, $ordenCallback, 'desc');
+				$entrenadores = $this->userDAO->ordenarPorValor($entrenadores, $ordenCallback, $order);
 			}
 
+			// Paginación
 			$entrenadores = array_slice($entrenadores, $offset, $limit);
 
 			// Para cada entrenador, obtener todos sus equipos
@@ -232,7 +245,7 @@ class UserController
 			$message = "Error obteniendo entrenadores: " . $e->getMessage();
 			$totalPages = 1;
 			$page = 1;
-			$limit = 10;
+			$limit = 5;
 		}
 		$userDAO = $this->userDAO;
 		$equipoDAO = $this->equipoDAO;

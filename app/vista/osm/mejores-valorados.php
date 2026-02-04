@@ -25,9 +25,15 @@
     ?>
 
     <div class="main">
-        <?php
-        require_once __DIR__ . '/../globals/crudButtonsJugador.php';
-        ?>
+        <div class="d-flex align-items-center justify-content-center mb-3"
+            style="gap: 16px; max-width: 1100px; margin: auto;">
+            <?php
+            require_once __DIR__ . '/../globals/crudButtonsJugador.php';
+            ?>
+            <?php
+            require_once __DIR__ . '/../globals/searchBar.php';
+            ?>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
@@ -41,7 +47,7 @@
                         <th class="text-center align-middle" style="width:16%">GOLES + ASISTENCIAS</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tabla-jugadores-body">
                     <?php foreach ($jugadores as $jugador):
                         $equipo = $equipoDAO->findById($jugador->getEquipoId()); ?>
                         <tr onclick="window.location='/practicas/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
@@ -85,15 +91,16 @@
             </table>
         </div>
     </div>
-    <!-- Paginación -->
-    <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
-        <?php
-        require_once __DIR__ . '/../globals/order.php';
-        ?>
-        <?php
-        require_once __DIR__ . '/../globals/pagination.php';
-        ?>
-    </div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+    <script src="/practicas/resources/js/jugadorSearch.js"></script>
 </body>
+<!-- Paginacion -->
+<div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
+    <?php
+    require_once __DIR__ . '/../globals/order.php';
+    ?>
+    <?php
+    require_once __DIR__ . '/../globals/pagination.php';
+    ?>
+</div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 
 </html>

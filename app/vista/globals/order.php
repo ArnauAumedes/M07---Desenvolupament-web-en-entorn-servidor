@@ -4,7 +4,7 @@
         Ordenar equipos:
     </label>
     <select id="orderSelect" name="order" class="form-control form-control-sm" style="width: 160px;" onchange="this.form.submit()">
-        <option value="desc" <?= (($_GET['order'] ?? 'desc') === 'desc') ? 'selected' : '' ?>>Descendente</option>
-        <option value="asc" <?= (($_GET['order'] ?? 'desc') === 'asc') ? 'selected' : '' ?>>Ascendente</option>
+        <option value="desc" <?= ($order === 'desc') ? 'selected' : '' ?>>Descendente</option>
+        <option value="asc" <?= ($order === 'asc') ? 'selected' : '' ?>>Ascendente</option>
     </select>
 </form>
