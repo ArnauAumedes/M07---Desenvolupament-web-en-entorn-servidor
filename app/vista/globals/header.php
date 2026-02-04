@@ -36,7 +36,9 @@ function navActive($action, $currentAction) {
 ?>
 <nav id="header" class="navbar navbar-expand-sm navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="index.php">Logo</a>
+        <a class="navbar-brand text-white" href="index.php">
+            <img src="public/assets/logoTablaFutbol.webp" alt="Logo" class="logo-header mr-2" />
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
