@@ -8,7 +8,7 @@ require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/components/CookieHelper.php';
 
-class SearchBarController
+class SearchBarControllerEquipo
 {
     private $db;
     private $equipoDAO;
@@ -57,8 +57,11 @@ class SearchBarController
             exit;
         }
         foreach ($equipos as $index => $equipo) {
+            // ID EQUIPO
             echo '<tr onclick="window.location=\'/practicas/index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
+            // POSICIÓN
             echo '<td class="align-middle fs-4 fw-bold">' . ($offset + $index + 1) . '</td>';
+            // CLUB
             echo '<td class="align-middle">' . htmlspecialchars($equipo->getId()) . '</td>';
             echo '<td class="align-middle d-flex align-items-center gap-2">';
             echo '<img src="' . htmlspecialchars($equipo->getEscudo()) . '" alt="' . htmlspecialchars($equipo->getEquip()) . '" style="height:32px; margin-right:8px;">';
@@ -73,10 +76,12 @@ class SearchBarController
             echo '</span>';
             echo '</div>';
             echo '</td>';
+            // JUGADOS: GANADOS, EMPATADOS, PERDIDOS
             echo '<td class="text-center align-middle">' . htmlspecialchars($equipo->getJugados()) . '</td>';
             echo '<td class="text-center align-middle">' . htmlspecialchars($equipo->getGanados()) . '</td>';
             echo '<td class="text-center align-middle">' . htmlspecialchars($equipo->getEmpatados()) . '</td>';
             echo '<td class="text-center align-middle">' . htmlspecialchars($equipo->getPerdidos()) . '</td>';
+            // PUNTOS
             if (method_exists($this->equipoDAO, 'getPuntos')) {
                 $puntos = $this->equipoDAO->getPuntos($equipo->getId());
             } else {
@@ -115,21 +120,27 @@ class SearchBarController
             $valorTotal = $this->equipoDAO->getValorEquipo($equipoId);
             $cantidadJugadores = $this->equipoDAO->getCantidadJugadores($equipoId);
             $valorPromedio = $cantidadJugadores > 0 ? $this->equipoDAO->getMediaValorJugadores($equipoId) : 0;
+            // ID EQUIPO
             echo '<tr onclick="window.location=\'/practicas/index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
+            // POSICIÓN
             echo '<td class="align-middle fs-4 fw-bold">' . ($offset + $index + 1) . '</td>';
+            // CLUB
             echo '<td class="align-middle">' . htmlspecialchars($equipo->getId()) . '</td>';
             echo '<td class="align-middle d-flex align-items-center gap-2">';
             echo '<img src="' . htmlspecialchars($equipo->getEscudo()) . '" alt="' . htmlspecialchars($equipo->getEquip()) . '" style="height:32px; margin-right:8px;">';
             echo '<span class="fw-bold text-uppercase">' . htmlspecialchars($equipo->getEquip()) . '</span>';
             echo '</td>';
+            // VALOR TOTAL
             echo '<td class="text-center align-middle" style="font-weight:bold; color:#2c3e50;">' . number_format($valorTotal, 2) . ' €</td>';
+            // CANTIDAD DE JUGADORES
             echo '<td class="text-center align-middle">' . $cantidadJugadores . '</td>';
+            // VALOR PROMEDIO
             echo '<td class="text-center align-middle">' . number_format($valorPromedio, 2) . ' €</td>';
             echo '</tr>';
         }
         exit;
     }
 }
-$controller = new SearchBarController();
+$controller = new SearchBarControllerEquipo();
 $controller->handleRequest();
 ?>

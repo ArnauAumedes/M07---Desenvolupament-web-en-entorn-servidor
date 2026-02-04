@@ -58,6 +58,7 @@
 .crud-buttons-container {
   position: relative;
   z-index: 100;
+  min-width: 800px;
 }
 
 .container-fluid {

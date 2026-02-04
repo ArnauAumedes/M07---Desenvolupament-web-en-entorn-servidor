@@ -105,6 +105,27 @@ class UserDAO extends User implements DAO
         return null;
     }
 
+    public function findByName($name)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE username LIKE :name ORDER BY username ASC");
+        $stmt->bindValue(':name', "%" . $name . "%", PDO::PARAM_STR);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $users = [];
+        foreach ($rows as $row) {
+            $users[] = new User(
+                $row['user_id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+                $row['active'],
+                $row['isAdmin'],
+                $row['created_at']
+            );
+        }
+        return $users;
+    }
+
     /**
      * Funcion para obtener todos los usuarios
      * @return User[] Array de instancias de User

@@ -26,9 +26,15 @@
     $isAdmin = !empty($user['isAdmin']) && $user['isAdmin'] == 1;
     ?>
     <div class="main">
-        <?php if ($isLoggedIn && $isAdmin):
-        require_once __DIR__ . '/../globals/crudButtonsUsers.php';
-        endif; ?>
+        <div class="d-flex align-items-center justify-content-center mb-3"
+            style="gap: 16px; max-width: 1100px; margin: auto;">
+            <?php if ($isLoggedIn && $isAdmin):
+                require_once __DIR__ . '/../globals/crudButtonsUsers.php';
+            endif; ?>
+            <?php
+            require_once __DIR__ . '/../globals/searchBar.php';
+            ?>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
@@ -41,7 +47,7 @@
                         <th class="text-center align-middle" style="width:16%">FECHA CREACIÓN</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tabla-users-body">
                     <?php $posicion = 1; ?>
                     <?php foreach ($entrenadoresConEquipos as $entrenadorConEquipos): ?>
                         <?php $entrenador = $entrenadorConEquipos['entrenador']; ?>
@@ -89,6 +95,7 @@
             </table>
         </div>
     </div>
+    <script src="/practicas/resources/js/userSearch.js"></script>
 </body>
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
     <?php

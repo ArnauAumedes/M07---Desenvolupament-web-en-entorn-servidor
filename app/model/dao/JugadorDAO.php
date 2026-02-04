@@ -119,6 +119,33 @@ class JugadorDAO extends Jugador implements DAO
     }
 
     /**
+     * Busca jugadores por nombre completo (búsqueda parcial)   
+     * @param string $name Nombre o parte del nombre del jugador
+     * @return Jugador[] Array de instancias de Jugador que coinciden con la búsqueda
+     */
+    public function findByName($name)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM jugadores WHERE nombre_completo LIKE :name ORDER BY nombre_completo ASC");
+        $stmt->bindValue(':name', "%" . $name . "%", PDO::PARAM_STR);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugador = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+            $jugadores[] = $jugador;
+        }
+        return $jugadores;
+    }
+
+    /**
      * Obtiene todos los jugadores de un equipo
      * @param int $equipoId ID del equipo
      * @return Jugador[] Array de instancias de Jugador
@@ -228,7 +255,7 @@ class JugadorDAO extends Jugador implements DAO
      * @param string $order 'desc' para descendente, 'asc' para ascendente
      * @return Jugador[] Array ordenado
      */
-    public function ordenarPorValor(array $jugadores, callable $valueCallback, string $order = 'desc')
+    public function ordenarPorValor(array $jugadores, callable $valueCallback, ?string $order = 'desc')
     {
         usort($jugadores, function ($a, $b) use ($valueCallback, $order) {
             $valorA = $valueCallback($a);

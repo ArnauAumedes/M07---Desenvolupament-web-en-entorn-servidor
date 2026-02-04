@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search");
   const searchBtn = document.getElementById("search-btn");
-  const tablaBody = document.getElementById("tabla-equipos-body");
+  const tablaBody = document.getElementById("tabla-jugadores-body");
 
   // Detectar tipo de tabla según la página
   function getActionParam() {
@@ -9,15 +9,17 @@ document.addEventListener("DOMContentLoaded", function () {
     return params.get("action");
   }
 
-  let tipo = "clasificacion";
-  if (getActionParam() === "valor-equipo") {
-    tipo = "valor";
+  let tipo = "mejores-valorados";
+  if (getActionParam() === "asistencias") {
+    tipo = "asistencias";
+  } else if (getActionParam() === "pichichis") {
+    tipo = "pichichis";
   }
 
-  function buscarEquipos() {
+  function buscarJugadores() {
     const query = searchInput.value;
     fetch(
-      "/practicas/app/controlador/searchBarControllerEquipo.php?tipo=" +
+      "/practicas/app/controlador/searchBarControllerJugador.php?tipo=" +
         tipo +
         "&q=" +
         encodeURIComponent(query),
@@ -28,9 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
   // Buscar al escribir
-  searchInput.addEventListener("input", buscarEquipos);
+  searchInput.addEventListener("input", buscarJugadores);
   // Buscar al hacer click en la lupa
   if (searchBtn) {
-    searchBtn.addEventListener("click", buscarEquipos);
+    searchBtn.addEventListener("click", buscarJugadores);
   }
 });
