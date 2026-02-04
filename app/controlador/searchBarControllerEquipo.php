@@ -58,7 +58,7 @@ class SearchBarControllerEquipo
         }
         foreach ($equipos as $index => $equipo) {
             // ID EQUIPO
-            echo '<tr onclick="window.location=\'/practicas/index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
+            echo '<tr onclick="window.location=\'index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
             // POSICIÓN
             echo '<td class="align-middle fs-4 fw-bold">' . ($offset + $index + 1) . '</td>';
             // CLUB
@@ -121,7 +121,7 @@ class SearchBarControllerEquipo
             $cantidadJugadores = $this->equipoDAO->getCantidadJugadores($equipoId);
             $valorPromedio = $cantidadJugadores > 0 ? $this->equipoDAO->getMediaValorJugadores($equipoId) : 0;
             // ID EQUIPO
-            echo '<tr onclick="window.location=\'/practicas/index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
+            echo '<tr onclick="window.location=\'index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
             // POSICIÓN
             echo '<td class="align-middle fs-4 fw-bold">' . ($offset + $index + 1) . '</td>';
             // CLUB

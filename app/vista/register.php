@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
             <div class="login-card p-4">
                 <h4 class="mb-3 text-center">Registre d'usuari</h4>
                 <?php echo $messages ?? ''; ?>
-                <form method="post" action="/practicas/index.php?action=register">
+                <form method="post" action="index.php?action=register">
                     <div class="form-group">
                         <label for="username">Nom d'usuari</label>
                         <input id="username" name="username" type="text" class="form-control"
@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group text-center mt-4">
                         <button name="btnRegister" type="submit" class="btn btn-success px-4">Registrar</button>
-                        <a href="/practicas/index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
+                        <a href="index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
                     </div>
                 </form>
             </div>

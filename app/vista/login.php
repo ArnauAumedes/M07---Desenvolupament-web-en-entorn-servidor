@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -30,7 +30,7 @@
 					   $_SESSION['login_attempts'] = 0;
 				   }
 				   ?>
-				   <form method="post" action="/practicas/index.php?action=login">
+				   <form method="post" action="index.php?action=login">
 					   <div class="form-group">
 						   <label for="email">Email</label>
 						   <input id="email" name="email" type="text" class="form-control" autofocus value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
@@ -48,15 +48,15 @@
 							   <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
 							   <label class="form-check-label" for="rememberMe">Recordarme</label>
 						   </div>
-						   <a href="/practicas/app/vista/send-email.php"><b><u>Olvidé mi
+						   <a href="/app/vista/send-email.php"><b><u>Olvidé mi
 									   contraseña</u></b>
 						   </a>
-						   <a href="/practicas/app/vista/register.php"><b><u>Crear cuenta</u></b>
+						   <a href="/app/vista/register.php"><b><u>Crear cuenta</u></b>
 						   </a>
 					   </div>
 					   <div class="form-group text-center mt-4">
 						   <button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
-						   <a href="/practicas/index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
+						   <a href="index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
 					   </div>
 				   </form>
 			   </div>

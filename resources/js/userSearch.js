@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function buscarUsers() {
     const query = searchInput.value;
     fetch(
-      "/practicas/app/controlador/searchBarControllerUser.php?" + "&q=" +
+      "app/controlador/searchBarControllerUser.php?" + "&q=" +
         encodeURIComponent(query),
     )
       .then((response) => response.text())

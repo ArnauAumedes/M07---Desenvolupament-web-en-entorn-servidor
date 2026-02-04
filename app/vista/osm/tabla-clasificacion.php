@@ -9,11 +9,11 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="public/css/style.css">
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="public/css/style.css">
 </head>
 
 
@@ -55,7 +55,7 @@ $isLoggedIn = isLoggedIn();
 				</thead>
 				<tbody id="tabla-equipos-body">
 					<?php foreach ($equipos as $index => $equipo): ?>
-						<tr onclick="window.location='/practicas/index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
+						<tr onclick="window.location='index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
 							style="cursor:pointer;">
 							<td class="align-middle fs-4 fw-bold">
 								<?= $index + 1 ?>
@@ -91,7 +91,7 @@ $isLoggedIn = isLoggedIn();
 			</table>
 		</div>
 	</div>
-	<script src="/practicas/resources/js/equipoSearch.js"></script>
+	<script src="resources/js/equipoSearch.js"></script>
 </body>
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
 	<?php

@@ -259,7 +259,7 @@ class UserController
 		// Comprobar si el usuario está logueado
 		if (!isset($_SESSION['user']['user_id'])) {
 			// Redirigir al login si no está logueado
-			header('Location: /practicas/app/vista/login.php');
+			header('Location: app/vista/login.php');
 			exit();
 		}
 
@@ -283,7 +283,7 @@ class UserController
 					if ($rowsAffected > 0) {
 						// Actualizar el nombre en la sesión para reflejar el cambio en el header
 						$_SESSION['user']['username'] = $nickname;
-						echo '<script>alert("Perfil actualizado correctamente."); window.location.href = "/practicas/index.php";</script>';
+						echo '<script>alert("Perfil actualizado correctamente."); window.location.href = "index.php";</script>';
 						exit();
 					} else {
 						$messages = '<div class="alert alert-warning">No s\'ha actualitzat cap dada (potser no has canviat res).</div>';

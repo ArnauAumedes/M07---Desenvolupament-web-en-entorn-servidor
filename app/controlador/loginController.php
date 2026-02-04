@@ -105,7 +105,7 @@ if ($pdo instanceof PDO) {
                 }
                 // Redirigir a la pàgina de menú
                 $_SESSION['flash_welcome'] = $user['username'] ?? ($user['email'] ?? 'Usuari');
-                header('Location: /practicas/index.php?action=menu');
+                header('Location: index.php?action=menu');
                 exit;
             }
         }

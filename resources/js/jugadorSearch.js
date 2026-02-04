@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function buscarJugadores() {
     const query = searchInput.value;
     fetch(
-      "/practicas/app/controlador/searchBarControllerJugador.php?tipo=" +
+      "app/controlador/searchBarControllerJugador.php?tipo=" +
         tipo +
         "&q=" +
         encodeURIComponent(query),

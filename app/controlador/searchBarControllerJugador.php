@@ -68,7 +68,7 @@ class SearchBarControllerJugador
             $mediaGoles = method_exists($this->jugadorDAO, 'getMediaPorPartidoJugador')
                 ? $this->jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'goles')
                 : ($jugador->getPartidos() > 0 ? $jugador->getGoles() / $jugador->getPartidos() : 0);
-            echo '<tr onclick="window.location=\'/practicas/index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
+            echo '<tr onclick="window.location=\'index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
             // ID JUGADOR
             echo '<td class="align-middle">' . htmlspecialchars($jugador->getId()) . '</td>';
             // NOMBRE
@@ -128,7 +128,7 @@ class SearchBarControllerJugador
             $mediaAsistencias = method_exists($this->jugadorDAO, 'getMediaPorPartidoJugador')
                 ? $this->jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias')
                 : ($jugador->getPartidos() > 0 ? $jugador->getAsistencias() / $jugador->getPartidos() : 0);
-            echo '<tr onclick="window.location=\'/practicas/index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
+            echo '<tr onclick="window.location=\'index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
             // ID JUGADOR
             echo '<td class="align-middle">' . htmlspecialchars($jugador->getId()) . '</td>';
             // NOMBRE
@@ -184,7 +184,7 @@ class SearchBarControllerJugador
         $equipoDAO = new EquipoDAO($this->db);
         foreach ($jugadores as $index => $jugador) {
             $equipo = $equipoDAO->findById($jugador->getEquipoId());
-            echo '<tr onclick="window.location=\'/practicas/index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
+            echo '<tr onclick="window.location=\'index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
             // ID JUGADOR
             echo '<td class="align-middle">' . htmlspecialchars($jugador->getId()) . '</td>';
             // NOMBRE
