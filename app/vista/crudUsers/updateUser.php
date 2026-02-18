@@ -67,7 +67,7 @@
 				<?php endif; ?>
 				<div class="d-flex justify-content-center mt-3" style="gap: 0.5rem;">
 					<button type="submit" class="btn btn-primary">Actualizar Usuari</button>
-					<a href="index.php" class="btn btn-secondary">Cancelar</a>
+					<a href="index.php" class="btn btn-secondary">Menú</a>
 				</div>
 			</form>
 		<?php endif; ?>
