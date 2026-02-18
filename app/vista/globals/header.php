@@ -44,7 +44,7 @@ function navActive($action, $currentAction) {
         </button>
         <ul class="navbar-nav nav-left">
             <li class="nav-item <?php echo navActive('list', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="index.php?action=list">TABLA DE CLASIFICACION</a>
+                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="index.php?action=list">TABLA DE CLASIFICACIÓN</a>
             </li>
             <li class="nav-item <?php echo navActive('valor-equipo', $currentAction); ?>">
                 <a class="nav-link <?php echo navActive('valor-equipo', $currentAction); ?>" href="index.php?action=valor-equipo">VALOR DE EQUIPO</a>

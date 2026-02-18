@@ -48,15 +48,14 @@
 							   <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
 							   <label class="form-check-label" for="rememberMe">Recordarme</label>
 						   </div>
-						   <a href="/app/vista/send-email.php"><b><u>Olvidé mi
-									   contraseña</u></b>
+						   <a href="index.php?action=send-email"><b><u>Olvidé mi contraseña</u></b>
 						   </a>
-						   <a href="/app/vista/register.php"><b><u>Crear cuenta</u></b>
+						   <a href="index.php?action=register"><b><u>Crear cuenta</u></b>
 						   </a>
 					   </div>
 					   <div class="form-group text-center mt-4">
 						   <button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
-						   <a href="index.php" class="btn btn-outline-secondary ml-2">Cancelar</a>
+						   <a href="index.php" class="btn btn-outline-secondary ml-2">Menú</a>
 					   </div>
 				   </form>
 			   </div>

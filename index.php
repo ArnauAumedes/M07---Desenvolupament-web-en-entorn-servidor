@@ -7,22 +7,34 @@
  */
 // Front controller: route by ?action=
 
+// Habilitar la visualización de errores para depuración
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $action = $_GET['action'] ?? 'list';
 
-
-if ($action === 'login') {
-	require_once __DIR__ . '/./app/controlador/loginController.php';
-	exit;
+switch ($action) {
+    case 'login':
+        require_once __DIR__ . '/./app/controlador/loginController.php';
+        exit;
+    case 'logout':
+        require_once __DIR__ . '/./app/controlador/logoutController.php';
+        exit;
+    case 'register':
+        require_once __DIR__ . '/./app/controlador/registerController.php';
+        exit;
+	case 'send-password':
+		require_once __DIR__ . '/./app/controlador/ForgotPasswordController.php';
+		exit;
+	case 'change-password':
+		require_once __DIR__ . '/./app/controlador/ChangePasswordController.php';
+		exit;
 }
 
-if ($action === 'logout') {
-	require_once __DIR__ . '/./app/controlador/logoutController.php';
-	exit;
-}
-
-if ($action === 'register') {
-	require_once __DIR__ . '/./app/controlador/registerController.php';
-	exit;
+// Mostrar mensaje de éxito al cambiar la contraseña
+if (isset($_GET['success']) && $_GET['success'] === 'password') {
+    echo '<div class="alert alert-success">Contraseña cambiada correctamente.</div>';
 }
 
 // Accions de jugadors

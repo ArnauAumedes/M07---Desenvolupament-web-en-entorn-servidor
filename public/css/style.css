@@ -14,13 +14,15 @@
   background: #fff;
   color: #22223b;
   margin-bottom: 12px;
-  transition: border 0.2s, box-shadow 0.2s;
+  transition:
+    border 0.2s,
+    box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(34, 34, 59, 0.04);
 }
 .search-bar-component input[type="text"]:focus {
   border-color: #22223b;
   outline: none;
-  box-shadow: 0 2px 12px rgba(34, 34, 59, 0.10);
+  box-shadow: 0 2px 12px rgba(34, 34, 59, 0.1);
 }
 .search-bar-component #results {
   width: 100%;
@@ -56,18 +58,18 @@
 }
 /* Logo en el header */
 .logo-header {
-    height: 40px;
-    width: auto;
-    margin-right: 8px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    padding: 2px;
-    transition: transform 0.2s;
+  height: 40px;
+  width: auto;
+  margin-right: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2px;
+  transition: transform 0.2s;
 }
 
 .logo-header:hover {
-    transform: scale(1.08) rotate(-2deg);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 /* CRUD Buttons container: ensure header stays above */
 .crud-buttons-container {
@@ -90,6 +92,8 @@
 }
 
 .navbar-nav.nav-left {
+  justify-content: center;
+  align-items: center;
   flex-direction: row;
   gap: 32px;
   margin-left: 32px;
@@ -127,14 +131,14 @@ body {
   height: 100%;
   margin-top: 60px;
   margin: 0;
-  margin-bottom: 40px;
   padding: 0;
   display: flex;
   flex: 2;
   flex-direction: column;
   min-height: 100vh;
   color: #566787;
-  background: #f5f5f5;
+  background: url("../assets/background.webp") no-repeat center center fixed;
+  background-size: cover;
   font-family: "Varela Round", sans-serif;
   font-size: 13px;
   min-height: 100vh;
@@ -143,6 +147,13 @@ body {
 .main {
   flex: 2;
   margin-top: 56px;
+}
+
+/* TABLA */
+.table {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(34, 34, 59, 0.08);
 }
 
 /* FIN DEL BODY */
@@ -266,8 +277,8 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   background: #f5f5f5;
   margin: 0;
   padding: 0;
@@ -343,7 +354,7 @@ body {
   margin-bottom: 32px;
   background: #f8f9fa;
   border-radius: 18px;
-  box-shadow: 0 4px 32px rgba(34,34,59,0.10);
+  box-shadow: 0 4px 32px rgba(34, 34, 59, 0.1);
   padding: 32px 32px 32px 40px;
 }
 .single-equipo-escudo {
@@ -364,7 +375,7 @@ body {
   height: auto;
   display: block;
   margin: 0 auto;
-  box-shadow: 0 4px 24px rgba(34,34,59,0.13);
+  box-shadow: 0 4px 24px rgba(34, 34, 59, 0.13);
   background: #fff;
   border-radius: 16px;
   padding: 18px;
@@ -400,7 +411,8 @@ body {
     align-items: center;
     padding: 18px 8px 18px 8px;
   }
-  .single-equipo-escudo, .single-equipo-info {
+  .single-equipo-escudo,
+  .single-equipo-info {
     min-width: 0;
     width: 100%;
     padding: 0;

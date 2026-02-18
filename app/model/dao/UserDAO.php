@@ -125,6 +125,30 @@ class UserDAO extends User implements DAO
         }
         return $users;
     }
+    /**
+     * Busca un usuari per username i email (per a canvi de contrasenya)
+     * @param string $username Username de l'usuari a cercar
+     * @param string  $email Email de l'usuari a cercar
+     * @return User|null Instància de User o null si no es troba
+     */
+    public function findByUsernameAndEmail($username, $email)
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = :username AND email = :email LIMIT 1');
+        $stmt->execute([':username' => $username, ':email' => $email]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new User(
+                $row['user_id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+                $row['active'],
+                $row['isAdmin'],
+                $row['created_at']
+            );
+        }
+        return null;
+    }
 
     /**
      * Funcion para obtener todos los usuarios
@@ -255,6 +279,22 @@ class UserDAO extends User implements DAO
             }
         });
         return $items;
+    }
+
+    /**
+     * Actualitza la contrasenya d'un usuari per ID
+     * @param int $userId ID de l'usuari
+     * @param string $hashedPassword Nova contrasenya hashada
+     * @return int Número de files afectades
+     */
+    public function updatePassword($userId, $hashedPassword)
+    {
+        $sql = 'UPDATE users SET password = :password WHERE user_id = :user_id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':password', $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount();
     }
 }
 ?>
