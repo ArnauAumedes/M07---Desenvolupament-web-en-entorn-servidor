@@ -11,13 +11,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Actualitzar Usuari</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/practicas/public/css/style.css">
+	<link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
 	<div class="container mt-5">
 		<!-- Formulario de búsqueda por ID (siempre visible) -->
-		<form method="GET" action="/practicas/index.php" class="form-create mb-4">
+		<form method="GET" action="index.php" class="form-create mb-4">
 			<h1>Actualizar Usuari</h1>
 			<input type="hidden" name="action" value="updateUser">
 			<div class="form-group">
@@ -30,14 +30,14 @@
 			</div>
 			<div class="d-flex justify-content-center gap-2 mt-3">
 				<button type="submit" class="btn btn-primary">Buscar Usuari</button>
-				<a href="/practicas/index.php" class="btn btn-secondary">Volver al menú</a>
+				<a href="index.php" class="btn btn-secondary">Volver al menú</a>
 			</div>
 		</form>
 
 		<!-- Formulario de actualización (visible solo si $user está definido) -->
 		<?php if (isset($user)): ?>
 			<form method="POST"
-				action="/practicas/index.php?action=updateUser&id=<?php echo urlencode($user->getId()); ?>"
+				action="index.php?action=updateUser&id=<?php echo urlencode($user->getId()); ?>"
 				class="form-create">
 				<h1>Editar Usuari</h1>
 				<?php if (!empty($messages)): ?>
@@ -67,7 +67,7 @@
 				<?php endif; ?>
 				<div class="d-flex justify-content-center mt-3" style="gap: 0.5rem;">
 					<button type="submit" class="btn btn-primary">Actualizar Usuari</button>
-					<a href="/practicas/index.php" class="btn btn-secondary">Cancelar</a>
+					<a href="index.php" class="btn btn-secondary">Cancelar</a>
 				</div>
 			</form>
 		<?php endif; ?>

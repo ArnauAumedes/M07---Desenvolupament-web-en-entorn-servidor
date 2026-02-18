@@ -17,11 +17,11 @@ $username = $user['username'] ?? null;
 		<div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
 			<span>Bienvenido, puedes gestionar los usuarios:</span>
 			<div>
-				<a href="/practicas/index.php?action=createUser"
+				<a href="index.php?action=createUser"
 					class="btn btn-primary btn-sm mr-2">Crear usuario</a>
-				<a href="/practicas/index.php?action=updateUser"
+				<a href="index.php?action=updateUser"
 					class="btn btn-warning btn-sm mr-2">Actualizar usuario</a>
-				<a href="/practicas/index.php?action=deleteUser"
+				<a href="index.php?action=deleteUser"
 					class="btn btn-danger btn-sm">Eliminar usuario</a>
 			</div>
 		</div>

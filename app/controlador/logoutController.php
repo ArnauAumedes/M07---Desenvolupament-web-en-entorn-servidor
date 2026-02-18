@@ -38,7 +38,7 @@ if (isset($_COOKIE['rememberme'])) {
 session_destroy();
 
 // Redirigir a la pàgina d'inici 
-header('Location: /practicas/index.php');
+header('Location: index.php');
 exit;
 
 ?>

@@ -1,17 +1,3 @@
-<head>
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Footer</title>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/practicas/public/css/style.css">
-    </head>
-</head>
-
 <div id="footer" class="container-fluid footer-dark">
     <div class="container">
         <div class="row social">
@@ -37,9 +23,9 @@
             <div class="col-sm-6 col-md-4 item">
                 <h3>USEFUL LINKS</h3>
                 <ul>
-                    <li><a href="/practicas/index.php">Home</a></li>
-                    <li><a href="/practicas/app/vista/register.php">Register</a></li>
-                    <li><a href="/practicas/app/vista/login.php">Login</a></li>
+                    <li><a href="index.php">Home</a></li>
+                    <li><a href="/app/vista/register.php">Register</a></li>
+                    <li><a href="/app/vista/login.php">Login</a></li>
                 </ul>
             </div>
             <div class="col-sm-6 col-md-4 item text">

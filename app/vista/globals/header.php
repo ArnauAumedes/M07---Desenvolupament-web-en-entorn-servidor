@@ -22,7 +22,7 @@ $username = $user['username'] ?? null;
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
@@ -36,28 +36,30 @@ function navActive($action, $currentAction) {
 ?>
 <nav id="header" class="navbar navbar-expand-sm navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand text-white" href="/practicas/index.php">Logo</a>
+        <a class="navbar-brand text-white" href="index.php">
+            <img src="public/assets/logoTablaFutbol.webp" alt="Logo" class="logo-header mr-2" />
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="navbar-nav nav-left">
             <li class="nav-item <?php echo navActive('list', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="/practicas/index.php?action=list">TABLA DE CLASIFICACION</a>
+                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="index.php?action=list">TABLA DE CLASIFICACION</a>
             </li>
             <li class="nav-item <?php echo navActive('valor-equipo', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('valor-equipo', $currentAction); ?>" href="/practicas/index.php?action=valor-equipo">VALOR DE EQUIPO</a>
+                <a class="nav-link <?php echo navActive('valor-equipo', $currentAction); ?>" href="index.php?action=valor-equipo">VALOR DE EQUIPO</a>
             </li>
             <li class="nav-item <?php echo navActive('lista-entrenador', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('lista-entrenador', $currentAction); ?>" href="/practicas/index.php?action=lista-entrenador">LISTA DE ENTRENADORES</a>
+                <a class="nav-link <?php echo navActive('lista-entrenador', $currentAction); ?>" href="index.php?action=lista-entrenador">LISTA DE ENTRENADORES</a>
             </li>
             <li class="nav-item <?php echo navActive('pichichis', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('pichichis', $currentAction); ?>" href="/practicas/index.php?action=pichichis">PICHICHIS</a>
+                <a class="nav-link <?php echo navActive('pichichis', $currentAction); ?>" href="index.php?action=pichichis">PICHICHIS</a>
             </li>
             <li class="nav-item <?php echo navActive('asistencias', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('asistencias', $currentAction); ?>" href="/practicas/index.php?action=asistencias">ASISTENCIAS</a>
+                <a class="nav-link <?php echo navActive('asistencias', $currentAction); ?>" href="index.php?action=asistencias">ASISTENCIAS</a>
             </li>
             <li class="nav-item <?php echo navActive('mejores-valorados', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('mejores-valorados', $currentAction); ?>" href="/practicas/index.php?action=mejores-valorados">MEJORES VALORADOS</a>
+                <a class="nav-link <?php echo navActive('mejores-valorados', $currentAction); ?>" href="index.php?action=mejores-valorados">MEJORES VALORADOS</a>
             </li>
         </ul>
         <ul class="navbar-nav nav-right">
@@ -69,19 +71,19 @@ function navActive($action, $currentAction) {
                     ?>
                     <span class="d-flex align-items-center">
                         <img src="<?php echo $imgSrc; ?>" alt="profile" class="profile-img mr-2" />
-                        <a class="nav-link header-btn" href="/practicas/index.php?action=edit-profile"
+                        <a class="nav-link header-btn" href="index.php?action=edit-profile"
                             style="line-height:1;"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
                     </span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link header-btn" href="/practicas/index.php?action=logout">Logout</a>
+                    <a class="nav-link header-btn" href="index.php?action=logout">Logout</a>
                 </li>
             <?php else: ?>
                 <li class="nav-item">
-                    <a class="nav-link header-btn" href="/practicas/index.php?action=login">Login</a>
+                    <a class="nav-link header-btn" href="index.php?action=login">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link header-btn" href="/practicas/index.php?action=register">Register</a>
+                    <a class="nav-link header-btn" href="index.php?action=register">Register</a>
                 </li>
             <?php endif; ?>
         </ul>

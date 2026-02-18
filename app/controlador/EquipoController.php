@@ -93,14 +93,14 @@ class EquipoController
 				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 				$result = $this->equipoDAO->create($equipo);
 				if ($result) {
-					header("Location: /practicas/index.php?created=success&id=" . $result);
+					header("Location: index.php?created=success&id=" . $result);
 					exit();
 				} else {
-					header("Location: /practicas/index.php?created=error");
+					header("Location: index.php?created=error");
 					exit();
 				}
 			} catch (Exception $e) {
-				header("Location: /practicas/index.php?created=error&msg=" . urlencode($e->getMessage()));
+				header("Location: index.php?created=error&msg=" . urlencode($e->getMessage()));
 				exit();
 			}
 		} else {
@@ -146,7 +146,7 @@ class EquipoController
 						$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
 						$rowsAffected = $this->equipoDAO->update($equipo);
 						if ($rowsAffected > 0) {
-							header("Location: /practicas/index.php?updated=success");
+							header("Location: index.php?updated=success");
 							exit();
 						} else {
 							$message = "No s'ha pogut actualitzar l'equip";
@@ -183,14 +183,14 @@ class EquipoController
 				$id = $_GET['id'];
 				$rowsAffected = $this->equipoDAO->delete($id);
 				if ($rowsAffected > 0) {
-					header("Location: /practicas/index.php?deleted=success&id=" . $id);
+					header("Location: index.php?deleted=success&id=" . $id);
 					exit();
 				} else {
-					header("Location: /practicas/index.php?deleted=error");
+					header("Location: index.php?deleted=error");
 					exit();
 				}
 			} catch (Exception $e) {
-				header("Location: /practicas/index.php?deleted=error&msg=" . urlencode($e->getMessage()));
+				header("Location: index.php?deleted=error&msg=" . urlencode($e->getMessage()));
 				exit();
 			}
 		} else {
@@ -222,12 +222,15 @@ class EquipoController
 			$message = "ID no proporcionat";
 			header("HTTP/1.0 400 Bad Request");
 		}
-		include __DIR__ . '/../vista/crudEquipos/singleEquipo.php';
+		if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+			require_once __DIR__ . '/../vista/crudEquipos/singleEquipo.php';
+			exit;
+		}
 	}
+
 	/**
 	 * Lista los equipos de forma paginada y opcionalmente ordenada.
 	 * Incluye la vista especificada para mostrar los equipos.
-	 *
 	 * @param string $vista Nombre del archivo de vista a incluir (sin extensión ni ruta completa)
 	 * @param callable|null $ordenCallback Función de callback para ordenar los equipos (opcional)
 	 * @return void
@@ -236,17 +239,26 @@ class EquipoController
 	{
 		require_once __DIR__ . '/../model/dao/UserDAO.php';
 
-		$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-		$limit = isset($_GET['limit']) && is_numeric($_GET['limit']) ? (int) $_GET['limit'] : 10;
-		$offset = ($page - 1) * $limit;
+		// Usar CookieHelper para obtener la página actual (GET o cookie)
+		$page = CookieHelper::getPagePreference('page', 'page_preference', 1);
+		$limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 5);
 
 		try {
+			// Calcular total de páginas
 			$totalEquipos = $this->equipoDAO->countAll();
 			$totalPages = max(1, ceil($totalEquipos / $limit));
+
+			// Asegurarse de que la página actual no exceda el total de páginas
+			if ($page > $totalPages) {
+				$page = 1;
+				CookieHelper::set('page_preference', $page);
+			}
+
+			$offset = ($page - 1) * $limit;
 			$equipos = $this->equipoDAO->findAll();
 
 			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
-			$order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
+			$order = CookieHelper::getOrderPreference('order', 'order_preference');
 			if (!in_array(strtolower($order), ['asc', 'desc'])) {
 				$order = 'desc';
 			}
@@ -261,7 +273,7 @@ class EquipoController
 			$message = "Error obteniendo equipos: " . $e->getMessage();
 			$totalPages = 1;
 			$page = 1;
-			$limit = 10;
+			$limit = 5;
 		}
 		$equipoDAO = $this->equipoDAO;
 		include __DIR__ . "/../vista/osm/{$vista}.php";

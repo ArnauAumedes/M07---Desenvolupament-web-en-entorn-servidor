@@ -9,24 +9,32 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/practicas/public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
+    <script src="resources/js/jugadorSearch.js"></script>
+    <script src="resources/js/jugadorModal.js"></script>
 </head>
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Incloure capçalera i fitxers necessaris
+require_once __DIR__ . '/../globals/header.php';
+require_once __DIR__ . '/../../model/components/auth.php';
+$isLoggedIn = isLoggedIn();
+?>
 
 <body>
-    <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-    // Incloure capçalera i fitxers necessaris
-    require_once __DIR__ . '/../globals/header.php';
-    require_once __DIR__ . '/../../model/components/auth.php';
-    $isLoggedIn = isLoggedIn();
-    ?>
     <div class="main">
-        <?php
-        require_once __DIR__ . '/../globals/crudButtonsJugador.php';
-        ?>
+        <div class="d-flex align-items-center justify-content-center mb-3"
+            style="gap: 16px; max-width: 1100px; margin: auto;">
+            <?php
+            require_once __DIR__ . '/../globals/crudButtonsJugador.php';
+            ?>
+            <?php
+            require_once __DIR__ . '/../globals/searchBar.php';
+            ?>
+        </div>
         <div class="table-responsive">
             <table class="table table-bordered table-hover table-striped align-middle mb-0 tabla-clasificacion">
                 <thead class="thead-dark">
@@ -39,14 +47,13 @@
                         <th class="text-center align-middle" style="width:22%">GOLES/PARTIDO</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tabla-jugadores-body">
                     <?php foreach ($jugadores as $jugador): ?>
                         <?php
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $mediaGoles = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'goles');
                         ?>
-                        <tr onclick="window.location='/practicas/index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
-                            style="cursor:pointer;">
+                        <tr data-jugador-id="<?= urlencode($jugador->getId()) ?>" style="cursor:pointer;">
                             <td class="align-middle">
                                 <?= htmlspecialchars($jugador->getId()) ?>
                             </td>
@@ -83,14 +90,15 @@
             </table>
         </div>
     </div>
-    <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
-        <?php
-        require_once __DIR__ . '/../globals/order.php';
-        ?>
-        <?php
-        require_once __DIR__ . '/../globals/pagination.php';
-        ?>
-    </div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+    <?php require_once __DIR__ . '/../globals/modalJugador.php'; ?>
 </body>
+<div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
+    <?php
+    require_once __DIR__ . '/../globals/order.php';
+    ?>
+    <?php
+    require_once __DIR__ . '/../globals/pagination.php';
+    ?>
+</div> <?php require_once __DIR__ . '/../globals/footer.php'; ?>
 
 </html>
