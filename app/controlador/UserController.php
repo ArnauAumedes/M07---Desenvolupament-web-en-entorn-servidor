@@ -45,6 +45,9 @@ class UserController
 			case 'edit-profile':
 				$this->editProfile();
 				break;
+			case 'viewUser':
+				$this->viewUser();
+				break;
 			default:
 				$this->listEntrenadores();
 				break;
@@ -218,7 +221,7 @@ class UserController
 				$page = 1;
 				CookieHelper::set('page_preference', $page);
 			}
-			
+
 			$offset = ($page - 1) * $limit;
 			$entrenadores = $this->userDAO->findAll();
 
@@ -252,6 +255,28 @@ class UserController
 		include __DIR__ . '/../vista/osm/lista-entrenador.php';
 	}
 
+	private function viewUser()
+	{
+		$user = null;
+		$message = '';
+		if (isset($_GET['id']) && !empty($_GET['id'])) {
+			try {
+				$user = $this->userDAO->findById($_GET['id']);
+				if (!$user) {
+					$message = "No se ha encontrado ningún user con ese ID.";
+					header("HTTP/1.0 404 Not Found");
+				}
+			} catch (Exception $e) {
+				$message = "Error obteniendo el user: " . $e->getMessage();
+			}
+		} else {
+			header("HTTP/1.0 400 Bad Request");
+			$message = "ID de user no proporcionado.";
+		}
+		if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+			include __DIR__ . '/../vista/crudUsers/singleUser.php';
+		}
+	}
 	private function editProfile()
 	{
 		session_start();

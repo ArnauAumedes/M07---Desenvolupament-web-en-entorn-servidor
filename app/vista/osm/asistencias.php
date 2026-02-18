@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="public/css/style.css">
+    <script src="resources/js/jugadorSearch.js"></script>
+    <script src="resources/js/jugadorModal.js"></script>
 </head>
 
 <body>
@@ -52,8 +54,7 @@
                         $equipo = $equipoDAO->findById($jugador->getEquipoId());
                         $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
                         ?>
-                        <tr onclick="window.location='index.php?action=viewJugador&id=<?= urlencode($jugador->getId()) ?>'"
-                            style="cursor:pointer;">
+                        <tr data-jugador-id="<?= urlencode($jugador->getId()) ?>" style="cursor:pointer;">
                             <td class="align-middle">
                                 <?= htmlspecialchars($jugador->getId()) ?>
                             </td>
@@ -90,7 +91,7 @@
             </table>
         </div>
     </div>
-    <script src="resources/js/jugadorSearch.js"></script>
+    <?php require_once __DIR__ . '/../globals/modalJugador.php'; ?>
 </body>
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
     <?php

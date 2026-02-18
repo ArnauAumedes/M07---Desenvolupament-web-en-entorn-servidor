@@ -222,7 +222,10 @@ class EquipoController
 			$message = "ID no proporcionat";
 			header("HTTP/1.0 400 Bad Request");
 		}
-		include __DIR__ . '/../vista/crudEquipos/singleEquipo.php';
+		if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+			require_once __DIR__ . '/../vista/crudEquipos/singleEquipo.php';
+			exit;
+		}
 	}
 
 	/**

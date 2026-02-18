@@ -194,8 +194,11 @@ class JugadorController
             $message = "ID no proporcionado";
             header("HTTP/1.0 400 Bad Request");
         }
-        include __DIR__ . '/../vista/crudJugadores/singleJugador.php';
-    }
+        if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {    
+            include __DIR__ . '/../vista/crudJugadores/singleJugador.php';
+            exit;
+        }
+     }
 
     /**
      * Lista los jugadores de forma paginada y opcionalmente ordenada.

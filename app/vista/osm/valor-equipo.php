@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="public/css/style.css">
+    <script src="resources/js/equipoSearch.js"></script>
+    <script src="resources/js/equipoModal.js"></script>
 </head>
 
 <body>
@@ -52,8 +54,7 @@
                         $cantidadJugadores = $equipoDAO->getCantidadJugadores($equipoId);
                         $valorPromedio = $cantidadJugadores > 0 ? $equipoDAO->getMediaValorJugadores($equipoId) : 0;
                         ?>
-                        <tr onclick="window.location='index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
-                            style="cursor:pointer;">
+                        <tr data-equipo-id="<?= urlencode($equipo->getId()) ?>" style="cursor:pointer;">
                             <td class="align-middle fs-4 fw-bold">
                                 <?= $index + 1 ?>
                             </td>
@@ -81,7 +82,7 @@
             </table>
         </div>
     </div>
-    <script src="resources/js/equipoSearch.js"></script>
+    <?php require_once __DIR__ . '/../globals/modalEquipo.php'; ?>
 </body>
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
     <?php
@@ -92,4 +93,5 @@
     ?>
 </div>
 <?php require_once __DIR__ . '/../globals/footer.php'; ?>
+
 </html>
