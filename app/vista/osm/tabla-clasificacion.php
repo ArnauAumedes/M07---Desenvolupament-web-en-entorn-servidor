@@ -14,6 +14,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="public/css/style.css">
+	<script src="resources/js/equipoSearch.js"></script>
+	<script src="resources/js/equipoModal.js"></script>
 </head>
 
 
@@ -55,8 +57,7 @@ $isLoggedIn = isLoggedIn();
 				</thead>
 				<tbody id="tabla-equipos-body">
 					<?php foreach ($equipos as $index => $equipo): ?>
-						<tr onclick="window.location='index.php?action=view&id=<?= urlencode($equipo->getId()) ?>'"
-							style="cursor:pointer;">
+						<tr data-equipo-id="<?= urlencode($equipo->getId()) ?>" style="cursor:pointer;">
 							<td class="align-middle fs-4 fw-bold">
 								<?= $index + 1 ?>
 							</td>
@@ -91,7 +92,7 @@ $isLoggedIn = isLoggedIn();
 			</table>
 		</div>
 	</div>
-	<script src="resources/js/equipoSearch.js"></script>
+	<?php require_once __DIR__ . '/../globals/modalEquipo.php'; ?>
 </body>
 <div class="d-flex align-items-center justify-content-center mb-3" style="gap: 16px">
 	<?php
