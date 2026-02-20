@@ -4,7 +4,8 @@ require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/PasswordResetDAO.php';
 use PHPMailer\PHPMailer\PHPMailer;
 
-class ForgotPasswordController {
+class ForgotPasswordController
+{
     public $error = '';
     public $success = '';
     public $email = '';
@@ -13,7 +14,8 @@ class ForgotPasswordController {
     private $userDao;
     private $passwordResetDao;
 
-    public function __construct($db = null) {
+    public function __construct($db = null)
+    {
         if ($db === null) {
             // Cargar conexión PDO por defecto si no se pasa
             require_once __DIR__ . '/../../config/db-connection.php';
@@ -26,7 +28,8 @@ class ForgotPasswordController {
         $this->passwordResetDao = new PasswordResetDAO($this->db);
     }
 
-    public function handleRequest() {
+    public function handleRequest()
+    {
         if (isset($_POST["email"]) && (!empty($_POST["email"]))) {
             $this->email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
             $this->email = filter_var($this->email, FILTER_VALIDATE_EMAIL);
@@ -46,13 +49,13 @@ class ForgotPasswordController {
             $key = md5(time()) . substr(md5(uniqid(rand(), 1)), 3, 10);
             $this->passwordResetDao->insert($this->email, $key, $expDate);
             $output = '<p>Please click on the following link to reset your password.</p>';
-            $output .= '<p><a href="http://localhost/practicas/app/vista/reset-password.php?key=' . $key . '&email=' . $this->email . '&action=reset" target="_blank">http://localhost/practicas/app/vista/reset-password.php?key=' . $key . '&email=' . $this->email . '&action=reset</a></p>';
+            $output .= '<p><a href="http://localhost/practicas/index.php?action=reset-password&key=' . $key . '&email=' . $this->email . '" target="_blank">http://localhost/practicas/index.php?action=reset-password&key=' . $key . '&email=' . $this->email . '</a></p>';
             $body = $output;
             $subject = "Password Recovery";
             $email_to = $this->email;
-            require_once __DIR__ . '/../lib/PHPMailer/src/PHPMailer.php';
-            require_once __DIR__ . '/../lib/PHPMailer/src/SMTP.php';
-            require_once __DIR__ . '/../lib/PHPMailer/src/Exception.php';
+            require_once __DIR__ . '/../../lib/PHPMailer/src/PHPMailer.php';
+            require_once __DIR__ . '/../../lib/PHPMailer/src/SMTP.php';
+            require_once __DIR__ . '/../../lib/PHPMailer/src/Exception.php';
             $mail = new PHPMailer();
             $config = include(__DIR__ . '/../../config/smtp.php');
             $mail->IsSMTP();
@@ -82,5 +85,9 @@ class ForgotPasswordController {
                 $this->success = "An email has been sent";
             }
         }
+        $error = $this->error;
+        $success = $this->success;
+        $email = $this->email;
+        require_once __DIR__ . '/../vista/send-email.php';
     }
 }

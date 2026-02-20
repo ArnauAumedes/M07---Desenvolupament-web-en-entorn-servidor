@@ -24,11 +24,18 @@ switch ($action) {
     case 'register':
         require_once __DIR__ . '/./app/controlador/registerController.php';
         exit;
-	case 'send-password':
+	case 'send-email':
 		require_once __DIR__ . '/./app/controlador/ForgotPasswordController.php';
+		$controller = new ForgotPasswordController();
+		$controller->handleRequest();
 		exit;
 	case 'change-password':
 		require_once __DIR__ . '/./app/controlador/ChangePasswordController.php';
+		exit;
+	case 'reset-password':
+		require_once __DIR__ . '/./app/controlador/ResetPasswordController.php';
+		$controller = new ResetPasswordController();
+		$controller->handleRequest();
 		exit;
 }
 
