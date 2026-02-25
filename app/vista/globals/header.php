@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+var_dump($_SESSION); // Debug: mostrar contenido de la sesión   
+
 require_once __DIR__ . '/../../model/components/auth.php';
 
 $isLoggedIn = isLoggedIn();
