@@ -431,3 +431,26 @@ body {
 .modal-backdrop.show {
   backdrop-filter: blur(6px);
 }
+
+/* ERROR TARGET */
+.error-icon {
+  font-size: 3rem;
+  color: #e67e22;
+  margin-bottom: 0.5rem;
+}
+.error-title {
+  color: #e67e22;
+  font-weight: bold;
+}
+.btn-home {
+  background: #e67e22;
+  color: #fff;
+  border-radius: 20px;
+  padding: 0.4rem 1.5rem;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-home:hover {
+  background: #ca6f1e;
+  color: #fff;
+}

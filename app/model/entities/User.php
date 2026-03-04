@@ -4,13 +4,13 @@ class User
     public ?int $id;
     private string $username;
     private string $email;
-    private string $password;
+    private ?string $password;
     private int $active;
     private int $isAdmin;
     private ?string $created_at;
     private $updated_at;
 
-    public function __construct(?int $id, string $username, string $email, string $password, int $active = 1, int $isAdmin = 0, $created_at = null)
+    public function __construct(?int $id, string $username, string $email, ?string $password, int $active = 1, int $isAdmin = 0, $created_at = null)
     {
         $this->id = $id;
         $this->username = $username;

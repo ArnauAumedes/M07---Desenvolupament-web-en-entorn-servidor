@@ -1,20 +1,10 @@
-# 1. Activar motor de reescritura (No se usa de momento)
 RewriteEngine On
 
-# Redirige todas las rutas que no sean archivos o carpetas existentes a index.php
+# Maneig d'errors (sense ErrorDocument per evitar rutes absolutes)
+RewriteRule ^404$ app/vista/error/404.php [L]
+RewriteRule ^401$ app/vista/error/401.php [L]
+
+# Fallback 404 si no existeix fitxer o directori
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^.*$ index.php [L]
-
-# 2. Configurar UTF-8
-AddDefaultCharset UTF-8
-
-# 3. Páginas de error personalizadas
-ErrorDocument 404 /app/vista/error/404.php
-ErrorDocument 401 /app/vista/error/401.php
-
-# 4. Proteger el archivo .htaccess
-<Files .htaccess>
-order allow,deny
-deny from all
-</Files>
+RewriteRule . app/vista/error/404.php [L]
