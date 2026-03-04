@@ -46,7 +46,7 @@
                         <th class="text-center align-middle" style="width:14%">PARTIDOS</th>
                         <th class="text-center align-middle" style="width:14%">GOLES</th>
                         <th class="text-center align-middle" style="width:14%">ASISTENCIAS</th>
-                        <th class="text-center align-middle" style="width:16%">GOLES + ASISTENCIAS</th>
+                        <th class="text-center align-middle" style="width:16%">GOLES+ASISTENCIAS</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-jugadores-body">

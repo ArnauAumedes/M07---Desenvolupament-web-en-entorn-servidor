@@ -57,10 +57,16 @@ require_once __DIR__ . '/../controlador/oauth/google.php';
 						<a href="index.php?action=register"><b><u>Crear cuenta</u></b>
 						</a>
 					</div>
-					<a class="btn btn-outline-primary" href="<?= $client->createAuthUrl() ?>">
-						<img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
-							alt="Iniciar sesión con Google" style="height:40px;">
-					</a>
+					<div class="form-group text-center mt-4 d-flex justify-content-center" style="gap: 16px">
+						<a class="btn btn-outline-primary" href="<?= $client->createAuthUrl() ?>">
+							<img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
+								alt="Iniciar sesión con Google" style="height:40px;">
+						</a>
+						<a class="btn btn-outline-primary" href="app/controlador/oauth/hybridauth.php">
+							<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+								alt="Iniciar sesión con GitHub" style="height:40px;">
+						</a>
+					</div>
 					<div class="form-group text-center mt-4">
 						<button name="btnSubmit" type="submit" class="btn btn-success px-4">Entrar</button>
 						<a href="index.php" class="btn btn-outline-secondary ml-2">Menú</a>

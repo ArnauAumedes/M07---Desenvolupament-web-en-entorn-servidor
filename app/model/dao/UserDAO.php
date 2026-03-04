@@ -296,5 +296,35 @@ class UserDAO extends User implements DAO
         $stmt->execute();
         return $stmt->rowCount();
     }
+
+    /**
+     * Busca un usuari per email
+     * @param string $email Email de l'usuari a cercar
+     * @return User|null Instància de User o null si no es troba
+     */
+    public function findByEmail($email)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new User($row['user_id'], $row['username'], $row['email'], null);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Crea un nou usuari a la base de dades a partir de dades d'OAuth
+     * @param string $username Nom de l'usuari
+     * @param string $email Email de l'usuari
+     * @return int ID del nou usuari creat
+     */
+    public function createFromOAuth($username, $email)
+    {
+        $stmt = $this->db->prepare("INSERT INTO users (username, email) VALUES (:username, :email)");
+        $stmt->execute(['username' => $username, 'email' => $email]);
+        return $this->db->lastInsertId();
+    }
 }
 ?>

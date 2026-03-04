@@ -36,9 +36,9 @@ class ComposerStaticInit4463f0043056efdfa973f28b7b206738
         array (
             'Monolog\\' => 8,
         ),
-        'L' =>
+        'H' =>
         array (
-            'League\\OAuth2\\Client\\' => 21,
+            'Hybridauth\\' => 11,
         ),
         'G' =>
         array (
@@ -89,9 +89,9 @@ class ComposerStaticInit4463f0043056efdfa973f28b7b206738
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'League\\OAuth2\\Client\\' =>
+        'Hybridauth\\' =>
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
+            0 => __DIR__ . '/..' . '/hybridauth/hybridauth/src',
         ),
         'GuzzleHttp\\Psr7\\' =>
         array (

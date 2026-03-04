@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../config/env.php';
+require_once __DIR__ . '/../../model/dao/UserDAO.php';
+require_once __DIR__ . '/../../../config/db-connection.php';
 
 // Cargar las variables del .env
 loadEnv(__DIR__ . '/../../../.env');
@@ -27,11 +29,25 @@ if (isset($_GET['code'])) {
     $email = $google_account_info->email;
     $name = $google_account_info->name;
 
+    // Conexión a la base de datos
+    $database = new Database();
+    $db = $database->getConnection();
+    $userDAO = new UserDAO($db);
+
+    // Buscar o crear usuario local
+    $user = $userDAO->findByEmail($email);
+    if (!$user) {
+        $user_id = $userDAO->createFromOAuth($name, $email);
+    } else {
+        $user_id = $user->getId();
+    }
+
     $_SESSION['user'] = [
+        "user_id" => $user_id,
         "name" => $name,
         "email" => $email,
         "username" => $name,
-        "accessType" => "Google" 
+        "accessType" => "Google"
     ];
     header('Location: ../../../index.php');
     die();
