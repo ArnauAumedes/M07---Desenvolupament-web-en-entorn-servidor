@@ -1,15 +1,10 @@
-<?php
-require_once __DIR__ . '/../controlador/ForgotPasswordController.php';
-$controller = new ForgotPasswordController();
-$controller->handleRequest();
-?>
 <!DOCTYPE html>
 <html lang="ca">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Recuperar Contrasenya - Gestió d'Articles</title>
+    <title>Recuperar Contrasenya</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -17,16 +12,21 @@ $controller->handleRequest();
     <link rel="stylesheet" href="public/css/style.css">
 </head>
 
+<?php
+$error = $error ?? '';
+$success = $success ?? '';
+?>
+
 <body>
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="login-card p-4">
                 <h4 class="mb-3 text-center">Recupera la teva contrasenya</h4>
-                <?php if ($controller->error): ?>
-                    <div class="alert alert-danger"><?php echo $controller->error; ?></div>
+                <?php if ($error): ?>
+                    <div class="alert alert-danger"><?php echo $error; ?></div>
                 <?php endif; ?>
-                <?php if ($controller->success): ?>
-                    <div class="alert alert-success"><?php echo $controller->success; ?></div>
+                <?php if ($success): ?>
+                    <div class="alert alert-success"><?php echo $success; ?></div>
                 <?php endif; ?>
                 <form method="post" action="" name="reset">
                     <div class="form-group">
@@ -35,9 +35,8 @@ $controller->handleRequest();
                             class="form-control" autofocus required />
                     </div>
                     <div class="form-group text-center mt-4">
-                        <input type="submit" id="reset" value="Enviar enllaç de recuperació"
-                            class="btn btn-primary px-4" />
-                        <a href="index.php" class="btn btn-outline-secondary ml-2">Tornar al menú</a>
+                        <input type="submit" id="reset" value="Enviar" class="btn btn-success px-4" />
+                        <a href="index.php" class="btn btn-outline-secondary ml-2">Menú</a>
                     </div>
                 </form>
             </div>

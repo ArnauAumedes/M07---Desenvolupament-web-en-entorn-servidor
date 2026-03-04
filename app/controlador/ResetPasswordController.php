@@ -3,7 +3,8 @@
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/PasswordResetDAO.php';
 
-class ResetPasswordController {
+class ResetPasswordController
+{
     public $error = '';
     public $success = '';
     public $showForm = false;
@@ -14,7 +15,8 @@ class ResetPasswordController {
     private $userDao;
     private $passwordResetDao;
 
-    public function __construct($db = null) {
+    public function __construct($db = null)
+    {
         if ($db === null) {
             require_once __DIR__ . '/../../config/db-connection.php';
             $dbInstance = new Database();
@@ -26,8 +28,9 @@ class ResetPasswordController {
         $this->passwordResetDao = new PasswordResetDAO($this->db);
     }
 
-    public function handleRequest() {
-        if (isset($_GET["key"]) && isset($_GET["email"]) && isset($_GET["action"]) && ($_GET["action"] == "reset") && !isset($_POST["action"])) {
+    public function handleRequest()
+    {
+        if (isset($_GET["key"]) && isset($_GET["email"]) && isset($_GET["action"]) && ($_GET["action"] == "reset-password") && !isset($_POST["action"])) {
             $this->key = $_GET["key"];
             $this->email = $_GET["email"];
             $curDate = date("Y-m-d H:i:s");
@@ -62,5 +65,10 @@ class ResetPasswordController {
                 $this->success = '¡Contraseña actualizada correctamente!';
             }
         }
+        $error = $this->error;
+        $success = $this->success;
+        $showForm = $this->showForm;
+        $email = $this->email;
+        require_once __DIR__ . '/../vista/reset-password.php';
     }
 }

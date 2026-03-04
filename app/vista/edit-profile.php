@@ -30,15 +30,20 @@
 				<form method="post" action="index.php?action=edit-profile">
 					<div class="form-group">
 						<label for="nickname">Nickname</label>
-						<input id="nickname" name="nickname" type="text" class="form-control" autofocus value="<?php echo htmlspecialchars($user['nickname'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+						<input id="nickname" name="nickname" type="text" class="form-control" autofocus
+							value="<?php echo htmlspecialchars($user['nickname'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 					</div>
 					<div class="form-group">
 						<label for="email">Email</label>
-						<input id="email" name="email" type="email" class="form-control" value="<?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+						<input id="email" name="email" type="email" class="form-control"
+							value="<?php echo htmlspecialchars($user['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+					</div>
+					<div class="form-group text-center mt-2 d-flex justify-content-center" style="gap: 16px">
+						<a href="index.php?action=change-password" class="btn btn-link">Cambiar contraseña</a>
 					</div>
 					<div class="form-group text-center mt-4">
-						<button name="btnSubmit" type="submit" class="btn btn-success px-4">Desar canvis</button>
-						<a href="index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
+						<button name="btnSubmit" type="submit" class="btn btn-success px-4">Aceptar</button>
+						<a href="index.php" class="btn btn-outline-secondary ml-2">Menú</a>
 					</div>
 				</form>
 			</div>
@@ -49,9 +54,9 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 	<?php if (!empty($messages)): ?>
-	<script>
-		document.getElementById('nickname').focus();
-	</script>
+		<script>
+			document.getElementById('nickname').focus();
+		</script>
 	<?php endif; ?>
 </body>
 

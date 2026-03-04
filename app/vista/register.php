@@ -42,9 +42,12 @@
                         <label for="password2">Repetir Contrasenya</label>
                         <input id="password2" name="password2" type="password" class="form-control">
                     </div>
+                    <div class="form-group text-center mt-2 d-flex justify-content-center">
+                        <a href="index.php?action=login"><b><u>Ya tienes cuenta? Inicia sesión</u></b></a>
+                    </div>
                     <div class="form-group text-center mt-4">
                         <button name="btnRegister" type="submit" class="btn btn-success px-4">Registrar</button>
-                        <a href="index.php" class="btn btn-outline-secondary ml-2">Cancel·lar</a>
+                        <a href="index.php" class="btn btn-outline-secondary ml-2">Menú</a>
                     </div>
                 </form>
             </div>

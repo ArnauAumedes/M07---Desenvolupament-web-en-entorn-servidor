@@ -30,7 +30,8 @@ $username = $user['username'] ?? null;
 
 <?php
 $currentAction = $_GET['action'] ?? 'list';
-function navActive($action, $currentAction) {
+function navActive($action, $currentAction)
+{
     return $action === $currentAction ? 'active text-white' : '';
 }
 ?>
@@ -44,25 +45,32 @@ function navActive($action, $currentAction) {
         </button>
         <ul class="navbar-nav nav-left">
             <li class="nav-item <?php echo navActive('list', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="index.php?action=list">TABLA DE CLASIFICACION</a>
+                <a class="nav-link <?php echo navActive('list', $currentAction); ?>" href="index.php?action=list">TABLA
+                    DE CLASIFICACIÓN</a>
             </li>
             <li class="nav-item <?php echo navActive('valor-equipo', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('valor-equipo', $currentAction); ?>" href="index.php?action=valor-equipo">VALOR DE EQUIPO</a>
+                <a class="nav-link <?php echo navActive('valor-equipo', $currentAction); ?>"
+                    href="index.php?action=valor-equipo">VALOR DE EQUIPO</a>
             </li>
             <li class="nav-item <?php echo navActive('lista-entrenador', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('lista-entrenador', $currentAction); ?>" href="index.php?action=lista-entrenador">LISTA DE ENTRENADORES</a>
+                <a class="nav-link <?php echo navActive('lista-entrenador', $currentAction); ?>"
+                    href="index.php?action=lista-entrenador">LISTA DE ENTRENADORES</a>
             </li>
             <li class="nav-item <?php echo navActive('pichichis', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('pichichis', $currentAction); ?>" href="index.php?action=pichichis">PICHICHIS</a>
+                <a class="nav-link <?php echo navActive('pichichis', $currentAction); ?>"
+                    href="index.php?action=pichichis">PICHICHIS</a>
             </li>
             <li class="nav-item <?php echo navActive('asistencias', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('asistencias', $currentAction); ?>" href="index.php?action=asistencias">ASISTENCIAS</a>
+                <a class="nav-link <?php echo navActive('asistencias', $currentAction); ?>"
+                    href="index.php?action=asistencias">ASISTENCIAS</a>
             </li>
             <li class="nav-item <?php echo navActive('mejores-valorados', $currentAction); ?>">
-                <a class="nav-link <?php echo navActive('mejores-valorados', $currentAction); ?>" href="index.php?action=mejores-valorados">MEJORES VALORADOS</a>
+                <a class="nav-link <?php echo navActive('mejores-valorados', $currentAction); ?>"
+                    href="index.php?action=mejores-valorados">MEJORES VALORADOS</a>
             </li>
         </ul>
         <ul class="navbar-nav nav-right">
+            <!-- Si esta logged se mostrara la opcion de cambiar el perfil -->
             <?php if ($isLoggedIn): ?>
                 <li class="nav-item nav-profile d-flex align-items-center">
                     <?php
@@ -71,8 +79,20 @@ function navActive($action, $currentAction) {
                     ?>
                     <span class="d-flex align-items-center">
                         <img src="<?php echo $imgSrc; ?>" alt="profile" class="profile-img mr-2" />
-                        <a class="nav-link header-btn" href="index.php?action=edit-profile"
-                            style="line-height:1;"><?php echo htmlspecialchars($username ?? 'Usuari'); ?></a>
+                        <!-- 
+                        Si el usuario esta logeado por OAuth no podra editar su perfil.
+                        Los usuarios con id (En la base de datos) si que podran
+                          -->
+                        <?php if (!empty($user['user_id'])): ?>
+                            <a class="nav-link header-btn" href="index.php?action=edit-profile" style="line-height:1;">
+                                <?php echo htmlspecialchars($username ?? 'Usuari'); ?>
+                            </a>
+                        <?php else: ?>
+                            <a class="nav-link header-btn disabled" href="#" tabindex="-1" aria-disabled="true"
+                                style="line-height:1;">
+                                <?php echo htmlspecialchars($username ?? 'Usuari'); ?>
+                            </a>
+                        <?php endif; ?>
                     </span>
                 </li>
                 <li class="nav-item">
