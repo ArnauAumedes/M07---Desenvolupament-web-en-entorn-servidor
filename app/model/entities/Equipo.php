@@ -3,25 +3,27 @@ class Equipo
 {
 	private int|string|null $id;
 	private string $equip;
-	private ?int $user_id;
+	private ?int $entrenador;
 	private string $escudo;
 	private int $jugados;
 	private int $ganados;
 	private int $empatados;
 	private int $perdidos;
 	private int $objetivo;
+	private ?int $creadorId;
 
-	public function __construct(int|string|null $id, string $equip, int|string|null $user_id, string $escudo, int $jugados, int $ganados, int $empatados, int $perdidos, int $objetivo)
+	public function __construct(int|string|null $id, string $equip, ?int $entrenador, string $escudo, int $jugados, int $ganados, int $empatados, int $perdidos, int $objetivo, ?int $creadorId = null)
 	{
 		$this->id = $id;
 		$this->equip = $equip;
-		$this->user_id = $user_id;
+		$this->entrenador = $entrenador;
 		$this->escudo = $escudo;
 		$this->jugados = $jugados;
 		$this->ganados = $ganados;
 		$this->empatados = $empatados;
 		$this->perdidos = $perdidos;
 		$this->objetivo = $objetivo;
+		$this->creadorId = $creadorId;
 	}
 
 	public function getId()
@@ -43,13 +45,13 @@ class Equipo
 		$this->equip = $equip;
 	}
 
-	public function getUserId()
+	public function getEntrenador()
 	{
-		return $this->user_id;
+		return $this->entrenador;
 	}
-	public function setUserId($user_id)
+	public function setEntrenador($entrenador)
 	{
-		$this->user_id = $user_id;
+		$this->entrenador = $entrenador;
 	}
 
 	public function getEscudo()
@@ -96,9 +98,6 @@ class Equipo
 	{
 		$this->perdidos = $perdidos;
 	}
-
-	// ...existing code...
-
 	public function getObjetivo()
 	{
 		return $this->objetivo;
@@ -106,5 +105,14 @@ class Equipo
 	public function setObjetivo($objetivo)
 	{
 		$this->objetivo = $objetivo;
+	}
+
+	public function getCreadorId()
+	{
+		return $this->creadorId;
+	}
+	public function setCreadorId($creadorId)
+	{
+		$this->creadorId = $creadorId;
 	}
 }

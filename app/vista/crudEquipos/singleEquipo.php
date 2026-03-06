@@ -29,7 +29,7 @@ if (!$isAjax):
                 <h3 class="mb-3"><?php echo htmlspecialchars($equipo->getEquip()); ?></h3>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><strong>ID:</strong> <?php echo $equipo->getId(); ?></li>
-                    <li class="list-group-item"><strong>Entrenador (user_id):</strong> <?php echo $equipo->getUserId(); ?></li>
+                    <li class="list-group-item"><strong>Entrenador (user_id):</strong> <?php echo $equipo->getEntrenador() ?? 'No tiene entrenador'; ?></li>
                     <li class="list-group-item"><strong>Partidos Jugados:</strong> <?php echo $equipo->getJugados(); ?></li>
                     <li class="list-group-item"><strong>Ganados:</strong> <?php echo $equipo->getGanados(); ?></li>
                     <li class="list-group-item"><strong>Empatados:</strong> <?php echo $equipo->getEmpatados(); ?></li>

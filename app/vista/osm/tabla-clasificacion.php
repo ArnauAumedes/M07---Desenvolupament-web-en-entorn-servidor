@@ -74,10 +74,10 @@ $isLoggedIn = isLoggedIn();
 							<div>
 								<span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
 								<span class="text-muted club-usuario" style="font-size:0.95em;">
-									<?php if ($equipo->getUserId() === null || $equipo->getUserId() === ""): ?>
+									<?php if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === ""): ?>
 										no tiene entrenador
 									<?php else: ?>
-										<?= htmlspecialchars($equipo->getUserId()) ?>
+										<?= htmlspecialchars($equipo->getEntrenador()) ?>
 									<?php endif; ?>
 							</div>
 						</td>

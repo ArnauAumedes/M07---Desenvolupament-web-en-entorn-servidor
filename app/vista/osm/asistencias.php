@@ -68,10 +68,10 @@
                                         style="height:32px; margin-right:8px;">
                                     <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
                                     <span class="text-muted club-usuario" style="font-size:0.95em;">
-                                        <?php if ($equipo->getUserId() === null || $equipo->getUserId() === ""): ?>
+                                        <?php if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === ""): ?>
                                             no tiene entrenador
                                         <?php else: ?>
-                                            <?= htmlspecialchars($equipo->getUserId()) ?>
+                                            <?= htmlspecialchars($equipo->getEntrenador()) ?>
                                         <?php endif; ?>
                                     </span>
                                 <?php endif; ?>

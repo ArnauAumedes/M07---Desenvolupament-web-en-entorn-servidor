@@ -112,7 +112,7 @@ class JugadorController
         $error_jugador = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $id = $_POST['id'] ?? '';
+                $id = $_POST['id'] ?? null;
                 $nombre_completo = $_POST['nombre_completo'] ?? '';
                 $equipo_id = $_POST['equipo_id'] ?? '';
                 $valor = $_POST['valor'] ?? '';
