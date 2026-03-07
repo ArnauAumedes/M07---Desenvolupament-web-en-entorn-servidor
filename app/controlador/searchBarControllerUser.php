@@ -56,7 +56,7 @@ class SearchBarControllerUser
         $posicion = 1 + $offset;
         foreach ($users as $user) {
             // Obtener equipos del usuario (entrenador)
-            $equipos = $equipoDAO->findByEntrenadorId($user->getId());
+            $equipos = $equipoDAO->findByEntrenador($user->getId());
             if (!empty($equipos)) {
                 foreach ($equipos as $equipo) {
                     echo '<tr>';
