@@ -79,10 +79,10 @@ class SearchBarControllerJugador
                 echo '<img src="' . htmlspecialchars($equipo->getEscudo()) . '" alt="' . htmlspecialchars($equipo->getEquip()) . '" style="height:32px; margin-right:8px;">';
                 echo '<span class="fw-bold text-uppercase">' . htmlspecialchars($equipo->getEquip()) . '</span><br>';
                 echo '<span class="text-muted club-usuario" style="font-size:0.95em;">';
-                if ($equipo->getUserId() === null || $equipo->getUserId() === "") {
+                if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === "") {
                     echo 'no tiene entrenador';
                 } else {
-                    echo htmlspecialchars($equipo->getUserId());
+                    echo htmlspecialchars($equipo->getEntrenador());
                 }
                 echo '</span>';
             }
@@ -139,10 +139,10 @@ class SearchBarControllerJugador
                 echo '<img src="' . htmlspecialchars($equipo->getEscudo()) . '" alt="' . htmlspecialchars($equipo->getEquip()) . '" style="height:32px; margin-right:8px;">';
                 echo '<span class="fw-bold text-uppercase">' . htmlspecialchars($equipo->getEquip()) . '</span><br>';
                 echo '<span class="text-muted club-usuario" style="font-size:0.95em;">';
-                if ($equipo->getUserId() === null || $equipo->getUserId() === "") {
+                if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === "") {
                     echo 'no tiene entrenador';
                 } else {
-                    echo htmlspecialchars($equipo->getUserId());
+                    echo htmlspecialchars($equipo->getEntrenador());
                 }
                 echo '</span>';
             }
@@ -195,10 +195,10 @@ class SearchBarControllerJugador
                 echo '<img src="' . htmlspecialchars($equipo->getEscudo()) . '" alt="' . htmlspecialchars($equipo->getEquip()) . '" style="height:32px; margin-right:8px;">';
                 echo '<span class="fw-bold text-uppercase">' . htmlspecialchars($equipo->getEquip()) . '</span><br>';
                 echo '<span class="text-muted club-usuario" style="font-size:0.95em;">';
-                if ($equipo->getUserId() === null || $equipo->getUserId() === "") {
+                if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === "") {
                     echo 'no tiene entrenador';
                 } else {
-                    echo htmlspecialchars($equipo->getUserId());
+                    echo htmlspecialchars($equipo->getEntrenador());
                 }
                 echo '</span>';
             }
