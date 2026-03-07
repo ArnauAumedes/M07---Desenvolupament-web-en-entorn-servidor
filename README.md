@@ -49,3 +49,33 @@ Si la validació és correcta, es crea una sessió segura per a l'usuari i es po
 El controlador `UserController.php` permet gestionar i llistar els usuaris, aplicant també la paginació i l'ordenació quan sigui necessari.
 
 Aquesta lògica garanteix una gestió d'usuaris segura, robusta i adaptada a les bones pràctiques de desenvolupament web.
+
+### Remember Me
+Si l'usuari marca aquesta opció en iniciar sessió, es genera un token únic i segur que es guarda a la base de dades i a una cookie. Això permet recordar la sessió de l'usuari durant 30 dies sense guardar la contrasenya. El token es gestiona i elimina en logout per seguretat. Aquesta solució millora la comoditat de l'usuari i evita riscos de seguretat associats a guardar contrasenyes.
+
+### reCAPTCHA
+Després de 3 intents fallits de login, es mostra un reCAPTCHA (tipus checkbox) per evitar intents automatitzats. La validació es fa amb l'API oficial de Google i només permet continuar si el reCAPTCHA és correcte. Això protegeix el sistema contra atacs de força bruta i bots.
+
+### Editar perfil personal
+L'usuari pot modificar el seu nickname, email i altres dades des del formulari d'edició de perfil, on es mostren les dades actuals. També pot canviar la contrasenya i la imatge/avatar si està implementat. Això dona flexibilitat i control a l'usuari sobre la seva informació.
+
+### Usuari Admin
+Existeix un usuari administrador que pot eliminar altres usuaris. Quan un usuari és esborrat, els seus articles associats també s'esborren (ON DELETE CASCADE), garantint la coherència de la base de dades i evitant dades orfes. Aquesta decisió assegura integritat i neteja de dades.
+
+### Barra de cerca
+Permet cercar per nom (o altres camps) en llistats d'usuaris, jugadors i equips. Les cerques es guarden mitjançant cookies per recordar preferències de l'usuari. La cerca es pot fer per enter o en temps real amb JavaScript/AJAX. Això millora l'experiència d'usuari i la rapidesa de consulta.
+
+### Configuracions de seguretat
+S'apliquen diverses mesures: fitxer `.htaccess` per gestionar errors i evitar accés a fitxers sensibles, variables d'entorn per separar informació confidencial, connexió PDO amb prepared statements, i eliminació de tokens/cookies en logout. Això protegeix l'aplicació contra vulnerabilitats comunes i garanteix la confidencialitat.
+
+### Canvi de contrasenya
+Si l'usuari està logat, pot accedir al formulari de canvi de contrasenya. Es demana la contrasenya antiga i la nova dues vegades. Es valida que la contrasenya antiga sigui correcta i que la nova compleixi requisits de seguretat. Aquesta metodologia evita canvis accidentals i reforça la seguretat.
+
+### Recuperació de contrasenya
+Si l'usuari no recorda la contrasenya, pot demanar la recuperació introduint el seu email. Es genera un token amb validesa limitada i s'envia per correu. Amb aquest token pot establir una nova contrasenya. Això permet recuperar l'accés de forma segura i controlada.
+
+### Autenticació social OAuth
+Permet iniciar sessió amb Google. S'utilitza la llibreria oficial, es recupera el perfil i es crea o recupera l'usuari a la base de dades. Aquesta opció facilita el registre i login, i aprofita la seguretat dels proveïdors externs.
+
+### Autenticació social HybridAuth
+Permet iniciar sessió amb GitHub mitjançant HybridAuth. Es recupera el perfil i es crea o recupera l'usuari a la base de dades. Això amplia les opcions d'autenticació i millora l'accessibilitat per a usuaris amb comptes socials.
