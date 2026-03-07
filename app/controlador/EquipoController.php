@@ -278,7 +278,7 @@ class EquipoController
 			$equipos = $this->equipoDAO->findAll();
 
 			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
-			$order = CookieHelper::getOrderPreference('order', 'order_preference');
+			$order = CookieHelper::getOrderPreference('order', 'order_preference') ?? 'desc';
 			if (!in_array(strtolower($order), ['asc', 'desc'])) {
 				$order = 'desc';
 			}
