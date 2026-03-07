@@ -125,15 +125,16 @@ class EquipoController
 				if (session_status() === PHP_SESSION_NONE)
 					session_start();
 				$user_id = $_SESSION['user']['user_id'] ?? null;
+                $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
 				if ($user_id === null) {
 					throw new Exception('User not authenticated');
 				}
 				// --- Comprobación de propiedad ---
 				$id = $_POST['id'] ?? '';
 				$equipoExistente = $this->equipoDAO->findById($id);
-				if (!$equipoExistente || $equipoExistente->getEntrenador() !== $user_id) {
-					throw new Exception('No tienes permiso para modificar este equipo.');
-				}
+                if (!$equipoExistente || ($equipoExistente->getCreadorId() !== $user_id && !$isAdmin)) {
+                    throw new Exception('No tienes permiso para modificar este equipo.');
+                }
 				$equip = $_POST['equip'] ?? '';
 				$objetivo = $_POST['objetivo'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
@@ -196,9 +197,10 @@ class EquipoController
 				$id = $_GET['id'];
 				// --- Comprobación de propiedad ---
 				$equipoExistente = $this->equipoDAO->findById($id);
-				if (!$equipoExistente || $equipoExistente->getCreadorId() !== $user_id) {
-					throw new Exception('No tienes permiso para eliminar este equipo.');
-				}
+                $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
+                if (!$equipoExistente || ($equipoExistente->getCreadorId() !== $user_id && !$isAdmin)) {
+                    throw new Exception('No tienes permiso para eliminar este equipo.');
+                }
 				$rowsAffected = $this->equipoDAO->delete($id);
 				if ($rowsAffected > 0) {
 					header("Location: index.php?deleted=success&id=" . $id);

@@ -48,36 +48,51 @@
                     </tr>
                 </thead>
                 <tbody id="tabla-equipos-body">
-                    <?php foreach ($equipos as $index => $equipo):
-                        $equipoId = $equipo->getId();
-                        $valorTotal = $equipoDAO->getValorEquipo($equipoId);
-                        $cantidadJugadores = $equipoDAO->getCantidadJugadores($equipoId);
-                        $valorPromedio = $cantidadJugadores > 0 ? $equipoDAO->getMediaValorJugadores($equipoId) : 0;
-                        ?>
-                        <tr data-equipo-id="<?= urlencode($equipo->getId()) ?>" style="cursor:pointer;">
-                            <td class="align-middle fs-4 fw-bold">
-                                <?= $index + 1 ?>
-                            </td>
-                            <td class="align-middle">
-                                <?= htmlspecialchars($equipo->getId()) ?>
-                            </td>
-                            <td class="align-middle d-flex align-items-center gap-2">
-                                <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
-                                    alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
-                                    style="height:32px; margin-right:8px;">
-                                <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
-                            </td>
-                            <td class="text-center align-middle" style="font-weight:bold; color:#2c3e50;">
-                                <?= number_format($valorTotal, 2) ?> €
-                            </td>
-                            <td class="text-center align-middle">
-                                <?= $cantidadJugadores ?>
-                            </td>
-                            <td class="text-center align-middle">
-                                <?= number_format($valorPromedio, 2) ?> €
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                        <?php
+                        $user_id = $_SESSION['user']['user_id'] ?? null;
+                        $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
+                        foreach ($equipos as $index => $equipo):
+                            $equipoId = $equipo->getId();
+                            $valorTotal = $equipoDAO->getValorEquipo($equipoId);
+                            $cantidadJugadores = $equipoDAO->getCantidadJugadores($equipoId);
+                            $valorPromedio = $cantidadJugadores > 0 ? $equipoDAO->getMediaValorJugadores($equipoId) : 0;
+                            ?>
+                            <tr data-equipo-id="<?= urlencode($equipo->getId()) ?>" style="cursor:pointer;">
+                                <td class="align-middle fs-4 fw-bold">
+                                    <?= $index + 1 ?>
+                                </td>
+                                <td class="align-middle">
+                                    <?= htmlspecialchars($equipo->getId()) ?>
+                                </td>
+                                <td class="align-middle d-flex align-items-center gap-2">
+                                    <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
+                                        alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
+                                        style="height:32px; margin-right:8px;">
+                                    <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
+                                    <?php
+                                    if ($user_id !== null && ($equipo->getCreadorId() == $user_id || $isAdmin)):
+                                    ?>
+                                        <span class="crud-icons ms-2">
+                                            <a href="index.php?action=update&id=<?= urlencode($equipo->getId()) ?>" title="Editar equipo">
+                                                <i class="fa fa-pencil text-primary" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="index.php?action=delete&id=<?= urlencode($equipo->getId()) ?>" title="Eliminar equipo" onclick="return confirm('¿Seguro que quieres eliminar este equipo?');">
+                                                <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                            </a>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center align-middle" style="font-weight:bold; color:#2c3e50;">
+                                    <?= number_format($valorTotal, 2) ?> €
+                                </td>
+                                <td class="text-center align-middle">
+                                    <?= $cantidadJugadores ?>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <?= number_format($valorPromedio, 2) ?> €
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
