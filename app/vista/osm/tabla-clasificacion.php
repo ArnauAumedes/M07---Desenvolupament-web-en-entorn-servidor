@@ -60,7 +60,11 @@ $isLoggedIn = isLoggedIn();
 				</tr>
 			</thead>
 			<tbody id="tabla-equipos-body">
-				<?php foreach ($equipos as $index => $equipo): ?>
+				<?php
+				// Obtener usuario actual y admin
+				$user_id = $_SESSION['user']['user_id'] ?? null;
+				$isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
+				foreach ($equipos as $index => $equipo): ?>
 					<tr data-equipo-id="<?= urlencode($equipo->getId()) ?>" style="cursor:pointer;">
 						<td class="align-middle fs-4 fw-bold">
 							<?= $index + 1 ?>
@@ -74,11 +78,25 @@ $isLoggedIn = isLoggedIn();
 							<div>
 								<span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
 								<span class="text-muted club-usuario" style="font-size:0.95em;">
-									<?php if ($equipo->getUserId() === null || $equipo->getUserId() === ""): ?>
+									<?php if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === ""): ?>
 										no tiene entrenador
 									<?php else: ?>
-										<?= htmlspecialchars($equipo->getUserId()) ?>
+										<?= htmlspecialchars($equipo->getEntrenador()) ?>
 									<?php endif; ?>
+								</span>
+								<?php
+								// Mostrar iconos si el usuario puede hacer CRUD
+								if ($user_id !== null && ($equipo->getCreadorId() == $user_id || $isAdmin)):
+								?>
+									<span class="crud-icons ms-2">
+										<a href="index.php?action=update&id=<?= urlencode($equipo->getId()) ?>" title="Editar equipo">
+											<i class="fa fa-pencil text-primary" aria-hidden="true"></i>
+										</a>
+										<a href="index.php?action=delete&id=<?= urlencode($equipo->getId()) ?>" title="Eliminar equipo" onclick="return confirm('¿Seguro que quieres eliminar este equipo?');">
+											<i class="fa fa-trash text-danger" aria-hidden="true"></i>
+										</a>
+									</span>
+								<?php endif; ?>
 							</div>
 						</td>
 						<td class="text-center align-middle"><?= htmlspecialchars($equipo->getJugados()) ?></td>

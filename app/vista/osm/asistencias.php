@@ -49,44 +49,56 @@
                     </tr>
                 </thead>
                 <tbody id="tabla-jugadores-body">
-                    <?php foreach ($jugadores as $index => $jugador): ?>
                         <?php
-                        $equipo = $equipoDAO->findById($jugador->getEquipoId());
-                        $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
-                        ?>
-                        <tr data-jugador-id="<?= urlencode($jugador->getId()) ?>" style="cursor:pointer;">
-                            <td class="align-middle">
-                                <?= htmlspecialchars($jugador->getId()) ?>
-                            </td>
-                            <td class="align-middle fw-bold text-uppercase">
-                                <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
-                            </td>
-                            <td class="align-middle d-flex align-items-center gap-2">
-                                <?php if ($equipo): ?>
-                                    <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
-                                        alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
-                                        style="height:32px; margin-right:8px;">
-                                    <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
-                                    <span class="text-muted club-usuario" style="font-size:0.95em;">
-                                        <?php if ($equipo->getUserId() === null || $equipo->getUserId() === ""): ?>
-                                            no tiene entrenador
-                                        <?php else: ?>
-                                            <?= htmlspecialchars($equipo->getUserId()) ?>
-                                        <?php endif; ?>
-                                    </span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="text-center align-middle">
-                                <?= htmlspecialchars($jugador->getPartidos()) ?>
-                            </td>
-                            <td class="text-center align-middle">
-                                <?= htmlspecialchars($jugador->getAsistencias()) ?>
-                            </td>
-                            <td class="text-center align-middle" style="font-weight:bold;">
-                                <?= str_replace('.', "'", number_format($mediaAsistencias, 2)) ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
+                        $user_id = $_SESSION['user']['user_id'] ?? null;
+                        $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
+                        foreach ($jugadores as $index => $jugador):
+                            $equipo = $equipoDAO->findById($jugador->getEquipoId());
+                            $mediaAsistencias = $jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias');
+                            ?>
+                            <tr data-jugador-id="<?= urlencode($jugador->getId()) ?>" style="cursor:pointer;">
+                                <td class="align-middle">
+                                    <?= htmlspecialchars($jugador->getId()) ?>
+                                </td>
+                                <td class="align-middle fw-bold text-uppercase">
+                                    <?= htmlspecialchars($jugador->getNombreCompleto()) ?>
+                                    <?php if ($user_id !== null && $equipo && ($equipo->getCreadorId() == $user_id || $isAdmin)): ?>
+                                        <span class="crud-icons ms-2">
+                                            <a href="index.php?action=updateJugador&id=<?= urlencode($jugador->getId()) ?>" title="Editar jugador">
+                                                <i class="fa fa-pencil text-primary" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="index.php?action=deleteJugador&id=<?= urlencode($jugador->getId()) ?>" title="Eliminar jugador" onclick="return confirm('¿Seguro que quieres eliminar este jugador?');">
+                                                <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                            </a>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="align-middle d-flex align-items-center gap-2">
+                                    <?php if ($equipo): ?>
+                                        <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
+                                            alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
+                                            style="height:32px; margin-right:8px;">
+                                        <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span><br>
+                                        <span class="text-muted club-usuario" style="font-size:0.95em;">
+                                            <?php if ($equipo->getEntrenador() === null || $equipo->getEntrenador() === ""): ?>
+                                                no tiene entrenador
+                                            <?php else: ?>
+                                                <?= htmlspecialchars($equipo->getEntrenador()) ?>
+                                            <?php endif; ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <?= htmlspecialchars($jugador->getPartidos()) ?>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <?= htmlspecialchars($jugador->getAsistencias()) ?>
+                                </td>
+                                <td class="text-center align-middle" style="font-weight:bold;">
+                                    <?= str_replace('.', "'", number_format($mediaAsistencias, 2)) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                 </tbody>
             </table>
         </div>

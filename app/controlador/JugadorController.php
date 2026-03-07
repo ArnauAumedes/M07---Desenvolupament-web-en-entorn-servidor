@@ -112,7 +112,11 @@ class JugadorController
         $error_jugador = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $id = $_POST['id'] ?? '';
+                    if (session_status() === PHP_SESSION_NONE)
+                        session_start();
+                    $user_id = $_SESSION['user']['user_id'] ?? null;
+                    $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
+                $id = $_POST['id'] ?? null;
                 $nombre_completo = $_POST['nombre_completo'] ?? '';
                 $equipo_id = $_POST['equipo_id'] ?? '';
                 $valor = $_POST['valor'] ?? '';
@@ -127,6 +131,10 @@ class JugadorController
                     if (!$equipo) {
                         $error_jugador = 'El equipo seleccionado no existe.';
                     } else {
+                            // Permiso: solo creador del equipo o admin
+                            if ($user_id === null || ($equipo->getCreadorId() !== $user_id && !$isAdmin)) {
+                                $error_jugador = 'No tienes permiso para editar jugadores de este equipo.';
+                            } else {
                         $jugador = new Jugador($id, $nombre_completo, $equipo_id, $valor, $partidos, $goles, $asistencias);
                         $rowsAffected = $this->jugadorDAO->update($jugador);
                         if ($rowsAffected > 0) {
@@ -135,6 +143,7 @@ class JugadorController
                         } else {
                             $message = "No se ha podido actualizar el jugador.";
                         }
+                            }
                     }
                 }
             } catch (Exception $e) {
@@ -158,7 +167,20 @@ class JugadorController
     {
         if (isset($_GET['id']) && !empty($_GET['id'])) {
             try {
+                    if (session_status() === PHP_SESSION_NONE)
+                        session_start();
+                    $user_id = $_SESSION['user']['user_id'] ?? null;
+                    $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
                 $id = $_GET['id'];
+                    // Obtener equipo del jugador
+                    $jugador = $this->jugadorDAO->findById($id);
+                    if ($jugador) {
+                        $equipo = $this->equipoDAO->findById($jugador->getEquipoId());
+                        if ($user_id === null || ($equipo && $equipo->getCreadorId() !== $user_id && !$isAdmin)) {
+                            header("Location: index.php?deletedJugador=error&msg=" . urlencode("No tienes permiso para eliminar jugadores de este equipo."));
+                            exit();
+                        }
+                    }
                 $rowsAffected = $this->jugadorDAO->delete($id);
                 if ($rowsAffected > 0) {
                     header("Location: index.php?deletedJugador=success&id=" . $id);

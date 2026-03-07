@@ -23,16 +23,17 @@ class EquipoDAO extends Equipo implements DAO
      */
     public function create($equipo)
     {
-        $sql = "INSERT INTO equipos (equip, user_id, escudo, jugados, ganados, empatados, perdidos, objetivo) VALUES (:equip, :user_id, :escudo, :jugados, :ganados, :empatados, :perdidos, :objetivo)";
+        $sql = "INSERT INTO equipos (equip, entrenador, escudo, jugados, ganados, empatados, perdidos, objetivo, creador_id) VALUES (:equip, :entrenador, :escudo, :jugados, :ganados, :empatados, :perdidos, :objetivo, :creador_id)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':equip', $equipo->getEquip(), PDO::PARAM_STR);
-        $stmt->bindValue(':user_id', $equipo->getUserId(), PDO::PARAM_INT);
+        $stmt->bindValue(':entrenador', $equipo->getEntrenador(), PDO::PARAM_INT);
         $stmt->bindValue(':escudo', $equipo->getEscudo(), PDO::PARAM_STR);
         $stmt->bindValue(':jugados', $equipo->getJugados(), PDO::PARAM_INT);
         $stmt->bindValue(':ganados', $equipo->getGanados(), PDO::PARAM_INT);
         $stmt->bindValue(':empatados', $equipo->getEmpatados(), PDO::PARAM_INT);
         $stmt->bindValue(':perdidos', $equipo->getPerdidos(), PDO::PARAM_INT);
         $stmt->bindValue(':objetivo', $equipo->getObjetivo(), PDO::PARAM_INT);
+        $stmt->bindValue(':creador_id', $equipo->getCreadorId(), PDO::PARAM_INT);
         $stmt->execute();
         return $this->db->lastInsertId();
     }
@@ -44,17 +45,17 @@ class EquipoDAO extends Equipo implements DAO
      */
     public function update($equipo)
     {
-        $sql = "UPDATE equipos SET equip = :equip, user_id = :user_id, escudo = :escudo, jugados = :jugados, ganados = :ganados, empatados = :empatados, perdidos = :perdidos, objetivo = :objetivo WHERE id = :id";
+        $sql = "UPDATE equipos SET equip = :equip, entrenador = :entrenador, escudo = :escudo, jugados = :jugados, ganados = :ganados, empatados = :empatados, perdidos = :perdidos, objetivo = :objetivo, creador_id = :creador_id WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':equip', $equipo->getEquip(), PDO::PARAM_STR);
-        $stmt->bindValue(':user_id', $equipo->getUserId(), PDO::PARAM_INT);
+        $stmt->bindValue(':entrenador', $equipo->getEntrenador(), PDO::PARAM_INT);
         $stmt->bindValue(':escudo', $equipo->getEscudo(), PDO::PARAM_STR);
         $stmt->bindValue(':jugados', $equipo->getJugados(), PDO::PARAM_INT);
         $stmt->bindValue(':ganados', $equipo->getGanados(), PDO::PARAM_INT);
         $stmt->bindValue(':empatados', $equipo->getEmpatados(), PDO::PARAM_INT);
         $stmt->bindValue(':perdidos', $equipo->getPerdidos(), PDO::PARAM_INT);
         $stmt->bindValue(':objetivo', $equipo->getObjetivo(), PDO::PARAM_INT);
-        $stmt->bindValue(':id', $equipo->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(':creador_id', $equipo->getCreadorId(), PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->rowCount();
     }
@@ -86,13 +87,14 @@ class EquipoDAO extends Equipo implements DAO
             $equipo = new Equipo(
                 $row['id'],
                 $row['equip'],
-                $row['user_id'],
+                $row['entrenador'],
                 $row['escudo'],
                 $row['jugados'],
                 $row['ganados'],
                 $row['empatados'],
                 $row['perdidos'],
-                $row['objetivo'] ?? 0
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
             );
             $equipos[] = $equipo;
         }
@@ -114,13 +116,14 @@ class EquipoDAO extends Equipo implements DAO
             return new Equipo(
                 $row['id'],
                 $row['equip'],
-                $row['user_id'],
+                $row['entrenador'],
                 $row['escudo'],
                 $row['jugados'],
                 $row['ganados'],
                 $row['empatados'],
                 $row['perdidos'],
-                $row['objetivo'] ?? 0
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
             );
         }
         return null;
@@ -300,13 +303,14 @@ class EquipoDAO extends Equipo implements DAO
             $equipos[] = new Equipo(
                 $row['id'],
                 $row['equip'],
-                $row['user_id'],
+                $row['entrenador'],
                 $row['escudo'],
                 $row['jugados'],
                 $row['ganados'],
                 $row['empatados'],
                 $row['perdidos'],
-                $row['objetivo'] ?? 0
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
             );
         }
         return $equipos;
@@ -314,13 +318,13 @@ class EquipoDAO extends Equipo implements DAO
 
     /**
      * Obtiene los equipos de un entrenador por su ID
-     * @param int $entrenadorId ID del entrenador
+     * @param int $entrenador ID del entrenador
      * @return Equipo[] Array de instancias de Equipo
      */
-    function findByEntrenadorId($entrenadorId)
+    function findByEntrenador($entrenador)
     {
-        $stmt = $this->db->prepare("SELECT * FROM equipos WHERE user_id = :user_id");
-        $stmt->bindValue(':user_id', $entrenadorId, PDO::PARAM_INT);
+        $stmt = $this->db->prepare("SELECT * FROM equipos WHERE entrenador = :entrenador");
+        $stmt->bindValue(':entrenador', $entrenador, PDO::PARAM_INT);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $equipos = [];
@@ -328,13 +332,14 @@ class EquipoDAO extends Equipo implements DAO
             $equipos[] = new Equipo(
                 $row['id'],
                 $row['equip'],
-                $row['user_id'],
+                $row['entrenador'],
                 $row['escudo'],
                 $row['jugados'],
                 $row['ganados'],
                 $row['empatados'],
                 $row['perdidos'],
-                $row['objetivo'] ?? 0
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
             );
         }
         return $equipos;
@@ -356,13 +361,14 @@ class EquipoDAO extends Equipo implements DAO
             $equipos[] = new Equipo(
                 $row['id'],
                 $row['equip'],
-                $row['user_id'],
+                $row['entrenador'],
                 $row['escudo'],
                 $row['jugados'],
                 $row['ganados'],
                 $row['empatados'],
                 $row['perdidos'],
-                $row['objetivo'] ?? 0
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
             );
         }
         return $equipos;

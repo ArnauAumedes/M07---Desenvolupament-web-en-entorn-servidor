@@ -67,7 +67,7 @@ class UserController
 			$userIdForEdit = $_POST['id'];
 		}
 		foreach ($allEquipos as $equipo) {
-			if ($equipo->getUserId() === null || ($userIdForEdit && $equipo->getUserId() == $userIdForEdit)) {
+			if ($equipo->getCreadorId() === null || ($userIdForEdit && $equipo->getCreadorId() == $userIdForEdit)) {
 				$equipos[] = $equipo;
 			}
 		}
@@ -101,7 +101,7 @@ class UserController
 						$equipoId = $_POST['equipo_id'];
 						$equipo = $this->equipoDAO->findById($equipoId);
 						if ($equipo) {
-							$equipo->setUserId($userId);
+							$equipo->setEntrenador($userId);
 							$this->equipoDAO->update($equipo);
 						}
 					}
@@ -130,7 +130,7 @@ class UserController
 			$userIdForEdit = $_POST['id'];
 		}
 		foreach ($allEquipos as $equipo) {
-			if ($equipo->getUserId() === null || ($userIdForEdit && $equipo->getUserId() == $userIdForEdit)) {
+			if ($equipo->getCreadorId() === null || ($userIdForEdit && $equipo->getCreadorId() == $userIdForEdit)) {
 				$equipos[] = $equipo;
 			}
 		}
@@ -158,7 +158,7 @@ class UserController
 					if (!empty($equipoId)) {
 						$equipo = $this->equipoDAO->findById($equipoId);
 						if ($equipo) {
-							$equipo->setUserId($user->getId());
+							$equipo->setEntrenador($user->getId());
 							$this->equipoDAO->update($equipo);
 						}
 					}
@@ -237,7 +237,7 @@ class UserController
 			// Para cada entrenador, obtener todos sus equipos
 			$entrenadoresConEquipos = [];
 			foreach ($entrenadores as $entrenador) {
-				$equipoList = $this->equipoDAO->findByEntrenadorId($entrenador->getId());
+				$equipoList = $this->equipoDAO->findByEntrenador($entrenador->getId());
 				$entrenadoresConEquipos[] = [
 					'entrenador' => $entrenador,
 					'equipos' => $equipoList

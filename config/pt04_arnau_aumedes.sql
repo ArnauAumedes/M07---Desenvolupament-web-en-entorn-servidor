@@ -38,7 +38,7 @@ CREATE TABLE
     `id` INT (11) NOT NULL AUTO_INCREMENT,
     `pos` INT (11) NOT NULL,
     `equip` VARCHAR(100) NOT NULL,
-    `user_id` INT (11) DEFAULT NULL,
+    `entrenador` INT (11) DEFAULT NULL,
     `escudo` VARCHAR(255) DEFAULT NULL,
     `jugados` INT (11) NOT NULL DEFAULT 0,
     `ganados` INT (11) NOT NULL DEFAULT 0,
@@ -48,9 +48,12 @@ CREATE TABLE
     `bg` VARCHAR(255) DEFAULT NULL,
     `trofeo` VARCHAR(100) DEFAULT NULL,
     `objetivo` INT (11) NOT NULL DEFAULT 0,
+    `creador_id` INT (11) DEFAULT NULL,
     PRIMARY KEY (`id`),
-    KEY `user_id` (`user_id`),
-    CONSTRAINT `fk_equipos_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
+    KEY `entrenador` (`entrenador`),
+    CONSTRAINT `fk_equipos_users` FOREIGN KEY (`entrenador`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+    KEY `creador_id` (`creador_id`),
+    CONSTRAINT `fk_equipos_creador` FOREIGN KEY (`creador_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
 
 -- --------------------------------------------------------

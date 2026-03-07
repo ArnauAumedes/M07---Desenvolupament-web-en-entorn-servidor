@@ -90,7 +90,7 @@ class EquipoController
 					include __DIR__ . '/../vista/crudEquipos/createEquipos.php';
 					return;
 				}
-				$equipo = new Equipo(null, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
+				$equipo = new Equipo(null, $equip, null, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo, $user_id);
 				$result = $this->equipoDAO->create($equipo);
 				if ($result) {
 					header("Location: index.php?created=success&id=" . $result);
@@ -121,13 +121,20 @@ class EquipoController
 		$error_partidos = '';
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			try {
+				// Comprobar autenticación y propiedad del equipo
 				if (session_status() === PHP_SESSION_NONE)
 					session_start();
 				$user_id = $_SESSION['user']['user_id'] ?? null;
+                $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
 				if ($user_id === null) {
 					throw new Exception('User not authenticated');
 				}
+				// --- Comprobación de propiedad ---
 				$id = $_POST['id'] ?? '';
+				$equipoExistente = $this->equipoDAO->findById($id);
+                if (!$equipoExistente || ($equipoExistente->getCreadorId() !== $user_id && !$isAdmin)) {
+                    throw new Exception('No tienes permiso para modificar este equipo.');
+                }
 				$equip = $_POST['equip'] ?? '';
 				$objetivo = $_POST['objetivo'] ?? '';
 				$escudo = $_POST['escudo'] ?? '';
@@ -143,7 +150,7 @@ class EquipoController
 					if (!is_numeric($objetivo) || $objetivo < 1 || $objetivo >= $totalEquipos) {
 						$error_partidos = 'El objetivo debe ser un número mayor o igual que 1 y menor que el número total de equipos (' . $totalEquipos . ').';
 					} else {
-						$equipo = new Equipo($id, $equip, $user_id, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo);
+						$equipo = new Equipo($id, $equip, null, $escudo, $jugados, $ganados, $empatados, $perdidos, $objetivo, $user_id);
 						$rowsAffected = $this->equipoDAO->update($equipo);
 						if ($rowsAffected > 0) {
 							header("Location: index.php?updated=success");
@@ -180,7 +187,20 @@ class EquipoController
 	{
 		if (isset($_GET['id']) && !empty($_GET['id'])) {
 			try {
+				// Comprobar que el equipo existe y pertenece al usuario logado para poder eliminarlo
+				if (session_status() === PHP_SESSION_NONE)
+					session_start();
+				$user_id = $_SESSION['user']['user_id'] ?? null;
+				if ($user_id === null) {
+					throw new Exception('User not authenticated');
+				}
 				$id = $_GET['id'];
+				// --- Comprobación de propiedad ---
+				$equipoExistente = $this->equipoDAO->findById($id);
+                $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
+                if (!$equipoExistente || ($equipoExistente->getCreadorId() !== $user_id && !$isAdmin)) {
+                    throw new Exception('No tienes permiso para eliminar este equipo.');
+                }
 				$rowsAffected = $this->equipoDAO->delete($id);
 				if ($rowsAffected > 0) {
 					header("Location: index.php?deleted=success&id=" . $id);

@@ -57,26 +57,36 @@
                         <?php if (!empty($entrenadorConEquipos['equipos'])): ?>
                             <?php foreach ($entrenadorConEquipos['equipos'] as $equipo): ?>
                                 <tr data-user-id="<?= urlencode($user->getId()) ?>" style="cursor:pointer;">
-                                    <td class="align-middle fw-bold">
-                                        <?= htmlspecialchars($user ? $user->getUsername() : '') ?>
-                                    </td>
-                                    <td class="align-middle d-flex align-items-center gap-2">
-                                        <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
-                                            alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
-                                            style="height:32px; margin-right:8px;">
-                                        <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
-                                    </td>
-                                    <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
-                                    <td class="text-center align-middle"><?= $posicion ?></td>
-                                    <?php $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $posicion); ?>
-                                    <td class="text-center align-middle">
-                                        <span class="fw-bold" style="color: <?= htmlspecialchars($dif['color'] ?? '#000') ?>;">
-                                            <?= ($dif['simbolo'] ?? '') . ($dif['valor'] ?? '') ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <?= htmlspecialchars($user ? $user->getCreatedAt() : '-') ?>
-                                    </td>
+                                        <td class="align-middle fw-bold">
+                                            <?= htmlspecialchars($user ? $user->getUsername() : '') ?>
+                                            <?php if ($isLoggedIn && $isAdmin): ?>
+                                                <span class="crud-icons ms-2">
+                                                    <a href="index.php?action=updateUser&id=<?= urlencode($user->getId()) ?>" title="Editar usuario">
+                                                        <i class="fa fa-pencil text-primary" aria-hidden="true"></i>
+                                                    </a>
+                                                    <a href="index.php?action=deleteUser&id=<?= urlencode($user->getId()) ?>" title="Eliminar usuario" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');">
+                                                        <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                                    </a>
+                                                </span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="align-middle d-flex align-items-center gap-2">
+                                            <img src="<?= htmlspecialchars($equipo->getEscudo()) ?>"
+                                                alt="<?= htmlspecialchars($equipo->getEquip()) ?>"
+                                                style="height:32px; margin-right:8px;">
+                                            <span class="fw-bold text-uppercase"><?= htmlspecialchars($equipo->getEquip()) ?></span>
+                                        </td>
+                                        <td class="text-center align-middle"><?= htmlspecialchars($equipo->getObjetivo()) ?></td>
+                                        <td class="text-center align-middle"><?= $posicion ?></td>
+                                        <?php $dif = $equipoDAO->getDiferenciaObjetivoPosicion($equipo->getObjetivo(), $posicion); ?>
+                                        <td class="text-center align-middle">
+                                            <span class="fw-bold" style="color: <?= htmlspecialchars($dif['color'] ?? '#000') ?>;">
+                                                <?= ($dif['simbolo'] ?? '') . ($dif['valor'] ?? '') ?>
+                                            </span>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <?= htmlspecialchars($user ? $user->getCreatedAt() : '-') ?>
+                                        </td>
                                 </tr>
                                 <?php $posicion++; ?>
                             <?php endforeach; ?>

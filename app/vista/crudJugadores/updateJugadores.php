@@ -48,7 +48,7 @@
                 <?php endif; ?>
                 <div class="form-group">
                     <label for="id_display">ID:</label>
-                    <input type="text" id="id_display" class="form-control" value="<?php echo htmlspecialchars($jugador->getId()); ?>" readonly>
+                    <input type="number" id="id_display" class="form-control" value="<?php echo htmlspecialchars($jugador->getId()); ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label for="nombre_completo">Nombre completo:</label>
@@ -62,9 +62,8 @@
                 </div>
                 <div class="form-group">
                     <label for="valor">Valor:</label>
-                    <input type="number" name="valor" id="valor" class="form-control" max="300" required
+                    <input type="number" name="valor" id="valor" class="form-control" required
                         value="<?php echo isset($_POST['valor']) ? htmlspecialchars($_POST['valor']) : htmlspecialchars($jugador->getValor()); ?>">
-                    <small class="form-text text-muted">Máximo permitido: 300</small>
                 </div>
                 <div class="form-group">
                     <label for="partidos">Partidos jugados:</label>
