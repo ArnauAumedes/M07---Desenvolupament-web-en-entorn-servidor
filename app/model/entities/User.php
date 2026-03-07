@@ -1,4 +1,9 @@
 <?php
+/**
+ * User.php
+ * Entidad que representa un usuario de la aplicación
+ * Autor: Arnau Aumedes Jimenez
+ */
 class User
 {
     public ?int $id;

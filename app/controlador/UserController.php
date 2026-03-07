@@ -1,4 +1,9 @@
 <?php
+/**
+ * UserController.php
+ * Controlador para la gestión de usuarios
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/User.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';
@@ -25,7 +30,7 @@ class UserController
 
 	/**
 	 * Maneja la petición HTTP y redirige a la acción correspondiente
-	 * según el parámetro 'action' recibido por GET.
+	 * según el parámetro 'action' recibido por GET.	
 	 *
 	 * @return void
 	 */

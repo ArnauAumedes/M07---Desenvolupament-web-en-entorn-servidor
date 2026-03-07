@@ -1,3 +1,9 @@
+<!-- 
+modalJugador.php
+Vista para mostrar el modal de detalle de un jugador, con contenido cargado vía AJAX
+Autor: Arnau Aumedes Jimenez 
+-->
+
 <!-- Script para Bootstrap (JavaScript Bundle con Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -1,5 +1,11 @@
 <?php
-// Vista de detalle de un user
+
+/**
+ * singleUser.php
+ * Vista para mostrar el detalle de un usuario específico
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 $isAjax = isset($_GET['ajax']) && $_GET['ajax'] == '1';
 
 if (!$isAjax):

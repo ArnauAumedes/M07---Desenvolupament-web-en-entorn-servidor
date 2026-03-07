@@ -1,3 +1,9 @@
+<!-- 
+mejores-valorados.php
+Vista para mostrar la lista de jugadores ordenados por goles+asistencias, con opciones de búsqueda y paginación
+Autor: Arnau Aumedes Jimenez 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 

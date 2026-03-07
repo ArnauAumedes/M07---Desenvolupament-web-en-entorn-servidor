@@ -1,5 +1,15 @@
 <?php
-// Carga variables del .env en el entorno
+/**
+ * env.php
+ * Función para cargar variables de entorno desde un archivo .env
+ * Autor: Arnau Aumedes Jimenez
+ */
+
+/**
+ * Función para cargar variables de entorno desde un archivo .env
+ * @param string $path Ruta del fitxer .env
+ * @return void
+ */
 function loadEnv($path) {
     if (!file_exists($path)) return;
     $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

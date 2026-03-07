@@ -1,4 +1,9 @@
 <?php
+/**
+ * SearchBarControllerUser.php
+ * Controlador para la búsqueda de usuarios en la tabla de entrenadores
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/entities/User.php';
 require_once __DIR__ . '/../../config/db-connection.php';

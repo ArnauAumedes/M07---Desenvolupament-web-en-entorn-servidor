@@ -1,3 +1,8 @@
+/* 
+style.css
+Autor: Arnau Aumedes Jimenez
+Estils globals per l'aplicació (header, footer, cartes, paginació)
+*/
 /* SEARCH BAR COMPONENT */
 .search-bar-component {
   display: flex;

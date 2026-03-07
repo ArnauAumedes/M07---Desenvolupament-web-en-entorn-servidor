@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * EquipoDAO.php
+ * Data Access Object para la gestión de equipos
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../entities/Equipo.php';
 require_once __DIR__ . '/../dao/DAO.php';
 

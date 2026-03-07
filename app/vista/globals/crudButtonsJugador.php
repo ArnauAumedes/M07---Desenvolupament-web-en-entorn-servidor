@@ -1,5 +1,10 @@
 <?php
-// CRUD buttons fragment: shows different links when the user is logged in
+/**
+ * crudButtonsJugador.php
+ * Vista para mostrar los botones de CRUD de jugadores, solo si el usuario está logueado
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

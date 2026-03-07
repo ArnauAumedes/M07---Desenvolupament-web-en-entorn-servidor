@@ -1,4 +1,12 @@
 <?php
+/**
+ * JugadorController.php
+ * Controlador para la gestión de jugadores
+ * Autor: Arnau Aumedes Jimenez
+ *
+ * Este archivo implementa la lógica de creación, actualización, borrado, visualización y listado de jugadores.
+ * Cada método está documentado y el código incluye comentarios explicativos.
+ */
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/Jugador.php';
 require_once __DIR__ . '/../model/dao/JugadorDAO.php';

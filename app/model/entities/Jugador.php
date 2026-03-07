@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Jugador.php
+ * Entidad que representa un jugador de fútbol
+ * Autor: Arnau Aumedes Jimenez
+ */
 class Jugador {
     private ?int $id;
     private string $nombre_completo;

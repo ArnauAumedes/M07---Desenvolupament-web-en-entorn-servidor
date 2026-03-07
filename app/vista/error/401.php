@@ -1,3 +1,8 @@
+<!-- 
+401.php
+Vista para mostrar un error 401 - Acceso no autorizado
+Autor: Arnau Aumedes Jimenez
+  -->
 <!DOCTYPE html>
 <html lang="es">
 

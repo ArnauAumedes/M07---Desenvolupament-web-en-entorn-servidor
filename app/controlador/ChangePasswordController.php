@@ -2,7 +2,7 @@
 /**
  * ChangePasswordController.php
  * Controlador para el cambio de contraseña
- * Estructura procedural similar a registerController.php
+ * Autor: Arnau Aumedes Jimenez
  */
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';

@@ -1,3 +1,9 @@
+<!-- 
+lista-entrenador.php
+Vista para mostrar la lista de entrenadores con sus equipos, objetivos y posiciones, con opciones de búsqueda y paginación
+Autor: Arnau Aumedes Jimenez 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,5 +1,11 @@
 <?php
 /**
+ * env.php
+ * Función para cargar variables de entorno desde un archivo .env
+ * Autor: Arnau Aumedes Jimenez
+ */
+
+/**
  * Carrega les variables d'entorn des d'un fitxer .env
  * @param string $path Ruta del fitxer .env
  */

@@ -1,3 +1,8 @@
+<!-- 
+404.php
+Vista para mostrar un error 404 - Página no encontrada
+Autor: Arnau Aumedes Jimenez 
+-->
 <!DOCTYPE html>
 <html lang="es">
 

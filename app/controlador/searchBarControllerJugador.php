@@ -1,4 +1,9 @@
 <?php
+/**
+ * SearchBarControllerJugador.php
+ * Controlador para la búsqueda de jugadores en la tabla de pichichis, asistencias y mejores valorados
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../model/dao/JugadorDAO.php';
 require_once __DIR__ . '/../model/entities/Jugador.php';
 require_once __DIR__ . '/../../config/db-connection.php';

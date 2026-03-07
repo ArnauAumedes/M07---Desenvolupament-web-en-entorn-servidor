@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * CookieHelper.php
+ * Componente para la gestión de cookies de preferencias de ordenación, paginación y límite de resultados
+ * Autor: Arnau Aumedes Jimenez
+ */
 class CookieHelper
 {
     /**

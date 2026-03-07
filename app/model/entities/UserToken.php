@@ -1,4 +1,9 @@
 <?php
+/**
+ * UserToken.php
+ * Entidad que representa un token de usuario para autenticación o reseteo de contraseña
+ * Autor: Arnau Aumedes Jimenez
+ */
 class UserToken {
     private int $id;
     private int $user_id;

@@ -1,4 +1,9 @@
 <?php
+/**
+ * SearchBarControllerEquipo.php
+ * Controlador para la búsqueda de equipos en la tabla de clasificación y valoración
+ * Autor: Arnau Aumedes Jimenez
+ */
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

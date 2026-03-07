@@ -1,4 +1,9 @@
 <?php
+/**
+ * EquipoController.php
+ * Controlador para la gestión de equipos
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/Equipo.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
@@ -299,4 +304,3 @@ class EquipoController
 		include __DIR__ . "/../vista/osm/{$vista}.php";
 	}
 }
-?>

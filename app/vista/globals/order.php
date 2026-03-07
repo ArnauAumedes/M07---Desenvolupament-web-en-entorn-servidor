@@ -1,3 +1,8 @@
+<!-- 
+order.php
+Vista para mostrar el formulario de ordenamiento de equipos
+Autor: Arnau Aumedes Jimenez 
+-->
 <form method="get" class="mb-0 d-flex align-items-center bg-light rounded px-3 py-2 shadow-sm" style="gap:0.5rem;">
     <input type="hidden" name="action" value="<?= htmlspecialchars($_GET['action'] ?? 'list') ?>">
     <label for="orderSelect" class="mb-0 mr-2 font-weight-bold text-secondary" style="font-size: 1rem;">

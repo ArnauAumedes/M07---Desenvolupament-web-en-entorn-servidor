@@ -1,3 +1,8 @@
+<!-- 
+searchBar.php
+Vista para mostrar la barra de búsqueda de equipos
+Autor: Arnau Aumedes Jimenez 
+-->
 <div class="search-bar-component">
     <div style="display: flex; align-items: center; gap: 8px;">
         <input type="text" id="search" placeholder="Cerca per nom" autocomplete="off">
