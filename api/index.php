@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../app/api/ApiResponse.php';
+require_once __DIR__ . '/../app/api/ApiKeyHelper.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -28,18 +29,27 @@ if (isset($segments[1])) {
 try {
     switch ($resource) {
         case 'equipos':
+            if (!ApiKeyHelper::validateOrFail()) {
+                exit;
+            }
             require_once __DIR__ . '/../app/api/EquipoApiController.php';
             $controller = new EquipoApiController();
             $controller->handle($method, $id);
             break;
 
         case 'jugadores':
+            if (!ApiKeyHelper::validateOrFail()) {
+                exit;
+            }
             require_once __DIR__ . '/../app/api/JugadorApiController.php';
             $controller = new JugadorApiController();
             $controller->handle($method, $id);
             break;
 
         case 'usuarios':
+            if (!ApiKeyHelper::validateOrFail()) {
+                exit;
+            }
             require_once __DIR__ . '/../app/api/UserApiController.php';
             $controller = new UserApiController();
             $controller->handle($method, $id);
