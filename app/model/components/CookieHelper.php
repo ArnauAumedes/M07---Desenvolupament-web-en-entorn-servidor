@@ -19,9 +19,16 @@ class CookieHelper
     // Establece una cookie (por defecto, expira en 30 días)
     public static function set($name, $value, $expire = 2592000, $path = "/")
     {
-        setcookie($name, $value, time() + $expire, $path);
-    }
+        // Mantener valor disponible en esta misma request aunque no se pueda enviar cabecera
+        $_COOKIE[$name] = (string) $value;
 
+        if (!headers_sent()) {
+            setcookie($name, (string) $value, time() + $expire, $path);
+            return;
+        }
+
+        error_log('[cookie] headers ya enviados, no se puede setear cookie: ' . $name);
+    }
     /**
      * Obtiene la preferencia de ordenación del usuario.
      * @param string $paramName Nombre del parámetro GET
@@ -36,7 +43,7 @@ class CookieHelper
         }
         return self::get($cookieName, $default);
     }
-    
+
     /**
      * Obtiene la preferencia de página del usuario.
      * @param string $paramName Nombre del parámetro GET

@@ -37,7 +37,13 @@ class DataSourceResolver
 
     public static function persist(string $source): void
     {
-        setcookie(self::COOKIE_NAME, $source, time() + 2592000, '/');
         $_COOKIE[self::COOKIE_NAME] = $source;
+
+        if (!headers_sent()) {
+            setcookie(self::COOKIE_NAME, $source, time() + 2592000, '/');
+            return;
+        }
+
+        error_log('[data-source] headers ya enviados, no se puede persistir cookie');
     }
 }
