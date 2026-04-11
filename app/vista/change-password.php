@@ -1,3 +1,9 @@
+<!-- 
+change-password.php
+Vista para mostrar el formulario de cambio de contraseña, con validaciones y mensajes de error/success
+Autor: Arnau Aumedes Jimenez 
+-->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

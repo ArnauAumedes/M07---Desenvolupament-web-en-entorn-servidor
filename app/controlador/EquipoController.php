@@ -1,13 +1,22 @@
 <?php
+/**
+ * EquipoController.php
+ * Controlador para la gestión de equipos
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/Equipo.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/../model/components/CookieHelper.php';
+require_once __DIR__ . '/../services/DataSourceResolver.php';
+require_once __DIR__ . '/../services/EquipoDataService.php';
 
 class EquipoController
 {
 	private $equipoDAO;
+	private $equipoDataService;
 	private $db;
+	private $currentSource = 'bdd';
 
 	/**
 	 * Constructor de EquipoController
@@ -18,6 +27,7 @@ class EquipoController
 		$database = new Database();
 		$this->db = $database->getConnection();
 		$this->equipoDAO = new EquipoDAO($this->db);
+		$this->equipoDataService = new EquipoDataService($this->db);
 	}
 
 	/**
@@ -28,6 +38,7 @@ class EquipoController
 	 */
 	public function handleRequest()
 	{
+		$this->currentSource = DataSourceResolver::resolve();
 		$action = $_GET['action'] ?? 'list';
 		switch ($action) {
 			case 'create':
@@ -44,12 +55,12 @@ class EquipoController
 				break;
 			case 'valor-equipo':
 				$this->listEquipos('valor-equipo', function ($equipo) {
-					return $this->equipoDAO->getValorEquipo($equipo->getId());
+					return $this->equipoDataService->getValorEquipo((int) $equipo->getId(), $this->currentSource);
 				});
 				break;
 			default:
 				$this->listEquipos('tabla-clasificacion', function ($equipo) {
-					return $this->equipoDAO->getPuntos($equipo->getId());
+					return $this->equipoDataService->getPuntos((int) $equipo->getId(), $this->currentSource);
 				});
 				break;
 		}
@@ -258,6 +269,7 @@ class EquipoController
 	private function listEquipos($vista = 'tabla-clasificacion', $ordenCallback = null)
 	{
 		require_once __DIR__ . '/../model/dao/UserDAO.php';
+		$source = $this->currentSource;
 
 		// Usar CookieHelper para obtener la página actual (GET o cookie)
 		$page = CookieHelper::getPagePreference('page', 'page_preference', 1);
@@ -275,15 +287,15 @@ class EquipoController
 			}
 
 			$offset = ($page - 1) * $limit;
-			$equipos = $this->equipoDAO->findAll();
+			$equipos = $this->equipoDataService->getAll($source);
 
 			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
-			$order = CookieHelper::getOrderPreference('order', 'order_preference');
+			$order = CookieHelper::getOrderPreference('order', 'order_preference') ?? 'desc';
 			if (!in_array(strtolower($order), ['asc', 'desc'])) {
 				$order = 'desc';
 			}
 			if ($ordenCallback !== null) {
-				$equipos = $this->equipoDAO->ordenarPorValor($equipos, $ordenCallback, $order);
+				$equipos = $this->equipoDataService->sortByValue($equipos, $ordenCallback, $order);
 			}
 
 			$equipos = array_slice($equipos, $offset, $limit);
@@ -295,8 +307,7 @@ class EquipoController
 			$page = 1;
 			$limit = 5;
 		}
-		$equipoDAO = $this->equipoDAO;
+		$equipoDAO = $this->equipoDataService;
 		include __DIR__ . "/../vista/osm/{$vista}.php";
 	}
 }
-?>

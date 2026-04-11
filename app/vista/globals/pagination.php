@@ -1,3 +1,9 @@
+<!-- 
+pagination.php
+Vista para mostrar la paginación de la lista de equipos, con opciones para cambiar el número de elementos por página
+Autor: Arnau Aumedes Jimenez 
+-->
+
 <div class="d-flex justify-content-center align-items-center flex-wrap gap-3 py-3" style="gap: 1.5rem;">
     <?php
     // Asegurarse de que las variables estén definidas

@@ -1,4 +1,9 @@
 <?php
+/**
+ * UserTokenDAO.php
+ * Data Access Object para la gestión de tokens de usuario
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../entities/UserToken.php';
 require_once __DIR__ . '/../../../config/db-connection.php';
 require_once __DIR__ . '/DAO.php';

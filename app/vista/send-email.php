@@ -1,3 +1,8 @@
+<!-- 
+send-email.php
+Vista para mostrar el formulario de envío de correo electrónico para recuperar contraseña
+Autor: Arnau Aumedes Jimenez 
+-->
 <!DOCTYPE html>
 <html lang="ca">
 

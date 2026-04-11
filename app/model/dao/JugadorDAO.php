@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * JugadorDAO.php
+ * Data Access Object para la gestión de jugadores
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../entities/Jugador.php';
 require_once __DIR__ . '/../dao/DAO.php';
 

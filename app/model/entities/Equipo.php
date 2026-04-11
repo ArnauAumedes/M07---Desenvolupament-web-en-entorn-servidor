@@ -1,4 +1,9 @@
 <?php
+/**
+ * Equipo.php
+ * Entidad que representa un equipo de fútbol
+ * Autor: Arnau Aumedes Jimenez
+ */
 class Equipo
 {
 	private int|string|null $id;

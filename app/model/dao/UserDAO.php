@@ -1,7 +1,6 @@
 <?php
 /**
- * UserDAO
- *
+ * UserDAO.php
  * Gestiona l'accés a la taula `users` per registre i autenticació.
  * Autor: Arnau Aumedes Jimenez
  */

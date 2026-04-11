@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * CookieHelper.php
+ * Componente para la gestión de cookies de preferencias de ordenación, paginación y límite de resultados
+ * Autor: Arnau Aumedes Jimenez
+ */
 class CookieHelper
 {
     /**
@@ -15,9 +19,16 @@ class CookieHelper
     // Establece una cookie (por defecto, expira en 30 días)
     public static function set($name, $value, $expire = 2592000, $path = "/")
     {
-        setcookie($name, $value, time() + $expire, $path);
-    }
+        // Mantener valor disponible en esta misma request aunque no se pueda enviar cabecera
+        $_COOKIE[$name] = (string) $value;
 
+        if (!headers_sent()) {
+            setcookie($name, (string) $value, time() + $expire, $path);
+            return;
+        }
+
+        error_log('[cookie] headers ya enviados, no se puede setear cookie: ' . $name);
+    }
     /**
      * Obtiene la preferencia de ordenación del usuario.
      * @param string $paramName Nombre del parámetro GET
@@ -32,7 +43,7 @@ class CookieHelper
         }
         return self::get($cookieName, $default);
     }
-    
+
     /**
      * Obtiene la preferencia de página del usuario.
      * @param string $paramName Nombre del parámetro GET
@@ -67,5 +78,33 @@ class CookieHelper
         }
         $limit = self::get($cookieName, $default);
         return (is_numeric($limit) && in_array((int) $limit, $validLimits)) ? (int) $limit : $default;
+    }
+
+    /**
+     * Obtiene la preferencia de fuente de datos (bdd|api).
+     * Prioriza query param, luego cookie, y por ultimo fallback.
+     *
+     * @param string $paramName Nombre del parámetro GET
+     * @param string $cookieName Nombre de la cookie
+     * @param string $default Valor por defecto si no existe
+     * @return string
+     */
+    public static function getSourcePreference($paramName = 'source', $cookieName = 'data_source_preference', $default = 'bdd')
+    {
+        $validSources = ['bdd', 'api'];
+
+        if (isset($_GET[$paramName])) {
+            $source = strtolower(trim((string) $_GET[$paramName]));
+            if (in_array($source, $validSources, true)) {
+                self::set($cookieName, $source);
+                return $source;
+            }
+            error_log('[data-source] source invalido recibido: ' . $source);
+            self::set($cookieName, $default);
+            return $default;
+        }
+
+        $source = strtolower(trim((string) self::get($cookieName, $default)));
+        return in_array($source, $validSources, true) ? $source : $default;
     }
 }

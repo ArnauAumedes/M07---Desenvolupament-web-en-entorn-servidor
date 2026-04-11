@@ -1,3 +1,8 @@
+<!-- 
+tabla-clasificacion.php
+Vista para mostrar la tabla de clasificación de equipos, con opciones de búsqueda, ordenamiento y paginación
+Autor: Arnau Aumedes Jimenez 
+-->
 <!DOCTYPE html>
 <html lang="en">
 

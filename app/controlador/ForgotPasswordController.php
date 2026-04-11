@@ -1,4 +1,9 @@
 <?php
+/**
+ * ForgotPasswordController.php
+ * Controlador para la recuperación de contraseña por email
+ * Autor: Arnau Aumedes Jimenez
+ */
 // app/controlador/ForgotPasswordController.php
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/PasswordResetDAO.php';

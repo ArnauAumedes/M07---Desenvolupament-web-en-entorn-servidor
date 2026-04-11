@@ -1,3 +1,9 @@
+<!-- 
+valor-equipo.php
+Vista para mostrar el valor total de los equipos, con opciones de búsqueda y paginación
+Autor: Arnau Aumedes Jimenez 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 

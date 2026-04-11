@@ -1,5 +1,9 @@
 <?php
-// Header fragment: shows different links when the user is logged in
+/**
+ * header.php
+ * Vista para mostrar el encabezado de la aplicación, con navegación y opciones de usuario
+ * Autor: Arnau Aumedes Jimenez
+ */
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }

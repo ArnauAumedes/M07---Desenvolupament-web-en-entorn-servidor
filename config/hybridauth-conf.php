@@ -1,4 +1,9 @@
 <?php
+/**
+ * hybridauth-conf.php
+ * Configuración para Hybridauth (autenticación social)
+ * Autor: Arnau Aumedes Jimenez
+*/
 require_once __DIR__ . '/../config/env.php';
 loadEnv(__DIR__ . '/../.env');
 return [

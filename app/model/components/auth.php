@@ -1,4 +1,9 @@
 <?php
+/**
+ * auth.php
+ * Funciones de autenticación y gestión de sesión
+ * Autor: Arnau Aumedes Jimenez
+ */
 // Inicializar sesión si cal
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

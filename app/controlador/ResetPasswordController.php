@@ -1,5 +1,9 @@
 <?php
-// app/controlador/ResetPasswordController.php
+/**
+ * ResetPasswordController.php
+ * Controlador para el reseteo de contraseña mediante enlace enviado por email
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/PasswordResetDAO.php';
 
@@ -12,8 +16,7 @@ class ResetPasswordController
     public $key = '';
 
     private $db;
-    private $userDao;
-    private $passwordResetDao;
+    private $userDao;private $passwordResetDao;    
 
     public function __construct($db = null)
     {

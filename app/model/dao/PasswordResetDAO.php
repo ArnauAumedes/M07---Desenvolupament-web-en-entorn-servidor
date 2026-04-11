@@ -1,5 +1,9 @@
 <?php
-// model/dao/PasswordResetDAO.php
+/**
+ * PasswordResetDAO.php
+ * Data Access Object para la gestión de reseteo de contraseñas
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../../../config/db-connection.php';
 
 class PasswordResetDAO  {

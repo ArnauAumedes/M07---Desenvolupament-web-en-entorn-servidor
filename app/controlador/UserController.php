@@ -1,15 +1,26 @@
 <?php
+/**
+ * UserController.php
+ * Controlador para la gestión de usuarios
+ * Autor: Arnau Aumedes Jimenez
+ */
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/entities/User.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/../model/components/CookieHelper.php';
+require_once __DIR__ . '/../services/DataSourceResolver.php';
+require_once __DIR__ . '/../services/UserDataService.php';
+require_once __DIR__ . '/../services/EquipoDataService.php';
 
 class UserController
 {
 	private $userDAO;
 	private $equipoDAO;
 	private $db;
+	private $userDataService;
+	private $equipoDataService;
+	private $currentSource = 'bdd';
 
 	/**
 	 * Constructor de UserController
@@ -21,16 +32,19 @@ class UserController
 		$this->db = $database->getConnection();
 		$this->userDAO = new UserDAO($this->db);
 		$this->equipoDAO = new EquipoDAO($this->db);
+		$this->userDataService = new UserDataService($this->db);
+		$this->equipoDataService = new EquipoDataService($this->db);
 	}
 
 	/**
 	 * Maneja la petición HTTP y redirige a la acción correspondiente
-	 * según el parámetro 'action' recibido por GET.
+	 * según el parámetro 'action' recibido por GET.	
 	 *
 	 * @return void
 	 */
 	public function handleRequest()
 	{
+		$this->currentSource = DataSourceResolver::resolve();
 		$action = $_GET['action'] ?? 'lista-entrenador';
 		switch ($action) {
 			case 'createUser':
@@ -207,13 +221,14 @@ class UserController
 	 */
 	private function listEntrenadores($ordenCallback = null)
 	{
+		$source = $this->currentSource;
 		// Usar CookieHelper para obtener la página actual (GET o cookie)
 		$page = CookieHelper::getPagePreference('page', 'page_preference', 1);
 		$limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 10);
 
 		try {
 			// Calcular total de entrenadores y páginas
-			$totalEntrenadores = $this->userDAO->countAll();
+			$totalEntrenadores = count($this->userDataService->getAll($source));
 			$totalPages = max(1, ceil($totalEntrenadores / $limit));
 
 			// Ajustar la página si excede el total de páginas
@@ -223,12 +238,12 @@ class UserController
 			}
 
 			$offset = ($page - 1) * $limit;
-			$entrenadores = $this->userDAO->findAll();
+			$entrenadores = $this->userDataService->getAll($source);
 
 			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
 			$order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
 			if ($ordenCallback !== null) {
-				$entrenadores = $this->userDAO->ordenarPorValor($entrenadores, $ordenCallback, $order);
+				$entrenadores = $this->userDataService->sortByValue($entrenadores, $ordenCallback, $order);
 			}
 
 			// Paginación
@@ -237,7 +252,7 @@ class UserController
 			// Para cada entrenador, obtener todos sus equipos
 			$entrenadoresConEquipos = [];
 			foreach ($entrenadores as $entrenador) {
-				$equipoList = $this->equipoDAO->findByEntrenador($entrenador->getId());
+				$equipoList = $this->equipoDataService->findByEntrenador((int) $entrenador->getId(), $source);
 				$entrenadoresConEquipos[] = [
 					'entrenador' => $entrenador,
 					'equipos' => $equipoList
@@ -250,8 +265,8 @@ class UserController
 			$page = 1;
 			$limit = 5;
 		}
-		$userDAO = $this->userDAO;
-		$equipoDAO = $this->equipoDAO;
+		$userDAO = $this->userDataService;
+		$equipoDAO = $this->equipoDataService;
 		include __DIR__ . '/../vista/osm/lista-entrenador.php';
 	}
 

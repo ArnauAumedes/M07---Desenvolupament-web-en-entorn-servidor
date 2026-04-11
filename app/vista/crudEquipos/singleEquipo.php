@@ -1,5 +1,9 @@
 <?php
-// Vista de detalle de un equipo
+/**
+ * singleEquipo.php
+ * Vista para mostrar el detalle de un equipo específico
+ * Autor: Arnau Aumedes Jimenez
+ */
 $isAjax = isset($_GET['ajax']) && $_GET['ajax'] == '1';
 
 if (!$isAjax):

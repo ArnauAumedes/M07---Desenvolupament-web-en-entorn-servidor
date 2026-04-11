@@ -1,51 +1,259 @@
-## Instal·lació de la base de dades
+# Practicas - Gestio de Futbol MVC amb mode dual BDD/API
 
-Abans d’utilitzar l’aplicació, has d’importar la base de dades al teu servidor MySQL (per exemple, utilitzant phpMyAdmin). És important seguir aquest ordre:
+Aplicacio web PHP amb arquitectura MVC per gestionar equips, jugadors i usuaris, amb autenticacio tradicional i social, llistats amb AJAX, i un mode dual de dades (`bdd` o `api`) per a consultes.
 
-1. Primer importa el fitxer `config/pt04_arnau_aumedes.sql`.
-2. Després importa el fitxer `config/pt04_insert_database.sql`.
+## Taula de continguts
+- [Visio general](#visio-general)
+- [Stack tecnologic](#stack-tecnologic)
+- [Estructura del projecte](#estructura-del-projecte)
+- [Arquitectura i flux](#arquitectura-i-flux)
+- [API interna](#api-interna)
+- [Integracio API externa de futbol](#integracio-api-externa-de-futbol)
+- [Instal-lacio i arrencada](#instal-lacio-i-arrencada)
+- [Configuracio d-entorn](#configuracio-d-entorn)
+- [Funcionalitats d-usuaris i seguretat](#funcionalitats-dusuaris-i-seguretat)
+- [Paginacio i cerca AJAX](#paginacio-i-cerca-ajax)
+- [Exemples d-us](#exemples-dus)
+- [Troubleshooting](#troubleshooting)
 
-Això assegurarà que l’estructura i les dades inicials es creïn correctament.
+## Visio general
+El projecte permet administrar dades de futbol amb una interfície web clàssica i incorpora una capa API pròpia per desacoblar el consum de dades.
+
+Flux principal de lectura:
+1. L'usuari navega a una vista de llistat (equips, jugadors o usuaris).
+2. El sistema resol la font de dades: query `source` -> cookie -> `bdd` per defecte.
+3. El controlador MVC delega en un DataService.
+4. El DataService retorna dades homogènies per a la vista, vinguin de BDD o API.
+5. A les cerques en temps real, JavaScript/AJAX actualitza les files de la taula.
+
+## Stack tecnologic
+| Capa | Tecnologia | Us principal |
+| --- | --- | --- |
+| Backend | PHP (MVC custom) | Lògica de negoci i controladors |
+| Persistència | MySQL + PDO | Emmagatzematge i consultes SQL |
+| Frontend | HTML, CSS, JavaScript vanilla | Interfície i interaccions AJAX |
+| API interna | Front controller REST a `api/index.php` | Exposició de recursos JSON |
+| API externa | Football-Data.org v4 | Dades de competició per equips |
+| Auth social | Google OAuth + HybridAuth (GitHub) | Login social |
+| Seguretat addicional | Google reCAPTCHA | Protecció anti-força bruta |
+| Correu | PHPMailer | Recuperació/canvi de contrasenya |
+
+Dependències principals (segons `composer.json`):
+- `google/recaptcha`
+- `google/apiclient`
+- `hybridauth/hybridauth`
+
+## Estructura del projecte
+```text
+practicas/
+|- api/
+|  |- index.php                 # Entrypoint de la API interna
+|- app/
+|  |- api/                      # Controladors i helpers API
+|  |- controlador/              # Controladors MVC web
+|  |- model/dao/                # Capa DAO
+|  |- model/entities/           # Entitats de domini
+|  |- services/                 # DataServices + clients API
+|  |- vista/                    # Vistes PHP
+|- config/
+|  |- db-connection.php         # Connexio PDO
+|  |- env.php                   # Loader de variables d'entorn
+|  |- pt04_arnau_aumedes.sql
+|  |- pt04_insert_database.sql
+|- public/
+|  |- js/                       # JS servit al client
+|- resources/
+|  |- js/                       # Font JS editable
+|- README.md
+```
+
+## Arquitectura i flux
+### Modo dual de dades
+La font de dades es resol a `app/services/DataSourceResolver.php`:
+- Prioritat 1: query param `?source=bdd|api`
+- Prioritat 2: cookie `data_source_preference`
+- Fallback: `bdd`
+
+### Cobertura actual del mode API
+- `equips` en `source=api`: consumeix Football-Data (competició configurable) i mapatge intern.
+- `jugadors` i `usuaris` en `source=api`: es mantenen sobre BDD (degradació controlada en l'abast actual).
+
+### Robustesa
+- Cache TTL server-side en consum de Football-Data.
+- Fallback a BDD si el provider extern falla.
+- Gestió d'errors AJAX amb suport per resposta JSON o text pla.
+
+## API interna
+L'API interna està centralitzada a `api/index.php` i respon JSON amb contracte uniforme:
+
+```json
+{
+	"status": true,
+	"msg": "Operacio correcta",
+	"data": [],
+	"errors": [],
+	"meta": {}
+}
+```
+
+### Autenticacio
+Rutes protegides amb API key (`X-API-Key`) via `app/api/ApiKeyHelper.php`.
+
+### Endpoints principals
+| Metode | Path | Descripcio |
+| --- | --- | --- |
+| GET | `/api/equipos` | Llista d'equips |
+| GET | `/api/equipos/{id}` | Detall d'equip |
+| GET | `/api/jugadores` | Llista de jugadors |
+| GET | `/api/jugadores/{id}` | Detall de jugador |
+| GET | `/api/usuarios` | Llista d'usuaris |
+| GET | `/api/usuarios/{id}` | Detall d'usuari |
+
+Paràmetres de llistat suportats en recursos API:
+- `limit` (1..100)
+- `order` (`asc` o `desc`)
+
+### Codis HTTP utilitzats
+| Codi | Escenari |
+| --- | --- |
+| 200 | Consulta correcta |
+| 400 | Request invàlida (ex. id no numèric) |
+| 401 | API key absent |
+| 403 | API key invàlida |
+| 404 | Recurs o element no trobat |
+| 405 | Mètode no permès |
+| 422 | Error de validació funcional |
+| 500 | Error intern controlat |
+
+## Integracio API externa de futbol
+El provider triat és **Football-Data.org (v4)**.
+
+Implementació principal:
+- `app/services/FootballApiService.php`: consum HTTP, validació, cache i obtenció de classificació.
+- `app/services/FootballMapper.php`: normalització de payload extern a format intern estable.
+
+Configuració de provider:
+- Header d'autenticació: `X-Auth-Token`
+- Competició per defecte configurable (`FOOTBALL_DEFAULT_COMPETITION`, p. ex. `PL`)
+- Cache TTL configurable (`FOOTBALL_API_CACHE_TTL`)
+
+Important:
+- `INTERNAL_API_KEY` (API interna) i `FOOTBALL_API_KEY` (provider extern) són claus diferents i independents.
+
+## Instal-lacio i arrencada
+### Requisits previs
+- XAMPP (Apache + MySQL)
+- PHP 8.x recomanat
+- Composer
+
+### 1) Instal-lar dependències
+```bash
+composer install
+```
+
+### 2) Importar la base de dades (ordre obligatori)
+1. `config/pt04_arnau_aumedes.sql`
+2. `config/pt04_insert_database.sql`
+
+### 3) Configurar `.env`
+Defineix les variables mínimes (veure secció següent).
+
+### 4) Servir el projecte
+Executa Apache/MySQL des de XAMPP i obre:
+- `http://localhost/practicas`
 
 ### Usuari administrador per defecte
+- Usuari: `admin@admin.com`
+- Contrasenya: `123`
 
-Després d’importar la base de dades, pots iniciar sessió com a administrador amb les credencials següents:
+## Configuracio d-entorn
+Exemple orientatiu (no usar claus reals en repositori):
 
-* **Usuari:** [admin@admin.com](mailto:admin@admin.com)
-* **Contrasenya:** 123
+```env
+DB_HOST=127.0.0.1
+DB_DATABASE=pt04_arnau_aumedes
+DB_USERNAME=root
+DB_PASSWORD=
 
-## Connexió PDO
+INTERNAL_API_KEY=canvia_aquesta_clau
 
-La connexió a la base de dades es gestiona mitjançant la classe `Database` ubicada a `config/db-connection.php`. Aquesta classe implementa el **patró Singleton**, el que garanteix que només existeixi una única instància de la connexió PDO durant tota l'execució de l'aplicació. Això millora el rendiment i la gestió de recursos.
+FOOTBALL_API_BASE_URL=https://api.football-data.org/v4
+FOOTBALL_API_KEY=la_teva_clau_football_data
+FOOTBALL_DEFAULT_COMPETITION=PL
+FOOTBALL_API_CACHE_TTL=120
+```
 
-La configuració de la connexió (host, usuari, contrasenya, nom de la base de dades, charset) s'obté de variables d'entorn definides al fitxer `.env`, el qual **no es puja a GitHub** per motius de seguretat (està inclòs al `.gitignore`). Això permet separar la configuració sensible del codi font i facilita el desplegament en diferents entorns.
+Altres variables ja usades pel projecte:
+- SMTP (`SMTP_HOST`, `SMTP_USERNAME`, ...)
+- reCAPTCHA (`RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`)
+- OAuth (`CLIENT_ID`, `CLIENT_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`)
 
-La classe `Database` utilitza les següents bones pràctiques de seguretat i robustesa:
-- Ús de **prepared statements** per evitar injeccions SQL.
-- Configuració de PDO per llençar excepcions en cas d'error (`PDO::ERRMODE_EXCEPTION`).
-- Desactivació de l'emulació de prepared statements (`PDO::ATTR_EMULATE_PREPARES = false`).
-- Recuperació de resultats com a arrays associatius per defecte (`PDO::FETCH_ASSOC`).
+## Funcionalitats d'usuaris i seguretat
+### Validacio d'usuaris
+Control principal a `loginController.php`, `logoutController.php` i `UserController.php`:
+- Validació de camps i format d'email.
+- Verificació de contrasenya encriptada.
+- Comprovació d'usuari actiu.
 
-Això assegura una connexió segura, eficient i fàcilment configurable per a tota l'aplicació.
+### Remember Me
+Si l'usuari activa l'opció, es genera token segur a BDD + cookie (fins a 30 dies). Es neteja al logout.
 
-## Paginació
+### reCAPTCHA
+Després de 3 intents fallits de login, es força validació reCAPTCHA (checkbox) amb Google.
 
-La paginació està implementada a totes les vistes d'OSM (`/app/vista/osm`) mitjançant un component reutilitzable ubicat a `app/vista/globals/pagination.php`. Aquest component mostra els controls de navegació de pàgines i permet a l'usuari seleccionar quants elements vol veure per pàgina.
+### Canvi i recuperacio de contrasenya
+- Canvi: validació de contrasenya antiga i nova.
+- Recuperació: token temporal enviat per correu.
 
-La lògica de la paginació es gestiona des dels controladors corresponents (`EquipoController.php` i `JugadorController.php`). Aquests controladors calculen la pàgina actual, el límit d'elements per pàgina i el nombre total de pàgines a partir dels paràmetres rebuts per GET (`page` i `limit`).
+### OAuth i login social
+- Google OAuth (llibreria oficial)
+- GitHub via HybridAuth
 
-El component de paginació rep aquestes variables i genera els enllaços per navegar entre pàgines, mantenint també altres paràmetres de la consulta (com l'acció o l'ordre). Això permet una experiència d'usuari fluida i escalable en llistats llargs.
+### Configuracions de seguretat
+- `.htaccess` per routing i errors.
+- Ús de variables d'entorn per secrets.
+- PDO amb prepared statements i `ERRMODE_EXCEPTION`.
+- Eliminació de tokens/cookies a logout.
 
-La implementació garanteix que només es mostren els elements corresponents a la pàgina seleccionada, millorant el rendiment i la usabilitat de l'aplicació.
+## Paginacio i cerca AJAX
+### Paginacio
+Component reutilitzable a `app/vista/globals/pagination.php` i càlcul de pàgines als controladors.
 
-## Validació d'usuaris
+### Barra de cerca
+Cerca per nom en usuaris, jugadors i equips:
+- Persistència de preferències via cookies.
+- Execució en temps real amb JavaScript/AJAX.
+- Compatible amb `source=bdd` i `source=api` segons pantalla.
 
-La validació d'usuaris es realitza principalment als controladors `loginController.php` (inici de sessió), `logoutController.php` (tancament de sessió) i `UserController.php` (gestió i llistat d'usuaris).
+## Exemples d'us
+### 1) Consultar API interna (PowerShell)
+```powershell
+$k='dev-internal-key'
+Invoke-WebRequest -Uri 'http://localhost/practicas/api/equipos' -Headers @{'X-API-Key'=$k} -Method GET
+```
 
-Durant el procés de login, es comprova que els camps no estiguin buits, que l'email tingui un format vàlid i que les credencials siguin correctes mitjançant la verificació de la contrasenya encriptada. També es valida que el compte estigui actiu abans de permetre l'accés.
+### 2) Error esperat sense API key
+```powershell
+Invoke-WebRequest -Uri 'http://localhost/practicas/api/equipos' -Method GET
+```
 
-Si la validació és correcta, es crea una sessió segura per a l'usuari i es pot activar l'opció "remember me" per mantenir la sessió iniciada durant més temps. En cas de logout, es destrueix la sessió, s'eliminen les cookies i es netegen els tokens de la base de dades per garantir la seguretat.
+### 3) Forcar font API des de URL
+```text
+http://localhost/practicas/index.php?action=tabla-clasificacion&source=api
+```
 
-El controlador `UserController.php` permet gestionar i llistar els usuaris, aplicant també la paginació i l'ordenació quan sigui necessari.
+## Troubleshooting
+### 403 a la API interna
+- Revisa que `X-API-Key` coincideixi amb `INTERNAL_API_KEY`.
 
-Aquesta lògica garanteix una gestió d'usuaris segura, robusta i adaptada a les bones pràctiques de desenvolupament web.
+### Dades buides en source=api (equips)
+- Comprova `FOOTBALL_API_KEY` i la competició.
+- Revisa TTL/cache i logs del servidor.
+- El sistema pot degradar a BDD si el provider falla.
+
+### Warning de headers/cookies
+- Evita sortida HTML o espais abans de crides que fan `setcookie`/`header`.
+
+### API externa no respon
+- Verifica quota/estat de Football-Data.
+- Comprova connectivitat i timeout.

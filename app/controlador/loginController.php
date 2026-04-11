@@ -27,7 +27,7 @@ if ($pdo instanceof PDO) {
     if (session_status() === PHP_SESSION_NONE) {
         ini_set('session.cookie_lifetime', 2400);
         ini_set('session.gc_maxlifetime', 2400);
-        session_set_cookie_params(2400);
+        session_set_cookie_params(lifetime_or_options: 2400);
         session_start();
     }
     // Inicialitzar intents de login

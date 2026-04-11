@@ -1,3 +1,8 @@
+<!-- 
+footer.php
+Vista para mostrar el pie de página de la aplicación, con enlaces a redes sociales y contacto
+Autor: Arnau Aumedes Jimenez 
+-->
 <div id="footer" class="container-fluid footer-dark">
     <div class="container">
         <div class="row social">

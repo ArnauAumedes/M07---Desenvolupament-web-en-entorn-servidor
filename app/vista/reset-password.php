@@ -1,3 +1,8 @@
+<!-- 
+reset-password.php
+Vista para mostrar el formulario de reseteo de contraseña mediante enlace enviado por email, con validaciones y mensajes de error/success
+Autor: Arnau Aumedes Jimenez 
+-->
 <!DOCTYPE html>
 <html lang="ca">
 
