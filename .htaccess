@@ -4,6 +4,10 @@ RewriteEngine On
 RewriteRule ^404$ app/vista/error/404.php [L]
 RewriteRule ^401$ app/vista/error/401.php [L]
 
+# Routing API intern
+RewriteRule ^api/?$ api/index.php [QSA,L]
+RewriteRule ^api/(.*)$ api/index.php [QSA,L]
+
 # Fallback 404 si no existeix fitxer o directori
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

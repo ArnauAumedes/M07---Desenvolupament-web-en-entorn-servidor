@@ -1,0 +1,28 @@
+@baseUrl = http://localhost/practicas
+@apiKey = dev-internal-key
+
+### 200 - GET equipos (api key valida)
+GET {{baseUrl}}/api/equipos
+X-API-Key: {{apiKey}}
+
+### 401 - Missing API key
+GET {{baseUrl}}/api/equipos
+
+### 403 - Wrong API key
+GET {{baseUrl}}/api/equipos
+X-API-Key: wrong-key
+
+### 404 - Item inexistente
+GET {{baseUrl}}/api/equipos/99999999
+X-API-Key: {{apiKey}}
+
+### 405 - Metodo no permitido
+POST {{baseUrl}}/api/equipos
+X-API-Key: {{apiKey}}
+Content-Type: application/json
+
+{}
+
+### 422 - Validacion funcional (limit invalido)
+GET {{baseUrl}}/api/equipos?limit=0
+X-API-Key: {{apiKey}}

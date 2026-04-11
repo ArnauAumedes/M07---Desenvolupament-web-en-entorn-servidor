@@ -12,23 +12,39 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/components/CookieHelper.php';
+require_once __DIR__ . '/../services/DataSourceResolver.php';
+require_once __DIR__ . '/../services/EquipoDataService.php';
 
 class SearchBarControllerEquipo
 {
     private $db;
     private $equipoDAO;
+    private $equipoDataService;
+    private $source = 'bdd';
 
+    /**
+     * Inicializa dependencias del controlador de busqueda de equipos.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->equipoDAO = new EquipoDAO($this->db);
+        $this->equipoDataService = new EquipoDataService($this->db);
     }
 
+    /**
+     * Resuelve la fuente y delega el tipo de busqueda solicitado.
+     *
+     * @return void
+     */
     public function handleRequest()
     {
         $action = $_GET['action'] ?? 'search';
-        $tipo = $_GET['tipo'];
+        $this->source = DataSourceResolver::resolve();
+        $tipo = $_GET['tipo'] ?? 'clasificacion';
         switch ($tipo) {
             case 'valor':
                 $this->searchEquiposValor();
@@ -39,6 +55,11 @@ class SearchBarControllerEquipo
         }
     }
 
+    /**
+     * Renderiza filas HTML para la tabla de clasificacion de equipos.
+     *
+     * @return void
+     */
     public function searchEquiposClasificacion()
     {
         header('Content-Type: text/html; charset=UTF-8');
@@ -49,12 +70,12 @@ class SearchBarControllerEquipo
         $order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
 
         if ($search === '') {
-            $equipos = $this->equipoDAO->findAll();
+            $equipos = $this->equipoDataService->getAll($this->source);
         } else {
-            $equipos = $this->equipoDAO->findByName($search);
+            $equipos = $this->equipoDataService->findByName($search, $this->source);
         }
-        $equipos = $this->equipoDAO->ordenarPorValor($equipos, function ($equipo) {
-            return $this->equipoDAO->getPuntos($equipo->getId());
+        $equipos = $this->equipoDataService->sortByValue($equipos, function ($equipo) {
+            return $this->equipoDataService->getPuntos((int) $equipo->getId(), $this->source);
         }, $order);
         $equipos = array_slice($equipos, $offset, $limit);
         if (empty($equipos)) {
@@ -87,17 +108,18 @@ class SearchBarControllerEquipo
             echo '<td class="text-center align-middle">' . htmlspecialchars($equipo->getEmpatados()) . '</td>';
             echo '<td class="text-center align-middle">' . htmlspecialchars($equipo->getPerdidos()) . '</td>';
             // PUNTOS
-            if (method_exists($this->equipoDAO, 'getPuntos')) {
-                $puntos = $this->equipoDAO->getPuntos($equipo->getId());
-            } else {
-                $puntos = '';
-            }
+            $puntos = $this->equipoDataService->getPuntos((int) $equipo->getId(), $this->source);
             echo '<td class="text-center align-middle">' . htmlspecialchars($puntos) . '</td>';
             echo '</tr>';
         }
         exit;
     }
 
+    /**
+     * Renderiza filas HTML para la tabla de valor de equipos.
+     *
+     * @return void
+     */
     public function searchEquiposValor()
     {
         header('Content-Type: text/html; charset=UTF-8');
@@ -108,12 +130,12 @@ class SearchBarControllerEquipo
         $order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
 
         if ($search === '') {
-            $equipos = $this->equipoDAO->findAll();
+            $equipos = $this->equipoDataService->getAll($this->source);
         } else {
-            $equipos = $this->equipoDAO->findByName($search);
+            $equipos = $this->equipoDataService->findByName($search, $this->source);
         }
-        $equipos = $this->equipoDAO->ordenarPorValor($equipos, function ($equipo) {
-            return $this->equipoDAO->getValorEquipo($equipo->getId());
+        $equipos = $this->equipoDataService->sortByValue($equipos, function ($equipo) {
+            return $this->equipoDataService->getValorEquipo((int) $equipo->getId(), $this->source);
         }, $order);
         $equipos = array_slice($equipos, $offset, $limit);
         if (empty($equipos)) {
@@ -122,9 +144,9 @@ class SearchBarControllerEquipo
         }
         foreach ($equipos as $index => $equipo) {
             $equipoId = $equipo->getId();
-            $valorTotal = $this->equipoDAO->getValorEquipo($equipoId);
-            $cantidadJugadores = $this->equipoDAO->getCantidadJugadores($equipoId);
-            $valorPromedio = $cantidadJugadores > 0 ? $this->equipoDAO->getMediaValorJugadores($equipoId) : 0;
+            $valorTotal = $this->equipoDataService->getValorEquipo((int) $equipoId, $this->source);
+            $cantidadJugadores = $this->equipoDataService->getCantidadJugadores((int) $equipoId, $this->source);
+            $valorPromedio = $this->equipoDataService->getMediaValorJugadores((int) $equipoId, $this->source);
             // ID EQUIPO
             echo '<tr onclick="window.location=\'index.php?action=view&id=' . urlencode($equipo->getId()) . '\'" style="cursor:pointer;">';
             // POSICIÓN
