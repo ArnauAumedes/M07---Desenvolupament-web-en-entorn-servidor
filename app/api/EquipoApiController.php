@@ -32,6 +32,15 @@ class EquipoApiController
 
     private function list(): void
     {
+        $validation = $this->validateListParams();
+        if ($validation !== null) {
+            ApiResponse::validationError('Error de validacion', $validation);
+            return;
+        }
+
+        $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : null;
+        $order = isset($_GET['order']) ? strtolower((string) $_GET['order']) : 'asc';
+
         $equipos = $this->equipoDAO->findAll();
         $payload = [];
 
@@ -39,9 +48,21 @@ class EquipoApiController
             $payload[] = $this->serializeEquipo($equipo);
         }
 
+        usort($payload, function ($a, $b) use ($order) {
+            return $order === 'desc'
+                ? ((int) $b['id'] <=> (int) $a['id'])
+                : ((int) $a['id'] <=> (int) $b['id']);
+        });
+
+        if ($limit !== null) {
+            $payload = array_slice($payload, 0, $limit);
+        }
+
         ApiResponse::success('Equipos obtenidos correctamente', $payload, [
             'resource' => 'equipos',
             'count' => count($payload),
+            'order' => $order,
+            'limit' => $limit,
         ]);
     }
 
@@ -82,5 +103,31 @@ class EquipoApiController
             'cantidad_jugadores' => (int) $cantidadJugadores,
             'valor_promedio' => $cantidadJugadores > 0 ? (float) $this->equipoDAO->getMediaValorJugadores($equipoId) : 0.0,
         ];
+    }
+
+    private function validateListParams(): ?array
+    {
+        $errors = [];
+
+        if (isset($_GET['limit'])) {
+            $rawLimit = (string) $_GET['limit'];
+            if (!ctype_digit($rawLimit)) {
+                $errors[] = 'limit debe ser un entero entre 1 y 100';
+            } else {
+                $limit = (int) $rawLimit;
+                if ($limit < 1 || $limit > 100) {
+                    $errors[] = 'limit debe ser un entero entre 1 y 100';
+                }
+            }
+        }
+
+        if (isset($_GET['order'])) {
+            $order = strtolower(trim((string) $_GET['order']));
+            if (!in_array($order, ['asc', 'desc'], true)) {
+                $errors[] = 'order debe ser asc o desc';
+            }
+        }
+
+        return empty($errors) ? null : $errors;
     }
 }
