@@ -1,15 +1,33 @@
 <?php
 
+/**
+ * InternalApiClient.php
+ * Cliente HTTP para consumir la API interna del proyecto con contrato JSON uniforme.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 require_once __DIR__ . '/../../config/env.php';
 
 loadEnv(__DIR__ . '/../../.env');
 
 class InternalApiClient
 {
+    /** @var string URL base de la API interna. */
     private string $baseUrl;
+
+    /** @var int Timeout de conexion y lectura en segundos. */
     private int $timeoutSeconds;
+
+    /** @var string API key usada para consumir la API interna. */
     private string $apiKey;
 
+    /**
+     * Inicializa el cliente HTTP interno.
+     *
+     * @param string|null $baseUrl URL base opcional para pruebas.
+     * @param int $timeoutSeconds Timeout de peticion en segundos.
+     * @return void
+     */
     public function __construct(?string $baseUrl = null, int $timeoutSeconds = 5)
     {
         $this->baseUrl = rtrim($baseUrl ?? $this->buildBaseUrl(), '/');
@@ -17,6 +35,14 @@ class InternalApiClient
         $this->apiKey = (string) (getenv('INTERNAL_API_KEY') ?: 'dev-internal-key');
     }
 
+    /**
+     * Ejecuta una peticion GET a la API interna y valida el contrato de respuesta.
+     *
+     * @param string $path Ruta relativa del recurso, por ejemplo equipos.
+     * @param array $query Parametros query opcionales.
+     * @return array Respuesta normalizada con payload, http_code y content_type.
+     * @throws RuntimeException Cuando hay fallo de red, respuesta invalida o error funcional.
+     */
     public function get(string $path, array $query = []): array
     {
         $url = $this->baseUrl . '/' . ltrim($path, '/');
@@ -70,6 +96,11 @@ class InternalApiClient
         ];
     }
 
+    /**
+     * Construye automaticamente la URL base de la API interna.
+     *
+     * @return string URL base construida.
+     */
     private function buildBaseUrl(): string
     {
         $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

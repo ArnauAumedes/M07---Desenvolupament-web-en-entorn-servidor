@@ -1,7 +1,20 @@
 <?php
 
+/**
+ * FootballMapper.php
+ * Normaliza payloads del proveedor de futbol al formato interno de la app.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 class FootballMapper
 {
+    /**
+     * Valida que el payload de proveedor incluya la clave data esperada.
+     *
+     * @param array $providerPayload Respuesta decodificada del proveedor.
+     * @return void
+     * @throws Exception Cuando la estructura no cumple el contrato minimo.
+     */
     public function validatePayload(array $providerPayload): void
     {
         if (!isset($providerPayload['data']) || !is_array($providerPayload['data'])) {
@@ -9,6 +22,12 @@ class FootballMapper
         }
     }
 
+    /**
+     * Mapea equipos del proveedor a un formato estable para servicios internos.
+     *
+     * @param array $providerPayload Payload validado con la clave data.
+     * @return array Listado de equipos normalizado.
+     */
     public function mapTeams(array $providerPayload): array
     {
         $this->validatePayload($providerPayload);

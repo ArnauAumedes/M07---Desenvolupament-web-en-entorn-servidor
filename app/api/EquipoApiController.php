@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * EquipoApiController.php
+ * Controlador de lectura para el recurso equipos de la API interna.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/ApiResponse.php';
@@ -8,6 +14,11 @@ class EquipoApiController
 {
     private $equipoDAO;
 
+    /**
+     * Inicializa la conexion y el DAO de equipos.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
@@ -15,6 +26,13 @@ class EquipoApiController
         $this->equipoDAO = new EquipoDAO($db);
     }
 
+    /**
+     * Gestiona la peticion HTTP del recurso equipos.
+     *
+     * @param string $method Metodo HTTP recibido.
+     * @param int|null $id Identificador del equipo o null para listado.
+     * @return void
+     */
     public function handle(string $method, ?int $id = null): void
     {
         if ($method !== 'GET') {
@@ -30,6 +48,11 @@ class EquipoApiController
         $this->show($id);
     }
 
+    /**
+     * Devuelve el listado de equipos con soporte de limit y order.
+     *
+     * @return void
+     */
     private function list(): void
     {
         $validation = $this->validateListParams();
@@ -66,6 +89,12 @@ class EquipoApiController
         ]);
     }
 
+    /**
+     * Devuelve un equipo concreto por id.
+     *
+     * @param int $id Identificador del equipo.
+     * @return void
+     */
     private function show(int $id): void
     {
         $equipo = $this->equipoDAO->findById($id);
@@ -79,6 +108,12 @@ class EquipoApiController
         ]);
     }
 
+    /**
+     * Serializa una entidad Equipo al formato JSON de la API.
+     *
+     * @param mixed $equipo Entidad de dominio Equipo.
+     * @return array Array serializado del equipo.
+     */
     private function serializeEquipo($equipo): array
     {
         $equipoId = (int) $equipo->getId();
@@ -105,6 +140,11 @@ class EquipoApiController
         ];
     }
 
+    /**
+     * Valida parametros de listado recibidos por query string.
+     *
+     * @return array|null Lista de errores o null si la entrada es valida.
+     */
     private function validateListParams(): ?array
     {
         $errors = [];

@@ -1,3 +1,9 @@
+/**
+ * jugadorSearch.js
+ * Gestiona la busqueda AJAX de jugadores segun ranking y fuente (bdd/api).
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search");
   const searchBtn = document.getElementById("search-btn");
@@ -9,6 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Detectar tipo de tabla según la página
+  /**
+   * Obtiene la accion actual desde query string.
+   *
+   * @returns {string|null} Valor de action o null.
+   */
   function getActionParam() {
     const params = new URLSearchParams(window.location.search);
     return params.get("action");
@@ -21,6 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
     tipo = "pichichis";
   }
 
+  /**
+   * Resuelve la fuente activa para la busqueda.
+   *
+   * @returns {string} Fuente seleccionada (bdd/api).
+   */
   function getSource() {
     if (sourceSelector && sourceSelector.value) {
       return sourceSelector.value;
@@ -29,6 +45,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return params.get("source") || "bdd";
   }
 
+  /**
+   * Renderiza un mensaje de error en la tabla.
+   *
+   * @param {string} message Mensaje a mostrar.
+   * @returns {void}
+   */
   function renderError(message) {
     tablaBody.innerHTML =
       '<tr><td colspan="7" class="text-center text-danger">' +
@@ -36,6 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
       "</td></tr>";
   }
 
+  /**
+   * Interpreta errores HTTP con preferencia por JSON y fallback a texto.
+   *
+   * @param {Response} response Respuesta HTTP fallida.
+   * @returns {Promise<string>} Mensaje de error parseado.
+   */
   async function parseErrorResponse(response) {
     const contentType = response.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
@@ -57,6 +85,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Ejecuta la busqueda de jugadores y actualiza el cuerpo de la tabla.
+   *
+   * @returns {Promise<void>}
+   */
   async function buscarJugadores() {
     const query = searchInput.value;
     const source = getSource();

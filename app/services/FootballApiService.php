@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * FootballApiService.php
+ * Servicio para consumir football-data, mapear datos y cachear respuestas.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 require_once __DIR__ . '/FootballMapper.php';
 require_once __DIR__ . '/../../config/env.php';
 
@@ -7,12 +13,28 @@ loadEnv(__DIR__ . '/../../.env');
 
 class FootballApiService
 {
+    /** @var FootballMapper Mapper para normalizar payloads externos. */
     private FootballMapper $mapper;
+
+    /** @var int Timeout de conexion y lectura en segundos. */
     private int $timeoutSeconds;
+
+    /** @var int Tiempo de vida de cache en segundos. */
     private int $cacheTtlSeconds;
+
+    /** @var string URL base del proveedor externo. */
     private string $baseUrl;
+
+    /** @var string API key para cabecera X-Auth-Token. */
     private string $apiKey;
 
+    /**
+     * Inicializa el servicio de proveedor externo.
+     *
+     * @param FootballMapper|null $mapper Mapper opcional para test.
+     * @param int $timeoutSeconds Timeout de peticion en segundos.
+     * @return void
+     */
     public function __construct(?FootballMapper $mapper = null, int $timeoutSeconds = 8)
     {
         $this->mapper = $mapper ?? new FootballMapper();
@@ -22,6 +44,13 @@ class FootballApiService
         $this->apiKey = (string) (getenv('FOOTBALL_API_KEY') ?: '');
     }
 
+    /**
+     * Obtiene equipos de una competicion y aplica mapeo estable.
+     *
+     * @param array $query Parametros opcionales, incluye competition.
+     * @return array Equipos normalizados por el mapper.
+     * @throws Exception Cuando el proveedor falla o la respuesta es invalida.
+     */
     public function getTeams(array $query = []): array
     {
         $competitionCode = $this->resolveCompetitionCode($query['competition'] ?? null);
@@ -82,6 +111,13 @@ class FootballApiService
         return $this->mapper->mapTeams($json);
     }
 
+    /**
+     * Obtiene la clasificacion de una competicion indexada por team id.
+     *
+     * @param string|null $competitionCode Codigo de competicion (ejemplo PL).
+     * @return array Estadisticas por id de equipo.
+     * @throws Exception Cuando el proveedor falla o la respuesta es invalida.
+     */
     public function getStandings(?string $competitionCode = null): array
     {
         $resolvedCompetition = $this->resolveCompetitionCode($competitionCode);
@@ -170,11 +206,23 @@ class FootballApiService
         return $statsByTeamId;
     }
 
+    /**
+     * Resuelve el codigo de competicion final a partir de parametro o entorno.
+     *
+     * @param string|null $competitionCode Codigo recibido por parametro.
+     * @return string Codigo final en mayusculas.
+     */
     private function resolveCompetitionCode(?string $competitionCode): string
     {
         return strtoupper((string) ($competitionCode ?: getenv('FOOTBALL_DEFAULT_COMPETITION') ?: 'PL'));
     }
 
+    /**
+     * Lee una entrada de cache si existe y no esta expirada.
+     *
+     * @param string $cacheKey Clave logica de cache.
+     * @return mixed Payload cacheado o null si no hay cache valida.
+     */
     private function readCache(string $cacheKey)
     {
         $cacheFile = $this->getCacheFile($cacheKey);
@@ -199,6 +247,13 @@ class FootballApiService
         return $decoded['payload'];
     }
 
+    /**
+     * Escribe una entrada de cache con expiracion basada en TTL.
+     *
+     * @param string $cacheKey Clave logica de cache.
+     * @param mixed $payload Datos a persistir.
+     * @return void
+     */
     private function writeCache(string $cacheKey, $payload): void
     {
         $cacheFile = $this->getCacheFile($cacheKey);
@@ -210,6 +265,12 @@ class FootballApiService
         @file_put_contents($cacheFile, json_encode($cacheData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 
+    /**
+     * Devuelve la ruta de archivo de cache asociada a una clave.
+     *
+     * @param string $cacheKey Clave logica de cache.
+     * @return string Ruta absoluta del archivo de cache.
+     */
     private function getCacheFile(string $cacheKey): string
     {
         return rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'practicas_football_cache_' . md5($cacheKey) . '.json';

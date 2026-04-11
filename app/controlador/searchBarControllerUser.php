@@ -21,6 +21,11 @@ class SearchBarControllerUser
     private $equipoDataService;
     private $source = 'bdd';
 
+    /**
+     * Inicializa dependencias del controlador de busqueda de usuarios.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
@@ -30,6 +35,11 @@ class SearchBarControllerUser
         $this->equipoDataService = new EquipoDataService($this->db);
     }
 
+    /**
+     * Resuelve la fuente y ejecuta la busqueda por defecto.
+     *
+     * @return void
+     */
     public function handleRequest()
     {
         $action = $_GET['action'] ?? 'search';
@@ -41,6 +51,11 @@ class SearchBarControllerUser
         }
     }
 
+    /**
+     * Renderiza filas HTML para la tabla de entrenadores y equipos.
+     *
+     * @return void
+     */
     public function searchUsers()
     {
         header('Content-Type: text/html; charset=UTF-8');

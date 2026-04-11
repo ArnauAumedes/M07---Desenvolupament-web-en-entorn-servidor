@@ -1,3 +1,9 @@
+/**
+ * userSearch.js
+ * Gestiona la busqueda AJAX de usuarios segun la fuente activa (bdd/api).
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("search");
   const searchBtn = document.getElementById("search-btn");
@@ -8,6 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
+  /**
+   * Resuelve la fuente activa para la busqueda.
+   *
+   * @returns {string} Fuente seleccionada (bdd/api).
+   */
   function getSource() {
     if (sourceSelector && sourceSelector.value) {
       return sourceSelector.value;
@@ -16,6 +27,12 @@ document.addEventListener("DOMContentLoaded", function () {
     return params.get("source") || "bdd";
   }
 
+  /**
+   * Renderiza un mensaje de error en la tabla.
+   *
+   * @param {string} message Mensaje a mostrar.
+   * @returns {void}
+   */
   function renderError(message) {
     tablaBody.innerHTML =
       '<tr><td colspan="6" class="text-center text-danger">' +
@@ -23,6 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
       "</td></tr>";
   }
 
+  /**
+   * Interpreta errores HTTP con preferencia por JSON y fallback a texto.
+   *
+   * @param {Response} response Respuesta HTTP fallida.
+   * @returns {Promise<string>} Mensaje de error parseado.
+   */
   async function parseErrorResponse(response) {
     const contentType = response.headers.get("content-type") || "";
     if (contentType.includes("application/json")) {
@@ -44,6 +67,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  /**
+   * Ejecuta la busqueda de usuarios y actualiza el cuerpo de la tabla.
+   *
+   * @returns {Promise<void>}
+   */
   async function buscarUsers() {
     const query = searchInput.value;
     const source = getSource();

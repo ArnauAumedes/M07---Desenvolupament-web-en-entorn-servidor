@@ -21,6 +21,11 @@ class SearchBarControllerJugador
     private $equipoDataService;
     private $source = 'bdd';
 
+    /**
+     * Inicializa dependencias del controlador de busqueda de jugadores.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
@@ -31,6 +36,11 @@ class SearchBarControllerJugador
         $this->equipoDataService = new EquipoDataService($this->db);
     }
 
+    /**
+     * Resuelve la fuente y delega el tipo de ranking solicitado.
+     *
+     * @return void
+     */
     public function handleRequest()
     {
         $action = $_GET['action'] ?? 'search';
@@ -49,6 +59,11 @@ class SearchBarControllerJugador
         }
     }
 
+    /**
+     * Renderiza filas HTML del ranking de pichichis.
+     *
+     * @return void
+     */
     public function searchJugadoresPichichis()
     {
         header('Content-Type: text/html; charset=UTF-8');
@@ -108,6 +123,11 @@ class SearchBarControllerJugador
         exit;
     }
 
+    /**
+     * Renderiza filas HTML del ranking por asistencias.
+     *
+     * @return void
+     */
     public function searchJugadoresAsistencias()
     {
         header('Content-Type: text/html; charset=UTF-8');
@@ -164,6 +184,11 @@ class SearchBarControllerJugador
         exit;
     }
 
+    /**
+     * Renderiza filas HTML del ranking de valoracion (goles + asistencias).
+     *
+     * @return void
+     */
     public function searchJugadoresValoracion()
     {
         header('Content-Type: text/html; charset=UTF-8');

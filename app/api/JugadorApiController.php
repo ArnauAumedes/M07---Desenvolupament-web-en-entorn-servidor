@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * JugadorApiController.php
+ * Controlador de lectura para el recurso jugadores de la API interna.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/dao/JugadorDAO.php';
 require_once __DIR__ . '/ApiResponse.php';
@@ -8,6 +14,11 @@ class JugadorApiController
 {
     private $jugadorDAO;
 
+    /**
+     * Inicializa la conexion y el DAO de jugadores.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
@@ -15,6 +26,13 @@ class JugadorApiController
         $this->jugadorDAO = new JugadorDAO($db);
     }
 
+    /**
+     * Gestiona la peticion HTTP del recurso jugadores.
+     *
+     * @param string $method Metodo HTTP recibido.
+     * @param int|null $id Identificador del jugador o null para listado.
+     * @return void
+     */
     public function handle(string $method, ?int $id = null): void
     {
         if ($method !== 'GET') {
@@ -30,6 +48,11 @@ class JugadorApiController
         $this->show($id);
     }
 
+    /**
+     * Devuelve el listado de jugadores con soporte de limit y order.
+     *
+     * @return void
+     */
     private function list(): void
     {
         $validation = $this->validateListParams();
@@ -66,6 +89,12 @@ class JugadorApiController
         ]);
     }
 
+    /**
+     * Devuelve un jugador concreto por id.
+     *
+     * @param int $id Identificador del jugador.
+     * @return void
+     */
     private function show(int $id): void
     {
         $jugador = $this->jugadorDAO->findById($id);
@@ -79,6 +108,12 @@ class JugadorApiController
         ]);
     }
 
+    /**
+     * Serializa una entidad Jugador al formato JSON de la API.
+     *
+     * @param mixed $jugador Entidad de dominio Jugador.
+     * @return array Array serializado del jugador.
+     */
     private function serializeJugador($jugador): array
     {
         $jugadorId = (int) $jugador->getId();
@@ -100,6 +135,11 @@ class JugadorApiController
         ];
     }
 
+    /**
+     * Valida parametros de listado recibidos por query string.
+     *
+     * @return array|null Lista de errores o null si la entrada es valida.
+     */
     private function validateListParams(): ?array
     {
         $errors = [];

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * UserApiController.php
+ * Controlador de lectura para el recurso usuarios de la API interna.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/dao/UserDAO.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
@@ -10,6 +16,11 @@ class UserApiController
     private $userDAO;
     private $equipoDAO;
 
+    /**
+     * Inicializa la conexion y los DAOs necesarios del recurso usuarios.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
@@ -18,6 +29,13 @@ class UserApiController
         $this->equipoDAO = new EquipoDAO($db);
     }
 
+    /**
+     * Gestiona la peticion HTTP del recurso usuarios.
+     *
+     * @param string $method Metodo HTTP recibido.
+     * @param int|null $id Identificador del usuario o null para listado.
+     * @return void
+     */
     public function handle(string $method, ?int $id = null): void
     {
         if ($method !== 'GET') {
@@ -33,6 +51,11 @@ class UserApiController
         $this->show($id);
     }
 
+    /**
+     * Devuelve el listado de usuarios con soporte de limit y order.
+     *
+     * @return void
+     */
     private function list(): void
     {
         $validation = $this->validateListParams();
@@ -69,6 +92,12 @@ class UserApiController
         ]);
     }
 
+    /**
+     * Devuelve un usuario concreto por id.
+     *
+     * @param int $id Identificador del usuario.
+     * @return void
+     */
     private function show(int $id): void
     {
         $user = $this->userDAO->findById($id);
@@ -82,6 +111,12 @@ class UserApiController
         ]);
     }
 
+    /**
+     * Serializa una entidad User al formato JSON de la API.
+     *
+     * @param mixed $user Entidad de dominio User.
+     * @return array Array serializado del usuario.
+     */
     private function serializeUser($user): array
     {
         $userId = (int) $user->getId();
@@ -98,6 +133,11 @@ class UserApiController
         ];
     }
 
+    /**
+     * Valida parametros de listado recibidos por query string.
+     *
+     * @return array|null Lista de errores o null si la entrada es valida.
+     */
     private function validateListParams(): ?array
     {
         $errors = [];

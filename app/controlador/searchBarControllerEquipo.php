@@ -22,6 +22,11 @@ class SearchBarControllerEquipo
     private $equipoDataService;
     private $source = 'bdd';
 
+    /**
+     * Inicializa dependencias del controlador de busqueda de equipos.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $database = new Database();
@@ -30,6 +35,11 @@ class SearchBarControllerEquipo
         $this->equipoDataService = new EquipoDataService($this->db);
     }
 
+    /**
+     * Resuelve la fuente y delega el tipo de busqueda solicitado.
+     *
+     * @return void
+     */
     public function handleRequest()
     {
         $action = $_GET['action'] ?? 'search';
@@ -45,6 +55,11 @@ class SearchBarControllerEquipo
         }
     }
 
+    /**
+     * Renderiza filas HTML para la tabla de clasificacion de equipos.
+     *
+     * @return void
+     */
     public function searchEquiposClasificacion()
     {
         header('Content-Type: text/html; charset=UTF-8');
@@ -100,6 +115,11 @@ class SearchBarControllerEquipo
         exit;
     }
 
+    /**
+     * Renderiza filas HTML para la tabla de valor de equipos.
+     *
+     * @return void
+     */
     public function searchEquiposValor()
     {
         header('Content-Type: text/html; charset=UTF-8');

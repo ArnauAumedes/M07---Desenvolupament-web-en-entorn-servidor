@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * index.php
+ * Front controller de la API interna. Resuelve recurso e id desde la URL y
+ * delega la peticion al controlador correspondiente.
+ * Autor: Arnau Aumedes Jimenez
+ */
+
 require_once __DIR__ . '/../app/api/ApiResponse.php';
 require_once __DIR__ . '/../app/api/ApiKeyHelper.php';
 
@@ -18,6 +25,7 @@ if (count($segments) > 2) {
 $resource = $segments[0] ?? '';
 $id = null;
 
+// Si se informa un segundo segmento, debe ser un id numerico.
 if (isset($segments[1])) {
     if (!ctype_digit($segments[1])) {
         ApiResponse::error('ID invalido', 400, ['id debe ser numerico']);
@@ -27,6 +35,7 @@ if (isset($segments[1])) {
 }
 
 try {
+    // Dispatch de recursos soportados por la API interna.
     switch ($resource) {
         case 'equipos':
             if (!ApiKeyHelper::validateOrFail()) {
