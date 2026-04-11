@@ -72,4 +72,32 @@ class CookieHelper
         $limit = self::get($cookieName, $default);
         return (is_numeric($limit) && in_array((int) $limit, $validLimits)) ? (int) $limit : $default;
     }
+
+    /**
+     * Obtiene la preferencia de fuente de datos (bdd|api).
+     * Prioriza query param, luego cookie, y por ultimo fallback.
+     *
+     * @param string $paramName Nombre del parámetro GET
+     * @param string $cookieName Nombre de la cookie
+     * @param string $default Valor por defecto si no existe
+     * @return string
+     */
+    public static function getSourcePreference($paramName = 'source', $cookieName = 'data_source_preference', $default = 'bdd')
+    {
+        $validSources = ['bdd', 'api'];
+
+        if (isset($_GET[$paramName])) {
+            $source = strtolower(trim((string) $_GET[$paramName]));
+            if (in_array($source, $validSources, true)) {
+                self::set($cookieName, $source);
+                return $source;
+            }
+            error_log('[data-source] source invalido recibido: ' . $source);
+            self::set($cookieName, $default);
+            return $default;
+        }
+
+        $source = strtolower(trim((string) self::get($cookieName, $default)));
+        return in_array($source, $validSources, true) ? $source : $default;
+    }
 }
