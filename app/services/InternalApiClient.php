@@ -1,14 +1,20 @@
 <?php
 
+require_once __DIR__ . '/../../config/env.php';
+
+loadEnv(__DIR__ . '/../../.env');
+
 class InternalApiClient
 {
     private string $baseUrl;
     private int $timeoutSeconds;
+    private string $apiKey;
 
     public function __construct(?string $baseUrl = null, int $timeoutSeconds = 5)
     {
         $this->baseUrl = rtrim($baseUrl ?? $this->buildBaseUrl(), '/');
         $this->timeoutSeconds = $timeoutSeconds;
+        $this->apiKey = (string) (getenv('INTERNAL_API_KEY') ?: 'dev-internal-key');
     }
 
     public function get(string $path, array $query = []): array
@@ -22,7 +28,10 @@ class InternalApiClient
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'X-API-Key: ' . $this->apiKey,
+        ]);
 
         $rawBody = curl_exec($ch);
         $curlError = curl_error($ch);

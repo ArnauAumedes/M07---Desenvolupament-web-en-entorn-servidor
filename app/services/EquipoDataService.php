@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/InternalApiClient.php';
+require_once __DIR__ . '/FootballApiService.php';
 require_once __DIR__ . '/../model/entities/Equipo.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 
@@ -8,6 +9,7 @@ class EquipoDataService
 {
     private $equipoDAO;
     private InternalApiClient $apiClient;
+    private FootballApiService $footballApiService;
     private array $statsById = [];
     private string $activeSource = 'bdd';
 
@@ -15,13 +17,19 @@ class EquipoDataService
     {
         $this->equipoDAO = new EquipoDAO($db);
         $this->apiClient = new InternalApiClient();
+        $this->footballApiService = new FootballApiService();
     }
 
     public function getAll(string $source = 'bdd'): array
     {
         $this->activeSource = $source;
         if ($source === 'api') {
-            return $this->fetchFromApi();
+            try {
+                return $this->fetchFromApi();
+            } catch (Throwable $e) {
+                error_log('[equipo-data-service] fallback a BDD por error provider: ' . $e->getMessage());
+                return $this->equipoDAO->findAll();
+            }
         }
 
         return $this->equipoDAO->findAll();
@@ -92,7 +100,10 @@ class EquipoDataService
     {
         $source = $this->resolveSource($source);
         if ($source === 'api') {
-            return (int) ($this->statsById[$equipoId]['puntos'] ?? 0);
+            if (isset($this->statsById[$equipoId]['puntos'])) {
+                return (int) $this->statsById[$equipoId]['puntos'];
+            }
+            return (int) $this->equipoDAO->getPuntos($equipoId);
         }
 
         return (int) $this->equipoDAO->getPuntos($equipoId);
@@ -102,7 +113,10 @@ class EquipoDataService
     {
         $source = $this->resolveSource($source);
         if ($source === 'api') {
-            return (float) ($this->statsById[$equipoId]['valor_total'] ?? 0);
+            if (isset($this->statsById[$equipoId]['valor_total'])) {
+                return (float) $this->statsById[$equipoId]['valor_total'];
+            }
+            return (float) $this->equipoDAO->getValorEquipo($equipoId);
         }
 
         return (float) $this->equipoDAO->getValorEquipo($equipoId);
@@ -112,7 +126,10 @@ class EquipoDataService
     {
         $source = $this->resolveSource($source);
         if ($source === 'api') {
-            return (int) ($this->statsById[$equipoId]['cantidad_jugadores'] ?? 0);
+            if (isset($this->statsById[$equipoId]['cantidad_jugadores'])) {
+                return (int) $this->statsById[$equipoId]['cantidad_jugadores'];
+            }
+            return (int) $this->equipoDAO->getCantidadJugadores($equipoId);
         }
 
         return (int) $this->equipoDAO->getCantidadJugadores($equipoId);
@@ -122,7 +139,10 @@ class EquipoDataService
     {
         $source = $this->resolveSource($source);
         if ($source === 'api') {
-            return (float) ($this->statsById[$equipoId]['valor_promedio'] ?? 0);
+            if (isset($this->statsById[$equipoId]['valor_promedio'])) {
+                return (float) $this->statsById[$equipoId]['valor_promedio'];
+            }
+            return (float) $this->equipoDAO->getMediaValorJugadores($equipoId);
         }
 
         return (float) $this->equipoDAO->getMediaValorJugadores($equipoId);
@@ -142,8 +162,9 @@ class EquipoDataService
 
     private function fetchFromApi(): array
     {
-        $response = $this->apiClient->get('equipos');
-        $rows = $response['payload']['data'] ?? [];
+        $competitionCode = (string) (getenv('FOOTBALL_DEFAULT_COMPETITION') ?: 'PL');
+        $rows = $this->footballApiService->getTeams(['competition' => $competitionCode]);
+        $standingsById = $this->footballApiService->getStandings($competitionCode);
 
         $equipos = [];
         $this->statsById = [];
@@ -154,25 +175,33 @@ class EquipoDataService
                 continue;
             }
 
+            $standing = $standingsById[$id] ?? [];
+            $jugados = (int) ($standing['jugados'] ?? 0);
+            $ganados = (int) ($standing['ganados'] ?? 0);
+            $empatados = (int) ($standing['empatados'] ?? 0);
+            $perdidos = (int) ($standing['perdidos'] ?? 0);
+            $position = (int) ($standing['position'] ?? 0);
+            $objetivo = $position > 0 ? $position : 0;
+
             $equipo = new Equipo(
                 $id,
-                (string) ($row['equip'] ?? ''),
-                isset($row['entrenador']) ? (int) $row['entrenador'] : null,
-                (string) ($row['escudo'] ?? ''),
-                (int) ($row['jugados'] ?? 0),
-                (int) ($row['ganados'] ?? 0),
-                (int) ($row['empatados'] ?? 0),
-                (int) ($row['perdidos'] ?? 0),
-                (int) ($row['objetivo'] ?? 0),
-                isset($row['creador_id']) ? (int) $row['creador_id'] : null,
+                (string) ($row['name'] ?? ''),
+                null,
+                (string) ($row['logo'] ?? ''),
+                $jugados,
+                $ganados,
+                $empatados,
+                $perdidos,
+                $objetivo,
+                null,
             );
 
             $equipos[] = $equipo;
             $this->statsById[$id] = [
-                'puntos' => (int) ($row['puntos'] ?? 0),
-                'valor_total' => (float) ($row['valor_total'] ?? 0),
-                'cantidad_jugadores' => (int) ($row['cantidad_jugadores'] ?? 0),
-                'valor_promedio' => (float) ($row['valor_promedio'] ?? 0),
+                'puntos' => (int) ($standing['puntos'] ?? (($ganados * 3) + $empatados)),
+                'valor_total' => 0.0,
+                'cantidad_jugadores' => 0,
+                'valor_promedio' => 0.0,
             ];
         }
 
