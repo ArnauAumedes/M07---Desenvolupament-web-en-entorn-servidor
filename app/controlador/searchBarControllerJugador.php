@@ -8,12 +8,18 @@ require_once __DIR__ . '/../model/dao/JugadorDAO.php';
 require_once __DIR__ . '/../model/entities/Jugador.php';
 require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/components/CookieHelper.php';
+require_once __DIR__ . '/../services/DataSourceResolver.php';
+require_once __DIR__ . '/../services/JugadorDataService.php';
+require_once __DIR__ . '/../services/EquipoDataService.php';
 
 class SearchBarControllerJugador
 {
     private $db;
     private $jugadorDAO;
     private $jugador;
+    private $jugadorDataService;
+    private $equipoDataService;
+    private $source = 'bdd';
 
     public function __construct()
     {
@@ -21,12 +27,15 @@ class SearchBarControllerJugador
         $this->db = $database->getConnection();
         $this->jugadorDAO = new JugadorDAO($this->db);
         $this->jugador = new Jugador();
+        $this->jugadorDataService = new JugadorDataService($this->db);
+        $this->equipoDataService = new EquipoDataService($this->db);
     }
 
     public function handleRequest()
     {
         $action = $_GET['action'] ?? 'search';
-        $tipo = $_GET['tipo'];
+        $this->source = DataSourceResolver::resolve();
+        $tipo = $_GET['tipo'] ?? 'mejores-valorados';
         switch ($tipo) {
             case 'pichichis':
                 $this->searchJugadoresPichichis();
@@ -51,12 +60,12 @@ class SearchBarControllerJugador
         $order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
         // Realitzar la cerca
         if ($search === '') {
-            $jugadores = $this->jugadorDAO->findAll();
+            $jugadores = $this->jugadorDataService->getAll($this->source);
         } else {
-            $jugadores = $this->jugadorDAO->findByName($search);
+            $jugadores = $this->jugadorDataService->findByName($search, $this->source);
         }
         // Ordenar los jugadores
-        $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, function ($jugador) {
+        $jugadores = $this->jugadorDataService->sortByValue($jugadores, function ($jugador) {
             return $jugador->getGoles();
         }, $order);
         // Aplicar paginació
@@ -66,13 +75,9 @@ class SearchBarControllerJugador
             exit;
         }
         // Mostrar els resultats
-        require_once __DIR__ . '/../model/dao/EquipoDAO.php';
-        $equipoDAO = new EquipoDAO($this->db);
         foreach ($jugadores as $index => $jugador) {
-            $equipo = $equipoDAO->findById($jugador->getEquipoId());
-            $mediaGoles = method_exists($this->jugadorDAO, 'getMediaPorPartidoJugador')
-                ? $this->jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'goles')
-                : ($jugador->getPartidos() > 0 ? $jugador->getGoles() / $jugador->getPartidos() : 0);
+            $equipo = $this->equipoDataService->getById((int) $jugador->getEquipoId(), $this->source);
+            $mediaGoles = $this->jugadorDataService->getMediaPorPartidoJugador((int) $jugador->getId(), 'goles', $this->source);
             echo '<tr onclick="window.location=\'index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
             // ID JUGADOR
             echo '<td class="align-middle">' . htmlspecialchars($jugador->getId()) . '</td>';
@@ -114,11 +119,11 @@ class SearchBarControllerJugador
         $order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
         // Realitzar la cerca
         if ($search === '') {
-            $jugadores = $this->jugadorDAO->findAll();
+            $jugadores = $this->jugadorDataService->getAll($this->source);
         } else {
-            $jugadores = $this->jugadorDAO->findByName($search);
+            $jugadores = $this->jugadorDataService->findByName($search, $this->source);
         }
-        $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, function ($jugador) {
+        $jugadores = $this->jugadorDataService->sortByValue($jugadores, function ($jugador) {
             return $jugador->getAsistencias();
         }, $order);
         $jugadores = array_slice($jugadores, $offset, $limit);
@@ -126,13 +131,9 @@ class SearchBarControllerJugador
             echo '<tr><td colspan="6" class="text-center">No se han encontrado jugadores</td></tr>';
             exit;
         }
-        require_once __DIR__ . '/../model/dao/EquipoDAO.php';
-        $equipoDAO = new EquipoDAO($this->db);
         foreach ($jugadores as $index => $jugador) {
-            $equipo = $equipoDAO->findById($jugador->getEquipoId());
-            $mediaAsistencias = method_exists($this->jugadorDAO, 'getMediaPorPartidoJugador')
-                ? $this->jugadorDAO->getMediaPorPartidoJugador($jugador->getId(), 'asistencias')
-                : ($jugador->getPartidos() > 0 ? $jugador->getAsistencias() / $jugador->getPartidos() : 0);
+            $equipo = $this->equipoDataService->getById((int) $jugador->getEquipoId(), $this->source);
+            $mediaAsistencias = $this->jugadorDataService->getMediaPorPartidoJugador((int) $jugador->getId(), 'asistencias', $this->source);
             echo '<tr onclick="window.location=\'index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
             // ID JUGADOR
             echo '<td class="align-middle">' . htmlspecialchars($jugador->getId()) . '</td>';
@@ -173,22 +174,20 @@ class SearchBarControllerJugador
         $order = CookieHelper::getOrderPreference('order', 'order_preference', 'desc');
 
         if ($search === '') {
-            $jugadores = $this->jugadorDAO->findAll();
+            $jugadores = $this->jugadorDataService->getAll($this->source);
         } else {
-            $jugadores = $this->jugadorDAO->findByName($search);
+            $jugadores = $this->jugadorDataService->findByName($search, $this->source);
         }
-        $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, function ($jugador) {
-            return $this->jugadorDAO->getSumaGolesAsistencias($jugador->getId());
+        $jugadores = $this->jugadorDataService->sortByValue($jugadores, function ($jugador) {
+            return $this->jugadorDataService->getSumaGolesAsistencias((int) $jugador->getId(), $this->source);
         }, $order);
         $jugadores = array_slice($jugadores, $offset, $limit);
         if (empty($jugadores)) {
             echo '<tr><td colspan="7" class="text-center">No se han encontrado jugadores</td></tr>';
             exit;
         }
-        require_once __DIR__ . '/../model/dao/EquipoDAO.php';
-        $equipoDAO = new EquipoDAO($this->db);
         foreach ($jugadores as $index => $jugador) {
-            $equipo = $equipoDAO->findById($jugador->getEquipoId());
+            $equipo = $this->equipoDataService->getById((int) $jugador->getEquipoId(), $this->source);
             echo '<tr onclick="window.location=\'index.php?action=viewJugador&id=' . urlencode($jugador->getId()) . '\'" style="cursor:pointer;">';
             // ID JUGADOR
             echo '<td class="align-middle">' . htmlspecialchars($jugador->getId()) . '</td>';
@@ -215,11 +214,7 @@ class SearchBarControllerJugador
             // ASISTENCIAS
             echo '<td class="text-center align-middle">' . htmlspecialchars($jugador->getAsistencias()) . '</td>';
             // GOLES + ASISTENCIAS
-            if (method_exists($this->jugadorDAO, 'getSumaGolesAsistencias')) {
-                $suma = $this->jugadorDAO->getSumaGolesAsistencias($jugador->getId());
-            } else {
-                $suma = $jugador->getGoles() + $jugador->getAsistencias();
-            }
+            $suma = $this->jugadorDataService->getSumaGolesAsistencias((int) $jugador->getId(), $this->source);
             echo '<td class="text-center align-middle" style="font-weight:bold;">' . htmlspecialchars($suma) . '</td>';
             echo '</tr>';
         }
