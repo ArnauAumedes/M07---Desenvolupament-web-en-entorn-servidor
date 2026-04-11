@@ -12,6 +12,9 @@ require_once __DIR__ . '/../model/entities/Jugador.php';
 require_once __DIR__ . '/../model/dao/JugadorDAO.php';
 require_once __DIR__ . '/../model/dao/EquipoDAO.php';
 require_once __DIR__ . '/../model/components/CookieHelper.php';
+require_once __DIR__ . '/../services/DataSourceResolver.php';
+require_once __DIR__ . '/../services/JugadorDataService.php';
+require_once __DIR__ . '/../services/EquipoDataService.php';
 
 
 class JugadorController
@@ -20,6 +23,9 @@ class JugadorController
     private $jugador;
     private $equipoDAO;
     private $db;
+    private $jugadorDataService;
+    private $equipoDataService;
+    private $currentSource = 'bdd';
 
 
     public function __construct()
@@ -29,10 +35,13 @@ class JugadorController
         $this->jugadorDAO = new JugadorDAO($this->db);
         $this->equipoDAO = new EquipoDAO($this->db);
         $this->jugador = new Jugador();
+        $this->jugadorDataService = new JugadorDataService($this->db);
+        $this->equipoDataService = new EquipoDataService($this->db);
     }
 
     public function handleRequest()
     {
+        $this->currentSource = DataSourceResolver::resolve();
         $action = $_GET['action'] ?? 'mejores-valorados';
         switch ($action) {
             case 'createJugador':
@@ -59,7 +68,7 @@ class JugadorController
                 break;
             default:
                 $this->listJugadores('mejores-valorados', function ($jugador) {
-                    return $this->jugadorDAO->getSumaGolesAsistencias($jugador->getId());
+                    return $this->jugadorDataService->getSumaGolesAsistencias((int) $jugador->getId(), $this->currentSource);
                 });
                 break;
         }
@@ -241,6 +250,7 @@ class JugadorController
     private function listJugadores($vista = 'mejores-valorados', $ordenCallback = null)
     {
         require_once __DIR__ . '/../model/dao/UserDAO.php';
+        $source = $this->currentSource;
         
         // Usar CookieHelper para obtener la página actual (GET o cookie)
         $page = CookieHelper::getPagePreference('page', 'page_preference', 1);
@@ -258,12 +268,12 @@ class JugadorController
             }
 
             $offset = ($page - 1) * $limit;
-            $jugadores = $this->jugadorDAO->findAll();
+            $jugadores = $this->jugadorDataService->getAll($source);
             
             // Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
             $order = CookieHelper::getOrderPreference('order', 'order_preference');
             if ($ordenCallback !== null) {
-                $jugadores = $this->jugadorDAO->ordenarPorValor($jugadores, $ordenCallback, $order);
+                $jugadores = $this->jugadorDataService->sortByValue($jugadores, $ordenCallback, $order);
             }
             
             // Paginación
@@ -276,8 +286,8 @@ class JugadorController
             $page = 1;
             $limit = 5;
         }
-        $jugadorDAO = $this->jugadorDAO;
-        $equipoDAO = $this->equipoDAO;
+        $jugadorDAO = $this->jugadorDataService;
+        $equipoDAO = $this->equipoDataService;
         include __DIR__ . "/../vista/osm/{$vista}.php";
     }
 }
