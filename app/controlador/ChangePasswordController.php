@@ -59,7 +59,6 @@ if ($pdo instanceof PDO) {
                         }
                     } catch (Exception $e) {
                         $messages = '<div class="alert alert-danger">Error del servidor. Inténtalo más tarde.</div>';
-                        $messages .= '<div class="alert alert-warning"><small>Debug: ' . htmlspecialchars($e->getMessage()) . '</small></div>';
                         error_log('Change password error: ' . $e->getMessage());
                     }
                 }

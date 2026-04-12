@@ -63,7 +63,6 @@ if ($pdo instanceof PDO) {
                 exit;
             } catch (Exception $e) {
                 $messages = '<div class="alert alert-danger">Error del servidor. Torna-ho a intentar més tard.</div>';
-                $messages .= '<div class="alert alert-warning"><small>Debug: ' . htmlspecialchars($e->getMessage()) . '</small></div>';
                 error_log('Register error: ' . $e->getMessage());
             }
         }
