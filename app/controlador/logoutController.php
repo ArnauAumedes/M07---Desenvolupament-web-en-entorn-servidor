@@ -5,6 +5,7 @@
  * Autor: Arnau Aumedes Jimenez
  */
 require_once __DIR__ . '/../../config/db-connection.php';
+require_once __DIR__ . '/../model/dao/UserTokenDAO.php';
 
 try {
     $database = new Database();
@@ -31,9 +32,17 @@ if (ini_get('session.use_cookies')) {
 
 // Eliminar token "remember me" de la base de dades i la cookie
 if (isset($_COOKIE['rememberme'])) {
-    $stmt = $pdo->prepare("DELETE FROM user_tokens WHERE token = ?");
-    $stmt->execute([$_COOKIE['rememberme']]);
-    setcookie('rememberme', '', time() - 3600, "/");
+    if ($pdo instanceof PDO) {
+        $tokenDAO = new UserTokenDAO($pdo);
+        $tokenDAO->deleteByPlainToken($_COOKIE['rememberme']);
+    }
+    setcookie('rememberme', '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
 }
 session_destroy();
 
