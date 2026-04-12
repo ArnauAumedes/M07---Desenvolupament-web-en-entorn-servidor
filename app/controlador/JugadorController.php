@@ -42,7 +42,7 @@ class JugadorController
     public function handleRequest()
     {
         $this->currentSource = DataSourceResolver::resolve();
-        $action = $_GET['action'] ?? 'mejores-valorados';
+        $action = $_POST['action'] ?? ($_GET['action'] ?? 'mejores-valorados');
         switch ($action) {
             case 'createJugador':
                 $this->createJugador();
@@ -114,7 +114,8 @@ class JugadorController
                     exit();
                 }
             } catch (Exception $e) {
-                header("Location: index.php?createdJugador=error&msg=" . urlencode($e->getMessage()));
+                error_log('Error creando jugador: ' . $e->getMessage());
+                header("Location: index.php?createdJugador=error");
                 exit();
             }
         } else {
@@ -164,7 +165,8 @@ class JugadorController
                     }
                 }
             } catch (Exception $e) {
-                $message = "Error: " . $e->getMessage();
+                error_log('Error actualizando jugador: ' . $e->getMessage());
+                $message = "Error interno del servidor.";
             }
         }
         if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -174,7 +176,8 @@ class JugadorController
                     $message = "No se ha encontrado ningún jugador con este ID.";
                 }
             } catch (Exception $e) {
-                $message = "Error buscando el jugador: " . $e->getMessage();
+                error_log('Error cargando jugador para update: ' . $e->getMessage());
+                $message = "Error interno del servidor.";
             }
         }
         include __DIR__ . '/../vista/crudJugadores/updateJugadores.php';
@@ -182,19 +185,22 @@ class JugadorController
 
     private function deleteJugador()
     {
-        if (isset($_GET['id']) && !empty($_GET['id'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
             try {
+                    if (!$this->isValidCsrfToken($_POST['csrf_token'] ?? null)) {
+                        throw new Exception('Invalid CSRF token');
+                    }
                     if (session_status() === PHP_SESSION_NONE)
                         session_start();
                     $user_id = $_SESSION['user']['user_id'] ?? null;
                     $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
-                $id = $_GET['id'];
+                $id = $_POST['id'];
                     // Obtener equipo del jugador
                     $jugador = $this->jugadorDAO->findById($id);
                     if ($jugador) {
                         $equipo = $this->equipoDAO->findById($jugador->getEquipoId());
                         if ($user_id === null || ($equipo && $equipo->getCreadorId() !== $user_id && !$isAdmin)) {
-                            header("Location: index.php?deletedJugador=error&msg=" . urlencode("No tienes permiso para eliminar jugadores de este equipo."));
+                            header("Location: index.php?deletedJugador=error");
                             exit();
                         }
                     }
@@ -207,10 +213,13 @@ class JugadorController
                     exit();
                 }
             } catch (Exception $e) {
-                header("Location: index.php?deletedJugador=error&msg=" . urlencode($e->getMessage()));
+                error_log('Error eliminando jugador: ' . $e->getMessage());
+                header("Location: index.php?deletedJugador=error");
                 exit();
             }
         } else {
+            $csrfToken = $this->getCsrfToken();
+            $idPrefill = $_GET['id'] ?? '';
             include __DIR__ . '/../vista/crudJugadores/deleteJugadores.php';
         }
     }
@@ -227,7 +236,8 @@ class JugadorController
                     header("HTTP/1.0 404 Not Found");
                 }
             } catch (Exception $e) {
-                $message = "Error buscando el jugador: " . $e->getMessage();
+                error_log('Error visualizando jugador: ' . $e->getMessage());
+                $message = "Error interno del servidor.";
             }
         } else {
             $message = "ID no proporcionado";
@@ -281,7 +291,8 @@ class JugadorController
 
         } catch (Exception $e) {
             $jugadores = [];
-            $message = "Error obteniendo jugadores: " . $e->getMessage();
+            error_log('Error listando jugadores: ' . $e->getMessage());
+            $message = "Error interno del servidor.";
             $totalPages = 1;
             $page = 1;
             $limit = 5;
@@ -289,6 +300,27 @@ class JugadorController
         $jugadorDAO = $this->jugadorDataService;
         $equipoDAO = $this->equipoDataService;
         include __DIR__ . "/../vista/osm/{$vista}.php";
+    }
+
+    private function getCsrfToken()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
+        return $_SESSION['csrf_token'];
+    }
+
+    private function isValidCsrfToken($token)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        return isset($_SESSION['csrf_token']) && is_string($token) && hash_equals($_SESSION['csrf_token'], $token);
     }
 }
 ?>

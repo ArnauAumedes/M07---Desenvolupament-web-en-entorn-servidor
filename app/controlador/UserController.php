@@ -45,7 +45,7 @@ class UserController
 	public function handleRequest()
 	{
 		$this->currentSource = DataSourceResolver::resolve();
-		$action = $_GET['action'] ?? 'lista-entrenador';
+		$action = $_POST['action'] ?? ($_GET['action'] ?? 'lista-entrenador');
 		switch ($action) {
 			case 'createUser':
 				$this->createUser();
@@ -200,8 +200,14 @@ class UserController
 	private function deleteUser()
 	{
 		$messages = '';
-		if (isset($_GET['id']) && !empty($_GET['id'])) {
-			$id = $_GET['id'];
+		if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
+			if (!$this->isValidCsrfToken($_POST['csrf_token'] ?? null)) {
+				error_log('Error eliminando usuario: invalid csrf token');
+				header("Location: index.php?deletedUser=error");
+				exit();
+			}
+
+			$id = $_POST['id'];
 			$rowsAffected = $this->userDAO->delete($id);
 			if ($rowsAffected > 0) {
 				header("Location: index.php?deletedUser=success&id=" . $id);
@@ -211,6 +217,8 @@ class UserController
 				exit();
 			}
 		}
+		$csrfToken = $this->getCsrfToken();
+		$idPrefill = $_GET['id'] ?? '';
 		include __DIR__ . '/../vista/crudUsers/deleteUser.php';
 	}
 	/**
@@ -260,7 +268,8 @@ class UserController
 			}
 		} catch (Exception $e) {
 			$entrenadoresConEquipos = [];
-			$message = "Error obteniendo entrenadores: " . $e->getMessage();
+			error_log('Error listando entrenadores: ' . $e->getMessage());
+			$message = "Error interno del servidor.";
 			$totalPages = 1;
 			$page = 1;
 			$limit = 5;
@@ -282,7 +291,8 @@ class UserController
 					header("HTTP/1.0 404 Not Found");
 				}
 			} catch (Exception $e) {
-				$message = "Error obteniendo el user: " . $e->getMessage();
+				error_log('Error visualizando usuario: ' . $e->getMessage());
+				$message = "Error interno del servidor.";
 			}
 		} else {
 			header("HTTP/1.0 400 Bad Request");
@@ -347,5 +357,26 @@ class UserController
 		}
 
 		include __DIR__ . '/../vista/edit-profile.php';
+	}
+
+	private function getCsrfToken()
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if (empty($_SESSION['csrf_token'])) {
+			$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+		}
+
+		return $_SESSION['csrf_token'];
+	}
+
+	private function isValidCsrfToken($token)
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		return isset($_SESSION['csrf_token']) && is_string($token) && hash_equals($_SESSION['csrf_token'], $token);
 	}
 }

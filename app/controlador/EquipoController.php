@@ -39,7 +39,7 @@ class EquipoController
 	public function handleRequest()
 	{
 		$this->currentSource = DataSourceResolver::resolve();
-		$action = $_GET['action'] ?? 'list';
+		$action = $_POST['action'] ?? ($_GET['action'] ?? 'list');
 		switch ($action) {
 			case 'create':
 				$this->createEquipo();
@@ -111,7 +111,8 @@ class EquipoController
 					exit();
 				}
 			} catch (Exception $e) {
-				header("Location: index.php?created=error&msg=" . urlencode($e->getMessage()));
+				error_log('Error creando equipo: ' . $e->getMessage());
+				header("Location: index.php?created=error");
 				exit();
 			}
 		} else {
@@ -172,7 +173,8 @@ class EquipoController
 					}
 				}
 			} catch (Exception $e) {
-				$message = "Error: " . $e->getMessage();
+				error_log('Error actualizando equipo: ' . $e->getMessage());
+				$message = "Error interno del servidor.";
 			}
 		}
 		if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -182,7 +184,8 @@ class EquipoController
 					$message = "No s'ha trobat cap equip amb aquest ID";
 				}
 			} catch (Exception $e) {
-				$message = "Error cercant l'equip: " . $e->getMessage();
+				error_log('Error cargando equipo para update: ' . $e->getMessage());
+				$message = "Error interno del servidor.";
 			}
 		}
 		include __DIR__ . '/../vista/crudEquipos/updateEquipos.php';
@@ -196,8 +199,11 @@ class EquipoController
 	 */
 	private function deleteEquipo()
 	{
-		if (isset($_GET['id']) && !empty($_GET['id'])) {
+		if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
 			try {
+				if (!$this->isValidCsrfToken($_POST['csrf_token'] ?? null)) {
+					throw new Exception('Invalid CSRF token');
+				}
 				// Comprobar que el equipo existe y pertenece al usuario logado para poder eliminarlo
 				if (session_status() === PHP_SESSION_NONE)
 					session_start();
@@ -205,7 +211,7 @@ class EquipoController
 				if ($user_id === null) {
 					throw new Exception('User not authenticated');
 				}
-				$id = $_GET['id'];
+				$id = $_POST['id'];
 				// --- Comprobación de propiedad ---
 				$equipoExistente = $this->equipoDAO->findById($id);
                 $isAdmin = $_SESSION['user']['isAdmin'] ?? 0;
@@ -221,10 +227,13 @@ class EquipoController
 					exit();
 				}
 			} catch (Exception $e) {
-				header("Location: index.php?deleted=error&msg=" . urlencode($e->getMessage()));
+				error_log('Error eliminando equipo: ' . $e->getMessage());
+				header("Location: index.php?deleted=error");
 				exit();
 			}
 		} else {
+			$csrfToken = $this->getCsrfToken();
+			$idPrefill = $_GET['id'] ?? '';
 			include __DIR__ . '/../vista/crudEquipos/deleteEquipos.php';
 		}
 	}
@@ -247,7 +256,8 @@ class EquipoController
 					header("HTTP/1.0 404 Not Found");
 				}
 			} catch (Exception $e) {
-				$message = "Error cercant l'equip: " . $e->getMessage();
+				error_log('Error visualizando equipo: ' . $e->getMessage());
+				$message = "Error interno del servidor.";
 			}
 		} else {
 			$message = "ID no proporcionat";
@@ -302,12 +312,34 @@ class EquipoController
 
 		} catch (Exception $e) {
 			$equipos = [];
-			$message = "Error obteniendo equipos: " . $e->getMessage();
+			error_log('Error listando equipos: ' . $e->getMessage());
+			$message = "Error interno del servidor.";
 			$totalPages = 1;
 			$page = 1;
 			$limit = 5;
 		}
 		$equipoDAO = $this->equipoDataService;
 		include __DIR__ . "/../vista/osm/{$vista}.php";
+	}
+
+	private function getCsrfToken()
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if (empty($_SESSION['csrf_token'])) {
+			$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+		}
+
+		return $_SESSION['csrf_token'];
+	}
+
+	private function isValidCsrfToken($token)
+	{
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		return isset($_SESSION['csrf_token']) && is_string($token) && hash_equals($_SESSION['csrf_token'], $token);
 	}
 }
