@@ -16,9 +16,6 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="public/css/style.css">
 </head>
-<?php
-require_once __DIR__ . '/../controlador/oauth/google.php';
-?>
 
 <body>
 	<div class="row justify-content-center">
@@ -58,7 +55,7 @@ require_once __DIR__ . '/../controlador/oauth/google.php';
 						</a>
 					</div>
 					<div class="form-group text-center mt-4 d-flex justify-content-center" style="gap: 16px">
-						<a class="btn btn-outline-primary" href="<?= $client->createAuthUrl() ?>">
+						<a class="btn btn-outline-primary" href="app/controlador/oauth/google.php">
 							<img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
 								alt="Iniciar sesión con Google" style="height:40px;">
 						</a>
