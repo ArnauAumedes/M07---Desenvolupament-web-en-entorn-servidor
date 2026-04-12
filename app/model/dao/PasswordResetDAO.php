@@ -14,9 +14,14 @@ class PasswordResetDAO  {
     }
 
     public function getByKeyAndEmail($key, $email) {
-        $stmt = $this->db->prepare('SELECT * FROM password_reset_temp WHERE `key` = :key AND `email` = :email LIMIT 1');
-        $stmt->execute([':key' => $key, ':email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare('SELECT * FROM password_reset_temp WHERE `email` = :email ORDER BY `expDate` DESC LIMIT 1');
+        $stmt->execute([':email' => $email]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return false;
+        }
+
+        return password_verify($key, $row['key']) ? $row : false;
     }
 
     public function deleteByEmail($email) {
@@ -25,7 +30,9 @@ class PasswordResetDAO  {
     }
 
     public function insert($email, $key, $expDate) {
+        $this->deleteByEmail($email);
+        $hashedKey = password_hash($key, PASSWORD_DEFAULT);
         $stmt = $this->db->prepare('INSERT INTO password_reset_temp (`email`, `key`, `expDate`) VALUES (:email, :key, :expDate)');
-        $stmt->execute([':email' => $email, ':key' => $key, ':expDate' => $expDate]);
+        $stmt->execute([':email' => $email, ':key' => $hashedKey, ':expDate' => $expDate]);
     }
 }
