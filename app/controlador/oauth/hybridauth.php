@@ -4,6 +4,10 @@ require_once __DIR__ . '/../../../config/db-connection.php';
 require_once __DIR__ . '/../../../vendor/autoload.php';
 $config = require __DIR__ . '/../../../config/hybridauth-conf.php';
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 use Hybridauth\Hybridauth;
 
 $hybridauth = new Hybridauth($config);
@@ -26,7 +30,6 @@ if (!$user) {
     $user_id = $user->getId();
 }
 
-session_start();
 $_SESSION['user'] = [
     'user_id' => $user_id,
     'name' => $userProfile->displayName,
