@@ -30,7 +30,7 @@ class JugadorController
 
     public function __construct()
     {
-        $database = new Database();
+        $database = Database::getInstance();
         $this->db = $database->getConnection();
         $this->jugadorDAO = new JugadorDAO($this->db);
         $this->equipoDAO = new EquipoDAO($this->db);
@@ -267,6 +267,11 @@ class JugadorController
         $limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 10);
 
         try {
+            $order = CookieHelper::getOrderPreference('order', 'order_preference') ?? 'desc';
+            if (!in_array(strtolower($order), ['asc', 'desc'], true)) {
+                $order = 'desc';
+            }
+
             // Calcular total de jugadores y páginas
             $totalJugadores = $this->jugadorDAO->countAll();
             $totalPages = max(1, ceil($totalJugadores / $limit));
@@ -278,16 +283,24 @@ class JugadorController
             }
 
             $offset = ($page - 1) * $limit;
-            $jugadores = $this->jugadorDataService->getAll($source);
-            
-            // Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
-            $order = CookieHelper::getOrderPreference('order', 'order_preference');
-            if ($ordenCallback !== null) {
-                $jugadores = $this->jugadorDataService->sortByValue($jugadores, $ordenCallback, $order);
+
+            if ($source === 'bdd') {
+                if ($vista === 'pichichis') {
+                    $jugadores = $this->jugadorDAO->getPichichisPaginados($limit, $offset, $order);
+                } elseif ($vista === 'asistencias') {
+                    $jugadores = $this->jugadorDAO->getAsistenciasPaginados($limit, $offset, $order);
+                } elseif ($vista === 'mejores-valorados') {
+                    $jugadores = $this->jugadorDAO->getMejoresValoradosPaginados($limit, $offset, $order);
+                } else {
+                    $jugadores = $this->jugadorDAO->getJugadoresPaginados($limit, $offset);
+                }
+            } else {
+                $jugadores = $this->jugadorDataService->getAll($source);
+                if ($ordenCallback !== null) {
+                    $jugadores = $this->jugadorDataService->sortByValue($jugadores, $ordenCallback, $order);
+                }
+                $jugadores = array_slice($jugadores, $offset, $limit);
             }
-            
-            // Paginación
-            $jugadores = array_slice($jugadores, $offset, $limit);
 
         } catch (Exception $e) {
             $jugadores = [];

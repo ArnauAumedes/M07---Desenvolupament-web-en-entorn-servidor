@@ -24,7 +24,7 @@ class EquipoController
 	 */
 	public function __construct()
 	{
-		$database = new Database();
+		$database = Database::getInstance();
 		$this->db = $database->getConnection();
 		$this->equipoDAO = new EquipoDAO($this->db);
 		$this->equipoDataService = new EquipoDataService($this->db);
@@ -286,6 +286,11 @@ class EquipoController
 		$limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 5);
 
 		try {
+			$order = CookieHelper::getOrderPreference('order', 'order_preference') ?? 'desc';
+			if (!in_array(strtolower($order), ['asc', 'desc'], true)) {
+				$order = 'desc';
+			}
+
 			// Calcular total de páginas
 			$totalEquipos = $this->equipoDAO->countAll();
 			$totalPages = max(1, ceil($totalEquipos / $limit));
@@ -297,18 +302,21 @@ class EquipoController
 			}
 
 			$offset = ($page - 1) * $limit;
-			$equipos = $this->equipoDataService->getAll($source);
-
-			// Usar CookieHelper para obtener el orden (asc/desc), por defecto 'desc'
-			$order = CookieHelper::getOrderPreference('order', 'order_preference') ?? 'desc';
-			if (!in_array(strtolower($order), ['asc', 'desc'])) {
-				$order = 'desc';
+			if ($source === 'bdd') {
+				if ($vista === 'tabla-clasificacion') {
+					$equipos = $this->equipoDAO->getClasificacionPaginada($limit, $offset, $order);
+				} elseif ($vista === 'valor-equipo') {
+					$equipos = $this->equipoDAO->getValorEquipoPaginado($limit, $offset, $order);
+				} else {
+					$equipos = $this->equipoDAO->getEquiposPaginados($limit, $offset);
+				}
+			} else {
+				$equipos = $this->equipoDataService->getAll($source);
+				if ($ordenCallback !== null) {
+					$equipos = $this->equipoDataService->sortByValue($equipos, $ordenCallback, $order);
+				}
+				$equipos = array_slice($equipos, $offset, $limit);
 			}
-			if ($ordenCallback !== null) {
-				$equipos = $this->equipoDataService->sortByValue($equipos, $ordenCallback, $order);
-			}
-
-			$equipos = array_slice($equipos, $offset, $limit);
 
 		} catch (Exception $e) {
 			$equipos = [];

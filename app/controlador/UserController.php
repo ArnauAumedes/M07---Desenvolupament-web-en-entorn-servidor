@@ -28,7 +28,7 @@ class UserController
 	 */
 	public function __construct()
 	{
-		$database = new Database();
+		$database = Database::getInstance();
 		$this->db = $database->getConnection();
 		$this->userDAO = new UserDAO($this->db);
 		$this->equipoDAO = new EquipoDAO($this->db);
@@ -200,6 +200,15 @@ class UserController
 	private function deleteUser()
 	{
 		$messages = '';
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+
+		if (empty($_SESSION['user']['user_id']) || empty($_SESSION['user']['isAdmin'])) {
+			header("Location: index.php?deletedUser=error");
+			exit();
+		}
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && !empty($_POST['id'])) {
 			if (!$this->isValidCsrfToken($_POST['csrf_token'] ?? null)) {
 				error_log('Error eliminando usuario: invalid csrf token');
@@ -217,6 +226,7 @@ class UserController
 				exit();
 			}
 		}
+
 		$csrfToken = $this->getCsrfToken();
 		$idPrefill = $_GET['id'] ?? '';
 		include __DIR__ . '/../vista/crudUsers/deleteUser.php';
@@ -230,6 +240,7 @@ class UserController
 	private function listEntrenadores($ordenCallback = null)
 	{
 		$source = $this->currentSource;
+		$csrfToken = $this->getCsrfToken();
 		// Usar CookieHelper para obtener la página actual (GET o cookie)
 		$page = CookieHelper::getPagePreference('page', 'page_preference', 1);
 		$limit = CookieHelper::getLimitPreference('limit', 'limit_preference', 10);
