@@ -24,7 +24,7 @@ class ForgotPasswordController
         if ($db === null) {
             // Cargar conexión PDO por defecto si no se pasa
             require_once __DIR__ . '/../../config/db-connection.php';
-            $dbInstance = new Database();
+            $dbInstance = Database::getInstance();
             $this->db = $dbInstance->getConnection();
         } else {
             $this->db = $db;

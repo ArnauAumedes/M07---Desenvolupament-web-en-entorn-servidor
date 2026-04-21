@@ -13,7 +13,7 @@ require_once __DIR__ . '/../model/dao/UserTokenDAO.php';
 $messages = '';
 
 try {
-    $database = new Database();
+    $database = Database::getInstance();
     $pdo = $database->getConnection();
 } catch (Exception $e) {
     error_log('DB init error (controller): ' . $e->getMessage());

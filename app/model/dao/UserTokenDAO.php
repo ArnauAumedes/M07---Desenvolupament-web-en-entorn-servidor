@@ -8,7 +8,7 @@ require_once __DIR__ . '/../entities/UserToken.php';
 require_once __DIR__ . '/../../../config/db-connection.php';
 require_once __DIR__ . '/DAO.php';
 
-class UserTokenDAO extends UserToken implements DAO {
+class UserTokenDAO implements DAO {
     private $db;
     public function __construct(PDO $db) { $this->db = $db; }
 

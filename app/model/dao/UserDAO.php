@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../entities/User.php';
 require_once __DIR__ . '/DAO.php';
 
-class UserDAO extends User implements DAO
+class UserDAO implements DAO
 {
     private $db;
     public function __construct($db)

@@ -9,7 +9,7 @@ require_once __DIR__ . '/../model/dao/UserDAO.php';
 
 $messages = '';
 try {
-    $database = new Database();
+    $database = Database::getInstance();
     $pdo = $database->getConnection();
 } catch (Exception $e) {
     error_log('DB init error (register controller): ' . $e->getMessage());

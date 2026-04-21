@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../config/db-connection.php';
 require_once __DIR__ . '/../model/dao/UserTokenDAO.php';
 
 try {
-    $database = new Database();
+    $database = Database::getInstance();
     $pdo = $database->getConnection();
 } catch (Exception $e) {
     error_log('DB init error (controller): ' . $e->getMessage());

@@ -21,6 +21,7 @@ $client->setRedirectUri('http://localhost/practicas/app/controlador/oauth/google
 $client->addScope('email');
 $client->addScope('profile');
 
+
 if (!isset($_GET['code'])) {
     $state = bin2hex(random_bytes(16));
     $_SESSION['oauth_state'] = $state;
@@ -53,7 +54,7 @@ if (isset($_GET['code'])) {
     $name = $google_account_info->name;
 
     // Conexión a la base de datos
-    $database = new Database();
+    $database = Database::getInstance();
     $db = $database->getConnection();
     $userDAO = new UserDAO($db);
 

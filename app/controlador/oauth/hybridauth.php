@@ -18,7 +18,7 @@ $userProfile = $adapter->getUserProfile();
 $name = $userProfile->displayName;
 $email = $userProfile->email;
 
-$database = new Database();
+$database = Database::getInstance();
 $db = $database->getConnection();
 
 // Buscar o crear usuario local
