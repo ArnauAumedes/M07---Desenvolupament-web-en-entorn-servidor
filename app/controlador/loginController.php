@@ -13,7 +13,7 @@ require_once __DIR__ . '/../model/dao/UserTokenDAO.php';
 $messages = '';
 
 try {
-    $database = new Database();
+    $database = Database::getInstance();
     $pdo = $database->getConnection();
 } catch (Exception $e) {
     error_log('DB init error (controller): ' . $e->getMessage());
@@ -101,7 +101,13 @@ if ($pdo instanceof PDO) {
                     $userId = $user['user_id'];
                     $expires = date('Y-m-d H:i:s', time() + 60 * 60 * 24 * 30);
                     $stmt = $usuarioTokenDAO->create(new UserToken($userId, $token, $expires));
-                    setcookie('rememberme', $token, time() + (86400 * 30), "/", "", true, true);
+                    setcookie('rememberme', $token, [
+                        'expires' => time() + (86400 * 30),
+                        'path' => '/',
+                        'secure' => true,
+                        'httponly' => true,
+                        'samesite' => 'Lax'
+                    ]);
                 }
                 // Redirigir a la pàgina de menú
                 $_SESSION['flash_welcome'] = $user['username'] ?? ($user['email'] ?? 'Usuari');

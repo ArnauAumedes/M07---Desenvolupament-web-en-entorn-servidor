@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../entities/Jugador.php';
 require_once __DIR__ . '/../dao/DAO.php';
 
-class JugadorDAO extends Jugador implements DAO
+class JugadorDAO implements DAO
 {
     private $db;
 
@@ -312,6 +312,108 @@ class JugadorDAO extends Jugador implements DAO
                 $row['asistencias']
             );
         }
+        return $jugadores;
+    }
+
+    /**
+     * Obtiene jugadores paginados ordenados por goles + asistencias.
+     *
+     * @param int $limit
+     * @param int $offset
+     * @param string $order
+     * @return Jugador[]
+     */
+    public function getMejoresValoradosPaginados(int $limit, int $offset, string $order = 'desc'): array
+    {
+        $direction = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+        $sql = "SELECT * FROM jugadores ORDER BY (goles + asistencias) {$direction}, id ASC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugadores[] = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+        }
+
+        return $jugadores;
+    }
+
+    /**
+     * Obtiene jugadores paginados ordenados por goles.
+     *
+     * @param int $limit
+     * @param int $offset
+     * @param string $order
+     * @return Jugador[]
+     */
+    public function getPichichisPaginados(int $limit, int $offset, string $order = 'desc'): array
+    {
+        $direction = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+        $sql = "SELECT * FROM jugadores ORDER BY goles {$direction}, id ASC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugadores[] = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+        }
+
+        return $jugadores;
+    }
+
+    /**
+     * Obtiene jugadores paginados ordenados por asistencias.
+     *
+     * @param int $limit
+     * @param int $offset
+     * @param string $order
+     * @return Jugador[]
+     */
+    public function getAsistenciasPaginados(int $limit, int $offset, string $order = 'desc'): array
+    {
+        $direction = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+        $sql = "SELECT * FROM jugadores ORDER BY asistencias {$direction}, id ASC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $jugadores = [];
+        foreach ($rows as $row) {
+            $jugadores[] = new Jugador(
+                $row['id'],
+                $row['nombre_completo'],
+                $row['equipo_id'],
+                $row['valor'],
+                $row['partidos'],
+                $row['goles'],
+                $row['asistencias']
+            );
+        }
+
         return $jugadores;
     }
 }

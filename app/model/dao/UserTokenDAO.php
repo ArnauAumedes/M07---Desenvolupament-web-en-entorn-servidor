@@ -8,7 +8,7 @@ require_once __DIR__ . '/../entities/UserToken.php';
 require_once __DIR__ . '/../../../config/db-connection.php';
 require_once __DIR__ . '/DAO.php';
 
-class UserTokenDAO extends UserToken implements DAO {
+class UserTokenDAO implements DAO {
     private $db;
     public function __construct(PDO $db) { $this->db = $db; }
 
@@ -20,11 +20,27 @@ class UserTokenDAO extends UserToken implements DAO {
     public function create($userToken): bool {
         $sql = "INSERT INTO user_tokens (user_id, token, expires_at) VALUES (:user_id, :token, :expires_at)";
         $stmt = $this->db->prepare($sql);
+        $hashedToken = password_hash($userToken->getToken(), PASSWORD_DEFAULT);
         $stmt->bindValue(':user_id', $userToken->getUserId(), PDO::PARAM_INT);
-        $stmt->bindValue(':token', $userToken->getToken(), PDO::PARAM_STR);
+        $stmt->bindValue(':token', $hashedToken, PDO::PARAM_STR);
         $stmt->bindValue(':expires_at', $userToken->getExpiresAt(), PDO::PARAM_STR);
         $stmt->execute();
         return $this->db->lastInsertId();
+    }
+
+    public function deleteByPlainToken(string $plainToken): bool {
+        $stmt = $this->db->prepare("SELECT id, token FROM user_tokens");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($rows as $row) {
+            if (password_verify($plainToken, $row['token'])) {
+                $deleteStmt = $this->db->prepare("DELETE FROM user_tokens WHERE id = :id");
+                return $deleteStmt->execute([':id' => $row['id']]);
+            }
+        }
+
+        return false;
     }
 
     /**

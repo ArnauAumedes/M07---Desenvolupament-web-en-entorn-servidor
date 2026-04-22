@@ -22,9 +22,6 @@ Autor: Arnau Aumedes Jimenez
 
 <body>
     <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
 
     // Incloure capçalera i fitxers necessaris
     require_once __DIR__ . '/../globals/header.php';
@@ -70,9 +67,14 @@ Autor: Arnau Aumedes Jimenez
                                                     <a href="index.php?action=updateUser&id=<?= urlencode($user->getId()) ?>" title="Editar usuario">
                                                         <i class="fa fa-pencil text-primary" aria-hidden="true"></i>
                                                     </a>
-                                                    <a href="index.php?action=deleteUser&id=<?= urlencode($user->getId()) ?>" title="Eliminar usuario" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');">
-                                                        <i class="fa fa-trash text-danger" aria-hidden="true"></i>
-                                                    </a>
+                                                    <form method="post" action="index.php" style="display:inline;" onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?');">
+                                                        <input type="hidden" name="action" value="deleteUser">
+                                                        <input type="hidden" name="id" value="<?= htmlspecialchars((string) $user->getId(), ENT_QUOTES, 'UTF-8') ?>">
+                                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                                                        <button type="submit" title="Eliminar usuario" style="background:none;border:none;padding:0;">
+                                                            <i class="fa fa-trash text-danger" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
                                                 </span>
                                             <?php endif; ?>
                                         </td>

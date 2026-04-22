@@ -1,5 +1,10 @@
 RewriteEngine On
 
+# Bloqueig de fitxers i carpetes sensibles
+RewriteRule ^\.env$ - [F,L,NC]
+RewriteRule ^config/ - [F,L,NC]
+RewriteRule ^app/config/ - [F,L,NC]
+
 # Maneig d'errors (sense ErrorDocument per evitar rutes absolutes)
 RewriteRule ^404$ app/vista/error/404.php [L]
 RewriteRule ^401$ app/vista/error/401.php [L]

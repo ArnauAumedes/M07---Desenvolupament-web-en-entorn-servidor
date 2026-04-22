@@ -21,7 +21,7 @@ class EquipoApiController
      */
     public function __construct()
     {
-        $database = new Database();
+        $database = Database::getInstance();
         $db = $database->getConnection();
         $this->equipoDAO = new EquipoDAO($db);
     }
