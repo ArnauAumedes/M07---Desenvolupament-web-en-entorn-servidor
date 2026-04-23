@@ -28,7 +28,7 @@ class SearchBarControllerUser
      */
     public function __construct()
     {
-        $database = new Database();
+        $database = Database::getInstance();
         $this->db = $database->getConnection();
         $this->userDAO = new UserDAO($this->db);
         $this->userDataService = new UserDataService($this->db);

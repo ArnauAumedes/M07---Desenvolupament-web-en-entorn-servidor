@@ -7,9 +7,10 @@
  */
 // Front controller: route by ?action=
 
-// Habilitar la visualización de errores para depuración
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+// No mostrar errores internos al usuario.
+ini_set('display_errors', '0');
+ini_set('display_startup_errors', '0');
+ini_set('log_errors', '1');
 error_reporting(E_ALL);
 
 $action = $_GET['action'] ?? 'list';

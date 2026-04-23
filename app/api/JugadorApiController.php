@@ -21,7 +21,7 @@ class JugadorApiController
      */
     public function __construct()
     {
-        $database = new Database();
+        $database = Database::getInstance();
         $db = $database->getConnection();
         $this->jugadorDAO = new JugadorDAO($db);
     }

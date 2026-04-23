@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../entities/Equipo.php';
 require_once __DIR__ . '/../dao/DAO.php';
 
-class EquipoDAO extends Equipo implements DAO
+class EquipoDAO implements DAO
 {
     private $db;
 
@@ -183,27 +183,6 @@ class EquipoDAO extends Equipo implements DAO
     }
 
     /**
-     * Ordena un array de objetos (equipos o jugadores) según un valor calculado.
-     * @param $items Array de objetos a ordenar
-     * @param $value Recibe el objeto y devuelve el valor para ordenar
-     * @param $order 'desc' para descendente, 'asc' para ascendente
-     * @return array Array ordenado
-     */
-    public function ordenarPorValor($items, $value, $order = 'desc')
-    {
-        usort($items, function ($a, $b) use ($value, $order) {
-            $valorA = $value($a);
-            $valorB = $value($b);
-            if ($order === 'desc') {
-                return $valorB <=> $valorA;
-            } else {
-                return $valorA <=> $valorB;
-            }
-        });
-        return $items;
-    }
-
-    /**
      * Devuelve la cantidad de jugadores de un equipo
      * @param int $equipoId
      * @return int
@@ -216,37 +195,6 @@ class EquipoDAO extends Equipo implements DAO
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['cantidad'] : 0;
-    }
-
-    /**
-     * Calcula la diferencia entre el objetivo y la posición actual de un equipo.
-     * Devuelve un array con el valor, el símbolo y la clase de color.
-     * @param int $objetivo
-     * @param int $posicionActual
-     * @return array ['valor' => int, 'simbolo' =>, 'color' =>]
-     */
-    public function getDiferenciaObjetivoPosicion($objetivo, $posicionActual)
-    {
-        $diferencia = $objetivo - $posicionActual;
-        if ($diferencia > 0) {
-            return [
-                'valor' => $diferencia,
-                'simbolo' => '+',
-                'color' => '#11461D'
-            ];
-        } elseif ($diferencia < 0) {
-            return [
-                'valor' => abs($diferencia),
-                'simbolo' => '-',
-                'color' => '#75151E'
-            ];
-        } else {
-            return [
-                'valor' => 0,
-                'simbolo' => '',
-                'color' => 'text-secondary'
-            ];
-        }
     }
 
     /**
@@ -286,6 +234,88 @@ class EquipoDAO extends Equipo implements DAO
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['total'] : 0;
+    }
+
+    /**
+     * Obtiene equipos paginados y ordenados por puntos de clasificacion.
+     *
+     * @param int $limit
+     * @param int $offset
+     * @param string $order
+     * @return Equipo[]
+     */
+    public function getClasificacionPaginada(int $limit, int $offset, string $order = 'desc'): array
+    {
+        $direction = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+        $sql = "SELECT * FROM equipos ORDER BY (ganados * 3 + empatados) {$direction}, id ASC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $equipos = [];
+        foreach ($rows as $row) {
+            $equipos[] = new Equipo(
+                $row['id'],
+                $row['equip'],
+                $row['entrenador'],
+                $row['escudo'],
+                $row['jugados'],
+                $row['ganados'],
+                $row['empatados'],
+                $row['perdidos'],
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
+            );
+        }
+
+        return $equipos;
+    }
+
+    /**
+     * Obtiene equipos paginados y ordenados por valor total de plantilla.
+     *
+     * @param int $limit
+     * @param int $offset
+     * @param string $order
+     * @return Equipo[]
+     */
+    public function getValorEquipoPaginado(int $limit, int $offset, string $order = 'desc'): array
+    {
+        $direction = strtolower($order) === 'asc' ? 'ASC' : 'DESC';
+        $sql = "SELECT e.*
+                FROM equipos e
+                LEFT JOIN (
+                    SELECT equipo_id, COALESCE(SUM(valor), 0) AS valor_total
+                    FROM jugadores
+                    GROUP BY equipo_id
+                ) v ON v.equipo_id = e.id
+                ORDER BY COALESCE(v.valor_total, 0) {$direction}, e.id ASC
+                LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $equipos = [];
+        foreach ($rows as $row) {
+            $equipos[] = new Equipo(
+                $row['id'],
+                $row['equip'],
+                $row['entrenador'],
+                $row['escudo'],
+                $row['jugados'],
+                $row['ganados'],
+                $row['empatados'],
+                $row['perdidos'],
+                $row['objetivo'] ?? 0,
+                $row['creador_id'] ?? null
+            );
+        }
+
+        return $equipos;
     }
 
     /**

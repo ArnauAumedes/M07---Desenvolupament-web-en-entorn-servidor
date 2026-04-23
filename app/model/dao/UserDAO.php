@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../entities/User.php';
 require_once __DIR__ . '/DAO.php';
 
-class UserDAO extends User implements DAO
+class UserDAO implements DAO
 {
     private $db;
     public function __construct($db)
@@ -257,27 +257,6 @@ class UserDAO extends User implements DAO
             );
         }
         return $usuarios;
-    }
-
-    /**
-     * Ordena un array de objetos (equipos o jugadores) según un valor calculado.
-     * @param $items Array de objetos a ordenar
-     * @param $value Recibe el objeto y devuelve el valor para ordenar
-     * @param $order 'desc' para descendente, 'asc' para ascendente
-     * @return array Array ordenado
-     */
-    public function ordenarPorValor($items, $value, $order = 'desc')
-    {
-        usort($items, function ($a, $b) use ($value, $order) {
-            $valorA = $value($a);
-            $valorB = $value($b);
-            if ($order === 'desc') {
-                return $valorB <=> $valorA;
-            } else {
-                return $valorA <=> $valorB;
-            }
-        });
-        return $items;
     }
 
     /**

@@ -37,11 +37,22 @@ class CookieHelper
      */
     public static function getOrderPreference($paramName = 'order', $cookieName = 'order_preference', $default = null)
     {
+        $validOrders = ['asc', 'desc'];
+        $normalizedDefault = in_array($default, $validOrders, true) ? $default : 'desc';
+
         if (isset($_GET[$paramName])) {
-            self::set($cookieName, $_GET[$paramName]);
-            return $_GET[$paramName];
+            $requested = strtolower(trim((string) $_GET[$paramName]));
+            if (in_array($requested, $validOrders, true)) {
+                self::set($cookieName, $requested);
+                return $requested;
+            }
+
+            self::set($cookieName, $normalizedDefault);
+            return $normalizedDefault;
         }
-        return self::get($cookieName, $default);
+
+        $stored = strtolower(trim((string) self::get($cookieName, $normalizedDefault)));
+        return in_array($stored, $validOrders, true) ? $stored : $normalizedDefault;
     }
 
     /**

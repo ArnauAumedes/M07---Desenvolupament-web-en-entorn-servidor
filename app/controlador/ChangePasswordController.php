@@ -9,7 +9,7 @@ require_once __DIR__ . '/../model/dao/UserDAO.php';
 
 $messages = '';
 try {
-    $database = new Database();
+    $database = Database::getInstance();
     $pdo = $database->getConnection();
 } catch (Exception $e) {
     error_log('DB init error (change password controller): ' . $e->getMessage());
@@ -59,7 +59,6 @@ if ($pdo instanceof PDO) {
                         }
                     } catch (Exception $e) {
                         $messages = '<div class="alert alert-danger">Error del servidor. Inténtalo más tarde.</div>';
-                        $messages .= '<div class="alert alert-warning"><small>Debug: ' . htmlspecialchars($e->getMessage()) . '</small></div>';
                         error_log('Change password error: ' . $e->getMessage());
                     }
                 }

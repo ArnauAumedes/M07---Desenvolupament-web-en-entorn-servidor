@@ -24,7 +24,7 @@ class ForgotPasswordController
         if ($db === null) {
             // Cargar conexión PDO por defecto si no se pasa
             require_once __DIR__ . '/../../config/db-connection.php';
-            $dbInstance = new Database();
+            $dbInstance = Database::getInstance();
             $this->db = $dbInstance->getConnection();
         } else {
             $this->db = $db;
@@ -51,7 +51,7 @@ class ForgotPasswordController
             }
             $expFormat = mktime(date("H"), date("i"), date("s"), date("m"), date("d") + 1, date("Y"));
             $expDate = date("Y-m-d H:i:s", $expFormat);
-            $key = md5(time()) . substr(md5(uniqid(rand(), 1)), 3, 10);
+            $key = bin2hex(random_bytes(32));
             $this->passwordResetDao->insert($this->email, $key, $expDate);
             $output = '<p>Please click on the following link to reset your password.</p>';
             $output .= '<p><a href="http://localhost/practicas/index.php?action=reset-password&key=' . $key . '&email=' . $this->email . '" target="_blank">http://localhost/practicas/index.php?action=reset-password&key=' . $key . '&email=' . $this->email . '</a></p>';

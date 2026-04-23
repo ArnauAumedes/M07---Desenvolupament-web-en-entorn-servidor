@@ -15,6 +15,11 @@ loadEnv(__DIR__ . '/../.env');
 class Database
 {
     /**
+     * @var Database|null Instancia unica de Database
+     */
+    private static $instance = null;
+
+    /**
      * @var string Host del servidor de base de dades
      */
     private $host;
@@ -50,7 +55,7 @@ class Database
      * Inicialitza automàticament la connexió a la base de dades
      * en crear una instància de la classe.
      */
-    public function __construct()
+    private function __construct()
     {
         $this->host = getenv('DB_HOST');
         $this->dbname = getenv('DB_DATABASE');
@@ -58,6 +63,35 @@ class Database
         $this->password = getenv('DB_PASSWORD');
         $this->charset = getenv('DB_CHARSET');
         $this->connect();
+    }
+
+    /**
+     * Retorna la instancia unica de la clase Database.
+     *
+     * @return Database
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Evita clonado de la instancia Singleton.
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * Evita deserializacion de la instancia Singleton.
+     */
+    public function __wakeup()
+    {
+        throw new Exception('Cannot unserialize singleton Database');
     }
 
     /**
@@ -87,8 +121,9 @@ class Database
             // Crear la connexió PDO
             $this->pdo = new PDO($dsn, $this->username, $this->password, $options);
         } catch (PDOException $e) {
-            // Gestió d'errors de connexió
-            die('Error de connexió: ' . $e->getMessage());
+            // Gestio d'errors de connexio sense exposar detalls sensibles.
+            error_log('Error de connexio a BD: ' . $e->getMessage());
+            throw new Exception('Error de connexio a la base de dades');
         }
     }
 

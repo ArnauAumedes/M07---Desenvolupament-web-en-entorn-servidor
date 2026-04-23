@@ -20,9 +20,6 @@ Autor: Arnau Aumedes Jimenez
     <script src="resources/js/jugadorModal.js"></script>
 </head>
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 // Incloure capçalera i fitxers necessaris
 require_once __DIR__ . '/../globals/header.php';
