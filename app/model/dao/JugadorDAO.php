@@ -250,29 +250,6 @@ class JugadorDAO implements DAO
         }
         return 0;
     }
-
-
-    /**
-     * Ordena un array de jugadores según un valor calculado por callback o método.
-     * @param Jugador[] $jugadores Array de jugadores a ordenar
-     * @param callable $valueCallback Callback que recibe el jugador y devuelve el valor para ordenar
-     * @param string $order 'desc' para descendente, 'asc' para ascendente
-     * @return Jugador[] Array ordenado
-     */
-    public function ordenarPorValor(array $jugadores, callable $valueCallback, ?string $order = 'desc')
-    {
-        usort($jugadores, function ($a, $b) use ($valueCallback, $order) {
-            $valorA = $valueCallback($a);
-            $valorB = $valueCallback($b);
-            if ($order === 'desc') {
-                return $valorB <=> $valorA;
-            } else {
-                return $valorA <=> $valorB;
-            }
-        });
-        return $jugadores;
-    }
-
     /**
      * Cuenta el total de jugadores en la base de datos
      * @return int Número total de jugadores

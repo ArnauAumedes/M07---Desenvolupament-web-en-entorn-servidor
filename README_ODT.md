@@ -1,55 +1,55 @@
-﻿# README_ODT - Estado de mejoras (apartados 2-22)
+# README_ODT - Estat de millores (apartats 2-22)
 
-Fecha: 2026-04-21  
-Proyecto: practicas
+Data: 2026-04-22  
+Projecte: practicas
 
-Documento de entrega para revision docente. Cada apartado incluye, en el mismo bloque, estado, explicacion y evidencia tecnica (Antes/Despues en todos los apartados).
+Document d'entrega per a revisió docent. Cada apartat inclou, dins del mateix bloc, estat, explicació i evidència tècnica (Abans/Després a tots els apartats).
 
-## Índice
+## Índex
 
-- [Resumen ejecutivo](#resumen-ejecutivo)
-- [2. Justificar uso de Singleton](#2-justificar-uso-de-singleton)
-- [3. Peticiones simultáneas y conexiones independientes](#3-peticiones-simultáneas-y-conexiones-independientes)
-- [4. Token reset con md5 predecible](#4-token-reset-con-md5-predecible)
-- [5. Exposición de mensajes internos](#5-exposición-de-mensajes-internos)
-- [6. display_errors visible para usuarios](#6-display_errors-visible-para-usuarios)
-- [7. Paginación con findAll + array_slice](#7-paginación-con-findall--array_slice)
-- [8. Uso de GET sin protección en deleteUser](#8-uso-de-get-sin-protección-en-deleteuser)
-- [9. Exposición de errores internos por URL](#9-exposición-de-errores-internos-por-url)
-- [10. DAO no debe heredar de entidad](#10-dao-no-debe-heredar-de-entidad)
-- [11. Token en texto plano en BDD](#11-token-en-texto-plano-en-bdd)
-- [12. getOrderPreference acepta cualquier valor](#12-getorderpreference-acepta-cualquier-valor)
-- [13. Acceso directo a /config o .env](#13-acceso-directo-a-config-o-env)
-- [14. Almacenamiento de contraseñas](#14-almacenamiento-de-contraseñas)
+- [Resum executiu](#resum-executiu)
+- [2. Justificar l'ús de Singleton](#2-justificar-lús-de-singleton)
+- [3. Peticions simultànies i connexions independents](#3-peticions-simultànies-i-connexions-independents)
+- [4. Token de reset amb md5 predictible](#4-token-de-reset-amb-md5-predictible)
+- [5. Exposició de missatges interns](#5-exposició-de-missatges-interns)
+- [6. display_errors visible per als usuaris](#6-display_errors-visible-per-als-usuaris)
+- [7. Paginació amb findAll + array_slice](#7-paginació-amb-findall--array_slice)
+- [8. Ús de GET sense protecció a deleteUser](#8-ús-de-get-sense-protecció-a-deleteuser)
+- [9. Exposició d'errors interns per URL](#9-exposició-derrors-interns-per-url)
+- [10. El DAO no ha d'heretar d'entitat](#10-el-dao-no-ha-dheretar-dentitat)
+- [11. Token en text pla a BDD](#11-token-en-text-pla-a-bdd)
+- [12. getOrderPreference accepta qualsevol valor](#12-getorderpreference-accepta-qualsevol-valor)
+- [13. Accés directe a /config o .env](#13-accés-directe-a-config-o-env)
+- [14. Emmagatzematge de contrasenyes](#14-emmagatzematge-de-contrasenyes)
 - [15. UserTokenDAO (remember me) vs token API](#15-usertokendao-remember-me-vs-token-api)
 - [16. google.php no valida state CSRF](#16-googlephp-no-valida-state-csrf)
-- [17. session_start demasiado tarde en google.php](#17-session_start-demasiado-tarde-en-googlephp)
-- [18. session_start al final en hybridauth.php](#18-session_start-al-final-en-hybridauthphp)
-- [19. Duplicidad carpeta config](#19-duplicidad-carpeta-config)
-- [20. Lógica de vista en DAO](#20-lógica-de-vista-en-dao)
-- [21. ordenarPorValor duplicado en DAO](#21-ordenarporvalor-duplicado-en-dao)
-- [22. Casuísticas Sign in (BDD <-> Social Auth)](#22-casuísticas-sign-in-bdd---social-auth)
-- [Cambios técnicos adicionales aplicados](#cambios-técnicos-adicionales-aplicados)
+- [17. session_start massa tard a google.php](#17-session_start-massa-tard-a-googlephp)
+- [18. session_start al final a hybridauth.php](#18-session_start-al-final-a-hybridauthphp)
+- [19. Duplicació de carpeta config](#19-duplicació-de-carpeta-config)
+- [20. Lògica de vista al DAO](#20-lògica-de-vista-al-dao)
+- [21. ordenarPorValor duplicat al DAO](#21-ordenarporvalor-duplicat-al-dao)
+- [22. Casuístiques Sign in (BDD <-> Social Auth)](#22-casuístiques-sign-in-bdd---social-auth)
+- [Canvis tècnics addicionals aplicats](#canvis-tècnics-addicionals-aplicats)
 
-## Resumen ejecutivo
+## Resum executiu
 
-- Mejorados: 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19.
-- Parciales: 3, 22.
-- Pendientes: 15, 20, 21.
+- Millorats: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21.
+- Parcials: 22.
+- Pendents: 15.
 
-## 2. Justificar uso de Singleton
+## 2. Justificar l'ús de Singleton
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- La conexión en config/db-connection.php ahora aplica Singleton real.
-- Se definió constructor privado, instancia estática y método getInstance().
-- Se bloqueó clonación y deserialización.
+Què s'ha implementat:
+- La connexió a config/db-connection.php ara aplica un Singleton real.
+- S'ha definit constructor privat, instància estàtica i mètode getInstance().
+- S'ha bloquejat la clonació i la deserialització.
 
-Motivo técnico:
-- El diseño anterior decía usar Singleton pero permitía múltiples instancias.
+Motiu tècnic:
+- El disseny anterior deia que feia servir Singleton però permetia múltiples instàncies.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -84,22 +84,23 @@ class Database
 }
 ~~~
 
-## 3. Peticiones simultáneas y conexiones independientes
+## 3. Peticions simultànies i connexions independents
 
-Estado: Parcial
+Estat: Millorat
 
-Qué se implementó:
-- Se unificó uso de Database::getInstance() en controladores, API, OAuth y CRUD.
+Què s'ha implementat:
+- S'ha unificat l'ús de Database::getInstance() a controladors, API, OAuth i CRUD.
+- S'ha documentat l'estratègia de concurrència a README.md (secció "Concurrencia i connexions a base de dades").
 
-Qué falta:
-- Documentar estrategia de concurrencia para entorno real (Apache/PHP-FPM/workers).
+Motiu tècnic:
+- Es defineix explícitament el comportament de connexió per request/procés a PHP, evitant ambigüitat sobre la reutilització de PDO en escenaris concurrents.
 
-Pasos propuestos:
-1. Definir modelo objetivo: conexión por proceso o aislamiento por request.
-2. Añadir nota técnica de concurrencia en README principal.
-3. Si se requiere aislamiento estricto por request, sustituir Singleton por factoría.
+Nota d'arquitectura aplicada:
+1. Instància única de Database per request/procés.
+2. Aïllament natural entre requests concurrents a Apache/PHP-FPM.
+3. Punt únic de canvi futur: config/db-connection.php.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -113,18 +114,18 @@ $database = Database::getInstance();
 $pdo = $database->getConnection();
 ~~~
 
-## 4. Token reset con md5 predecible
+## 4. Token de reset amb md5 predictible
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- Token de recuperación generado con random_bytes(32).
-- Token almacenado hasheado con password_hash en PasswordResetDAO.
+Què s'ha implementat:
+- Token de recuperació generat amb random_bytes(32).
+- Token emmagatzemat hashejat amb password_hash a PasswordResetDAO.
 
-Motivo técnico:
-- Se evita predictibilidad y almacenamiento en texto plano.
+Motiu tècnic:
+- S'evita la predictibilitat i l'emmagatzematge en text pla.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -139,18 +140,18 @@ $tokenHash = password_hash($token, PASSWORD_DEFAULT);
 $passwordResetDAO->saveToken($userId, $tokenHash); // hasheado
 ~~~
 
-## 5. Exposición de mensajes internos
+## 5. Exposició de missatges interns
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- En controladores de cambio/registro se muestran mensajes genéricos al usuario.
-- El detalle técnico se mantiene en logs con error_log.
+Què s'ha implementat:
+- Als controladors de canvi/registre es mostren missatges genèrics a l'usuari.
+- El detall tècnic es manté als logs amb error_log.
 
-Motivo técnico:
-- Evita fuga de mensajes de base de datos o stack.
+Motiu tècnic:
+- Evita la fuga de missatges de base de dades o stack.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -167,12 +168,12 @@ catch (PDOException $e) {
 }
 ~~~
 
-## 6. display_errors visible para usuarios
+## 6. display_errors visible per als usuaris
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- Eliminadas directivas display_errors/display_startup_errors/error_reporting(E_ALL) en vistas OSM:
+Què s'ha implementat:
+- Eliminades directives display_errors/display_startup_errors/error_reporting(E_ALL) a vistes OSM:
   - app/vista/osm/asistencias.php
   - app/vista/osm/lista-entrenador.php
   - app/vista/osm/mejores-valorados.php
@@ -180,10 +181,10 @@ Qué se implementó:
   - app/vista/osm/tabla-clasificacion.php
   - app/vista/osm/valor-equipo.php
 
-Motivo técnico:
-- No exponer errores internos a usuarios finales.
+Motiu tècnic:
+- No exposar errors interns als usuaris finals.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -197,23 +198,23 @@ error_reporting(E_ALL);
 // Bloque eliminado. Se respeta configuración global de logging.
 ~~~
 
-## 7. Paginación con findAll + array_slice
+## 7. Paginació amb findAll + array_slice
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- Se reemplazó carga completa + recorte en memoria por SQL paginada y ordenada.
-- Nuevos métodos DAO:
+Què s'ha implementat:
+- S'ha substituït càrrega completa + retall en memòria per SQL paginada i ordenada.
+- Nous mètodes DAO:
   - EquipoDAO::getClasificacionPaginada()
   - EquipoDAO::getValorEquipoPaginado()
   - JugadorDAO::getMejoresValoradosPaginados()
   - JugadorDAO::getPichichisPaginados()
   - JugadorDAO::getAsistenciasPaginados()
 
-Motivo técnico:
-- Menor consumo de memoria y mejor rendimiento con volúmenes altos.
+Motiu tècnic:
+- Menor consum de memòria i millor rendiment amb volums alts.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes (controlador)
@@ -235,18 +236,18 @@ if ($vista === 'tabla-clasificacion') {
 }
 ~~~
 
-## 8. Uso de GET sin protección en deleteUser
+## 8. Ús de GET sense protecció a deleteUser
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- El borrado de usuarios requiere POST, sesión válida, rol admin y token CSRF válido.
-- Se reemplazó enlace GET por formulario POST en la vista.
+Què s'ha implementat:
+- L'esborrat d'usuaris requereix POST, sessió vàlida, rol admin i token CSRF vàlid.
+- S'ha substituït l'enllaç GET per formulari POST a la vista.
 
-Motivo técnico:
-- Reduce riesgo CSRF y abusos por enlaces manipulados.
+Motiu tècnic:
+- Redueix el risc CSRF i abusos per enllaços manipulats.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes (vista)
@@ -292,17 +293,17 @@ private function deleteUser()
 }
 ~~~
 
-## 9. Exposición de errores internos por URL
+## 9. Exposició d'errors interns per URL
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- Se mantiene patrón de respuesta genérica al cliente con detalle técnico en logs.
+Què s'ha implementat:
+- Es manté el patró de resposta genèrica al client amb detall tècnic als logs.
 
-Motivo técnico:
-- Mitiga fuga de trazas y mensajes de excepción en URL o pantalla.
+Motiu tècnic:
+- Mitiga la fuga de traces i missatges d'excepció a URL o pantalla.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -315,18 +316,18 @@ error_log('Operacion fallida: ' . $e->getMessage());
 header('Location: index.php?error=operacion_no_disponible');
 ~~~
 
-## 10. DAO no debe heredar de entidad
+## 10. El DAO no ha d'heretar d'entitat
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- EquipoDAO, JugadorDAO, UserDAO y UserTokenDAO dejaron de extender entidades.
-- Se mantiene implementación de interfaz DAO sin herencia de modelo.
+Què s'ha implementat:
+- EquipoDAO, JugadorDAO, UserDAO i UserTokenDAO han deixat d'estendre entitats.
+- Es manté la implementació d'interfície DAO sense herència de model.
 
-Motivo técnico:
-- Corrige diseño orientado a objetos y separa responsabilidades.
+Motiu tècnic:
+- Corregeix el disseny orientat a objectes i separa responsabilitats.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -338,17 +339,17 @@ class UserDAO extends User implements DAO
 class UserDAO implements DAO
 ~~~
 
-## 11. Token en texto plano en BDD
+## 11. Token en text pla a BDD
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- UserTokenDAO almacena remember-me con password_hash.
+Què s'ha implementat:
+- UserTokenDAO emmagatzema remember-me amb password_hash.
 
-Motivo técnico:
-- Si hay fuga de base de datos, el token no es reutilizable directamente.
+Motiu tècnic:
+- Si hi ha fuga de base de dades, el token no és reutilitzable directament.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -363,17 +364,17 @@ $tokenHash = password_hash($token, PASSWORD_DEFAULT);
 $userTokenDAO->save($userId, $tokenHash); // hasheado
 ~~~
 
-## 12. getOrderPreference acepta cualquier valor
+## 12. getOrderPreference accepta qualsevol valor
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
+Què s'ha implementat:
 - CookieHelper::getOrderPreference() valida whitelist asc/desc.
 
-Motivo técnico:
-- Evita uso de entradas arbitrarias que puedan terminar en SQL dinámico inseguro.
+Motiu tècnic:
+- Evita l'ús d'entrades arbitràries que puguin acabar en SQL dinàmic insegur.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -392,18 +393,18 @@ public static function getOrderPreference(): string
 }
 ~~~
 
-## 13. Acceso directo a /config o .env
+## 13. Accés directe a /config o .env
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- .htaccess bloquea acceso a .env, config/ y app/config/.
-- Eliminado app/config/env.php duplicado.
+Què s'ha implementat:
+- .htaccess bloqueja accés a .env, config/ i app/config/.
+- Eliminat app/config/env.php duplicat.
 
-Motivo técnico:
-- Reduce exposición accidental de secretos y configuraciones sensibles.
+Motiu tècnic:
+- Redueix exposició accidental de secrets i configuracions sensibles.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~text
 Antes
@@ -417,17 +418,17 @@ config/env.php
 app/config/env.php -> eliminado
 ~~~
 
-## 14. Almacenamiento de contraseñas
+## 14. Emmagatzematge de contrasenyes
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- Se mantiene password_hash(PASSWORD_DEFAULT) y password_verify().
+Què s'ha implementat:
+- Es manté password_hash(PASSWORD_DEFAULT) i password_verify().
 
-Motivo técnico:
-- Práctica actual recomendada para hashing de contraseñas.
+Motiu tècnic:
+- Pràctica actual recomanada per al hashing de contrasenyes.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -442,17 +443,17 @@ $isValid = password_verify($loginPassword, $hash);
 
 ## 15. UserTokenDAO (remember me) vs token API
 
-Estado: No mejorado
+Estat: No millorat
 
-Qué falta:
-- Definir y aplicar política única de tokens de sesión y API.
+Què falta:
+- Definir i aplicar política única de tokens de sessió i API.
 
-Pasos propuestos:
-1. Añadir campo type en user_tokens (remember_me, api).
-2. Implementar validación/revocación/expiración para tokens API en BDD.
-3. Limitar claves estáticas a entorno local/desarrollo.
+Passos proposats:
+1. Afegir camp type a user_tokens (remember_me, api).
+2. Implementar validació/revocació/expiració per a tokens API a BDD.
+3. Limitar claus estàtiques a entorn local/desenvolupament.
 
-Evidencia (Antes vs Despues (propuesto)):
+Evidència (Abans vs Després (proposat)):
 
 ~~~php
 // Antes (actual)
@@ -471,15 +472,15 @@ $userTokenDAO->save($userId, $tokenHash, [
 
 ## 16. google.php no valida state CSRF
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- google.php genera state aleatorio, lo guarda en sesión y lo valida con hash_equals.
+Què s'ha implementat:
+- google.php genera state aleatori, el desa en sessió i el valida amb hash_equals.
 
-Motivo técnico:
-- Previene OAuth login CSRF.
+Motiu tècnic:
+- Prevé OAuth login CSRF.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -494,17 +495,17 @@ if (!hash_equals($_SESSION['oauth_state'] ?? '', $_GET['state'] ?? '')) {
 $googleClient->authenticate($_GET['code']);
 ~~~
 
-## 17. session_start demasiado tarde en google.php
+## 17. session_start massa tard a google.php
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- session_start() se ejecuta al inicio del flujo.
+Què s'ha implementat:
+- session_start() s'executa a l'inici del flux.
 
-Motivo técnico:
-- Asegura persistencia de state y variables de sesión.
+Motiu tècnic:
+- Assegura persistència de state i variables de sessió.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -520,17 +521,17 @@ if (session_status() === PHP_SESSION_NONE) {
 // ... resto del flujo OAuth
 ~~~
 
-## 18. session_start al final en hybridauth.php
+## 18. session_start al final a hybridauth.php
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- session_start() movido al inicio del script.
+Què s'ha implementat:
+- session_start() mogut a l'inici de l'script.
 
-Motivo técnico:
-- Evita pérdida de estado de autenticación.
+Motiu tècnic:
+- Evita pèrdua d'estat d'autenticació.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -547,18 +548,18 @@ if (session_status() === PHP_SESSION_NONE) {
 // configuracion hybridauth
 ~~~
 
-## 19. Duplicidad carpeta config
+## 19. Duplicació de carpeta config
 
-Estado: Mejorado
+Estat: Millorat
 
-Qué se implementó:
-- Eliminado app/config/env.php.
-- Configuración consolidada en config/.
+Què s'ha implementat:
+- Eliminat app/config/env.php.
+- Configuració consolidada a config/.
 
-Motivo técnico:
-- Menos deuda técnica y menor riesgo de inconsistencias.
+Motiu tècnic:
+- Menys deute tècnic i menor risc d'inconsistències.
 
-Evidencia (Antes vs Despues):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes
@@ -572,83 +573,85 @@ require_once __DIR__ . '/../../config/env.php';
 // fuente unica de configuracion
 ~~~
 
-## 20. Lógica de vista en DAO
+## 20. Lògica de vista al DAO
 
-Estado: No mejorado
+Estat: Millorat
 
-Qué falta:
-- Aún existe lógica de presentación (getDiferenciaObjetivoPosicion) en EquipoDAO.
+Què s'ha implementat:
+- S'ha eliminat getDiferenciaObjetivoPosicion() d'EquipoDAO.
+- La lògica de diferència objectiu/posició queda centralitzada a EquipoDataService.
+- La vista lista-entrenador manté la crida a equipoDAO, però en aquest context equipoDAO apunta al servei (no al DAO de persistència).
 
-Pasos propuestos:
-1. Mover esa lógica a servicio de aplicación o helper de vista.
-2. Dejar DAO solo para persistencia/consulta.
-3. Ajustar llamadas en controladores y vistas.
+Motiu tècnic:
+- El DAO queda exclusivament per a accés a dades, evitant lògica de presentació a la capa de persistència.
 
-Evidencia (Antes vs Despues (propuesto)):
+Evidència (Abans vs Després):
 
 ~~~php
-// Antes (actual en DAO)
-public function getDiferenciaObjetivoPosicion(array $equipo): string
+// Antes (en EquipoDAO)
+public function getDiferenciaObjetivoPosicion($objetivo, $posicionActual)
 {
-  if ($equipo['posicion'] <= $equipo['objetivo']) {
-    return 'cumpliendo objetivo';
-  }
-
-  return 'por debajo del objetivo';
+  // logica de presentacion en DAO
 }
 ~~~
 
 ~~~php
-// Despues (propuesto en servicio/helper)
-public function calcularDiferenciaObjetivoPosicion(array $equipo): string
+// Despues (en servicio)
+public function getDiferenciaObjetivoPosicion(int $objetivo, int $posicionActual): array
 {
-  return $equipo['posicion'] <= $equipo['objetivo']
-    ? 'cumpliendo objetivo'
-    : 'por debajo del objetivo';
+  // logica encapsulada en EquipoDataService
 }
 ~~~
 
-## 21. ordenarPorValor duplicado en DAO
+## 21. ordenarPorValor duplicat al DAO
 
-Estado: No mejorado
+Estat: Millorat
 
-Qué falta:
-- Persisten métodos de ordenación duplicados en distintos DAO.
+Què s'ha implementat:
+- S'ha eliminat ordenarPorValor() d'EquipoDAO, JugadorDAO i UserDAO.
+- Es manté l'ordenació centralitzada en serveis mitjançant sortByValue().
 
-Pasos propuestos:
-1. Eliminar ordenarPorValor() de DAO.
-2. Centralizar orden en servicios/controladores (sortByValue).
-3. Añadir tests funcionales de orden.
+Motiu tècnic:
+- S'elimina duplicació de lògica i es redueix deute tècnic en usar una única estratègia d'ordenació per servei.
 
-Evidencia (Antes vs Despues (propuesto)):
+Evidència (Abans vs Després):
 
 ~~~php
 // Antes (duplicado en DAO)
-public function ordenarPorValor(array $items, string $order): array
+public function ordenarPorValor($items, $value, $order = 'desc')
 {
-  usort($items, fn ($a, $b) => $order === 'asc' ? $a['valor'] <=> $b['valor'] : $b['valor'] <=> $a['valor']);
+  usort($items, function ($a, $b) use ($value, $order) {
+    $valorA = $value($a);
+    $valorB = $value($b);
+    return $order === 'desc' ? ($valorB <=> $valorA) : ($valorA <=> $valorB);
+  });
   return $items;
 }
 ~~~
 
 ~~~php
-// Despues (propuesto en servicio)
+// Despues (servicio)
 $items = $this->equipoDataService->sortByValue($items, fn ($i) => $i['valor'], $order);
 ~~~
 
-## 22. Casuísticas Sign in (BDD <-> Social Auth)
+## 22. Casuístiques Sign in (BDD <-> Social Auth)
 
-Estado: Parcial
+Estat: Parcial
 
-Qué falta:
-- Formalizar política de vinculación entre cuentas OAuth y cuentas con contraseña.
+Què falta:
+- Formalitzar política de vinculació entre comptes OAuth i comptes amb contrasenya.
+- Persistir proveïdor OAuth vinculat per usuari per traçabilitat (camp o taula dedicada).
+- Definir flux de vinculació/verificació per a comptes BDD ja existents.
 
-Pasos propuestos:
-1. Definir regla única por email (auto-link o verificación adicional).
-2. Gestionar caso OAuth-first sin password local (alta opcional de contraseña).
-3. Documentar migración y mensajes UX para cuentas existentes.
+Què s'ha implementat en aquesta iteració:
+- En login tradicional s'ha afegit un missatge específic per a comptes sense contrasenya local (OAuth-first), indicant accés per Google/GitHub o configuració de contrasenya des del perfil.
 
-Evidencia (Antes vs Despues (propuesto)):
+Passos proposats:
+1. Definir regla única per email (auto-link o verificació addicional).
+2. Gestionar cas OAuth-first sense password local (alta opcional de contrasenya).
+3. Documentar migració i missatges UX per a comptes existents.
+
+Evidència (Abans vs Després (proposat)):
 
 ~~~php
 // Antes (actual)
@@ -666,9 +669,7 @@ if ($user !== null && !$user->hasOAuthProvider('google')) {
 }
 ~~~
 
-## Cambios técnicos adicionales aplicados
+## Canvis tècnics addicionals aplicats
 
-- En config/db-connection.php ya no se expone el error de conexión con die(...); ahora se registra en log y se lanza excepción genérica.
-- Se migraron usos de new Database() a Database::getInstance() en controladores, OAuth, API y vistas CRUD.
-
-
+- A config/db-connection.php ja no s'exposa l'error de connexió amb die(...); ara es registra a log i es llença una excepció genèrica.
+- S'han migrat usos de new Database() a Database::getInstance() en controladors, OAuth, API i vistes CRUD.

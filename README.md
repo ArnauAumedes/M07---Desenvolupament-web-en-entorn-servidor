@@ -83,6 +83,12 @@ La font de dades es resol a `app/services/DataSourceResolver.php`:
 - Fallback a BDD si el provider extern falla.
 - Gestió d'errors AJAX amb suport per resposta JSON o text pla.
 
+### Concurrencia i connexions a base de dades
+- `Database::getInstance()` aplica Singleton dins del proces/request actual de PHP.
+- En entorns Apache mod_php o PHP-FPM, cada request s'executa en el seu propi context, aixi que no es comparteix la instancia PDO entre usuaris.
+- Consequencia practica: hi ha una sola connexio reutilitzada per request, pero a nivell global hi ha connexions independents per cada worker concurrent.
+- Si en un futur es necessita un model diferent (pooling o factoria per operacio), el punt d'entrada a canviar es `config/db-connection.php`.
+
 ## API interna
 L'API interna està centralitzada a `api/index.php` i respon JSON amb contracte uniforme:
 

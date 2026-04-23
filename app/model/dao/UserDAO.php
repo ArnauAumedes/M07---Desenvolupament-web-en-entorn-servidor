@@ -260,27 +260,6 @@ class UserDAO implements DAO
     }
 
     /**
-     * Ordena un array de objetos (equipos o jugadores) según un valor calculado.
-     * @param $items Array de objetos a ordenar
-     * @param $value Recibe el objeto y devuelve el valor para ordenar
-     * @param $order 'desc' para descendente, 'asc' para ascendente
-     * @return array Array ordenado
-     */
-    public function ordenarPorValor($items, $value, $order = 'desc')
-    {
-        usort($items, function ($a, $b) use ($value, $order) {
-            $valorA = $value($a);
-            $valorB = $value($b);
-            if ($order === 'desc') {
-                return $valorB <=> $valorA;
-            } else {
-                return $valorA <=> $valorB;
-            }
-        });
-        return $items;
-    }
-
-    /**
      * Actualitza la contrasenya d'un usuari per ID
      * @param int $userId ID de l'usuari
      * @param string $hashedPassword Nova contrasenya hashada

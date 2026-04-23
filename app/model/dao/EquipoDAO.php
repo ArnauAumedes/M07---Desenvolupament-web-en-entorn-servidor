@@ -183,27 +183,6 @@ class EquipoDAO implements DAO
     }
 
     /**
-     * Ordena un array de objetos (equipos o jugadores) según un valor calculado.
-     * @param $items Array de objetos a ordenar
-     * @param $value Recibe el objeto y devuelve el valor para ordenar
-     * @param $order 'desc' para descendente, 'asc' para ascendente
-     * @return array Array ordenado
-     */
-    public function ordenarPorValor($items, $value, $order = 'desc')
-    {
-        usort($items, function ($a, $b) use ($value, $order) {
-            $valorA = $value($a);
-            $valorB = $value($b);
-            if ($order === 'desc') {
-                return $valorB <=> $valorA;
-            } else {
-                return $valorA <=> $valorB;
-            }
-        });
-        return $items;
-    }
-
-    /**
      * Devuelve la cantidad de jugadores de un equipo
      * @param int $equipoId
      * @return int
@@ -216,37 +195,6 @@ class EquipoDAO implements DAO
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ? (int) $row['cantidad'] : 0;
-    }
-
-    /**
-     * Calcula la diferencia entre el objetivo y la posición actual de un equipo.
-     * Devuelve un array con el valor, el símbolo y la clase de color.
-     * @param int $objetivo
-     * @param int $posicionActual
-     * @return array ['valor' => int, 'simbolo' =>, 'color' =>]
-     */
-    public function getDiferenciaObjetivoPosicion($objetivo, $posicionActual)
-    {
-        $diferencia = $objetivo - $posicionActual;
-        if ($diferencia > 0) {
-            return [
-                'valor' => $diferencia,
-                'simbolo' => '+',
-                'color' => '#11461D'
-            ];
-        } elseif ($diferencia < 0) {
-            return [
-                'valor' => abs($diferencia),
-                'simbolo' => '-',
-                'color' => '#75151E'
-            ];
-        } else {
-            return [
-                'valor' => 0,
-                'simbolo' => '',
-                'color' => 'text-secondary'
-            ];
-        }
     }
 
     /**

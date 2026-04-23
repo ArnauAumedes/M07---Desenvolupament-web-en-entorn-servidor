@@ -72,7 +72,10 @@ if ($pdo instanceof PDO) {
                 if (!$user) {
                     $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
                     $login_fallido = true;
-                } elseif (!isset($user['password']) || !password_verify($password, $user['password'])) {
+                } elseif (!isset($user['password']) || trim((string) $user['password']) === '') {
+                    $messages = '<div class="alert alert-warning">Aquest compte no te contrasenya local. Inicia sessio amb Google o GitHub, o configura una contrasenya des del perfil.</div>';
+                    $login_fallido = true;
+                } elseif (!password_verify($password, $user['password'])) {
                     $messages = '<div class="alert alert-danger">Credencials incorrectes.</div>';
                     $login_fallido = true;
                 } elseif (isset($user['active']) && !$user['active']) {
