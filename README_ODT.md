@@ -1,10 +1,5 @@
 # README_ODT - Estat de millores (apartats 2-22)
 
-Data: 2026-04-22  
-Projecte: practicas
-
-Document d'entrega per a revisió docent. Cada apartat inclou, dins del mateix bloc, estat, explicació i evidència tècnica (Abans/Després a tots els apartats).
-
 ## Índex
 
 - [Resum executiu](#resum-executiu)
